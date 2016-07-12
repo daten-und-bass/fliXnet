@@ -1,3 +1,15 @@
+# fliXnet ignored files
+/node_modules
+npm-debug.log
+Dockerfile
+.DS_Store
+**/.DS_Store
+**/.sublime-project
+**/.sublime-workspace
+*/**/config_production.js
+
+
+# Swagger ignored files
 # IDE files
 .idea
 
