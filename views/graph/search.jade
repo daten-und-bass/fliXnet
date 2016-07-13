@@ -1,0 +1,77 @@
+extends ../layout
+
+block content
+  .flixnet-top-section
+    .android-card-container.mdl-grid
+      .flixnet-search-mdl-cell.mdl-cell.mdl-cell--12-col.mdl-shadow--3dp
+        .mdl-card__media
+          i.flixnet-material-icons.material-icons blur_on
+        .mdl-card__title
+          h4.mdl-card__title-text #{localesStrings['Search results']}:
+        .flixnet-search-mdl-card__supporting-text.mdl-card__supporting-text
+          table.flixnet-search-main-table
+            tbody
+              each object in graph
+                tr.flixnet-search-main-table-row 
+                  each person in object.graph.nodes
+                    if person.properties.name
+                      td.flixnet-search-main-table-data(onclick="app.location.changeLocationSearch('#{locale}', 'persons', '#{person.id}');")
+                        table
+                          thead
+                            tr
+                              th.flixnet-material-icons.material-icons person
+                                td 
+                                  table
+                                    tbody
+                                      if person.properties.name   
+                                        tr
+                                          th.flixnet-search-sub-table-head Name:       
+                                          td #{person.properties.name}
+                                      if person.properties.born  
+                                        tr
+                                          th.flixnet-search-sub-table-head Born:
+                                          td #{person.properties.born}
+                  each movie in object.graph.nodes
+                    if movie.properties.title
+                      td.flixnet-search-main-table-data(onclick="app.location.changeLocationSearch('#{locale}', 'movies', '#{movie.id}');")
+                        table
+                          thead
+                            tr
+                              th.flixnet-material-icons.material-icons movie
+                                td 
+                                  table
+                                    tbody
+                                      if movie.properties.title
+                                        tr
+                                          th.flixnet-search-sub-table-head Title:
+                                          td #{movie.properties.title}
+                                      if movie.properties.tagline
+                                        tr
+                                          th.flixnet-search-sub-table-head Tagline:                  
+                                          td #{movie.properties.tagline}
+                                      if movie.properties.released
+                                        tr
+                                          th.flixnet-search-sub-table-head Released:                  
+                                          td #{movie.properties.released}
+                  each relationship in object.graph.relationships
+                    if relationship.type
+                      td.flixnet-search-main-table-data(onclick="app.location.changeLocationSearch('#{locale}', 'graph/relationships', #{relationship.id});")
+                        table
+                          thead
+                            tr
+                              th.flixnet-material-icons.material-icons linear_scale
+                                td
+                                  table
+                                    tbody
+                                      if relationship.type
+                                        tr
+                                          th.flixnet-search-sub-table-head Type:
+                                          td #{relationship.type}
+                                      if relationship.properties.roles
+                                        tr
+                                          th.flixnet-search-sub-table-head Roles:
+                                          td #{relationship.properties.roles}
+                                      if relationship.properties.summary
+                                        tr
+                                          th.flixnet-search-sub-table-head Summary:
+                                          td #{relationship.properties.summary}

@@ -1,0 +1,9 @@
+extends ../layout
+include ../mixins/createForms.jade
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.flixnet-sub-slogan #{localesStrings['Create a new Movie']}:
+    .flixnet-logo-font.mdl-typography--font-light
+      br
+      +movieCreateForm

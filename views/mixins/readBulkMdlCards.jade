@@ -1,0 +1,29 @@
+mixin moviesReadBulkMdlCards
+  .android-card-container.mdl-grid
+    each movie in movies
+      .mdl-cell.mdl-cell--3-col.mdl-cell--4-col-tablet.mdl-cell--4-col-phone.mdl-card.mdl-shadow--3dp
+        .mdl-card__media
+          i.flixnet-material-icons.material-icons movie
+        .mdl-card__title
+          h4.mdl-card__title-text #{movie.properties.title}
+        .mdl-card__title
+          i.flixnet-material-icons-light.material-icons date_range &nbsp;
+          h4.mdl-card__title-text #{movie.properties.released} 
+        .mdl-card__supporting-text
+          span.mdl-typography--font-light.mdl-typography--subhead #{movie.properties.tagline}
+        .mdl-card__actions
+          a.android-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='/#{locale}/movies/read/#{movie.id}') #{localesCommands['Show']}
+
+mixin personsReadBulkMdlCards
+  .android-card-container.mdl-grid
+    each person in persons
+      .mdl-cell.mdl-cell--3-col.mdl-cell--4-col-tablet.mdl-cell--4-col-phone.mdl-card.mdl-shadow--3dp
+        .mdl-card__media
+          i.flixnet-material-icons.material-icons person
+        .mdl-card__title
+          h4.mdl-card__title-text #{person.properties.name}
+        .mdl-card__title
+          i.flixnet-material-icons-light.material-icons date_range &nbsp;
+          h4.mdl-card__title-text #{person.properties.born} 
+        .mdl-card__actions
+          a.android-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='/#{locale}/persons/read/#{person.id}') #{localesCommands['Show']}

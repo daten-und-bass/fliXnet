@@ -1,0 +1,99 @@
+doctype html
+
+html(lang='#{locale}')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='description', content='nodeTestApp16')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title #{localesMenu['fliXnet']} - #{localesMenu['The Movie Graph']}
+    // MDL Page styles
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons')
+    link(rel='stylesheet' href='https://code.getmdl.io/1.1.3/material.min.css')
+    // Android Page styles  
+    link(rel='stylesheet' href='/styles.css')
+    // Flixnet Page styles and App  
+    link(rel='stylesheet', href='/flixnet-styles.css')
+    script(src='/app.js')
+  body
+    .mdl-layout.mdl-js-layout.mdl-layout--fixed-header
+      .android-header.mdl-layout__header.mdl-layout__header--waterfall
+        .mdl-layout__header-row
+          span.android-title.mdl-layout-title
+            a(href='/#{locale}').flixnet-title-header.logo-font #{localesMenu['fliXnet']}
+          //- Add spacer, to align navigation to the right in desktop
+          .android-header-spacer.mdl-layout-spacer
+          .android-search-box.mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.mdl-textfield--floating-label.mdl-textfield--align-right.mdl-textfield--full-width
+            label.mdl-button.mdl-js-button.mdl-button--icon(for='search-field')
+              i.material-icons search
+            .mdl-textfield__expandable-holder
+              input.mdl-textfield__input(type='text' id='search-field' onkeypress='app.search.searchField(event, "#{locale}");')
+          //- Top Navigation
+          .android-navigation-container
+            nav.android-navigation.mdl-navigation
+              a.mdl-navigation__link.mdl-typography--text-uppercase(href='/#{locale}') #{localesMenu['Home']}
+              a.mdl-navigation__link.mdl-typography--text-uppercase(href='/#{locale}/about') #{localesMenu['About']}
+              a.mdl-navigation__link.mdl-typography--text-uppercase(disabled='' style="opacity: 0.46;") #{localesMenu['Login']}
+          span.android-mobile-title.mdl-layout-title
+            a(href='/#{locale}').flixnet-title-header.logo-font #{localesMenu['fliXnet']}
+          button#more-button.android-more-button.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect
+            i.material-icons language
+          ul.mdl-menu.mdl-js-menu.mdl-menu--bottom-right.mdl-js-ripple-effect(for='more-button')
+            li.mdl-menu__item
+              a.mdl-navigation__link(onclick='app.locale.changeLocale("#{locale}", "/de")') Deutsch
+            li.mdl-menu__item
+              a.mdl-navigation__link(onclick='app.locale.changeLocale("#{locale}", "/en")') English
+            li.mdl-menu__item
+              a.mdl-navigation__link(onclick='app.locale.changeLocale("#{locale}", "/es")') Español 
+            li.mdl-menu__item
+              a.mdl-navigation__link(onclick='app.locale.changeLocale("#{locale}", "/fr")') Français 
+      // Fly-out Side Navigation
+      .android-drawer.mdl-layout__drawer
+        span.mdl-layout-title
+          a.flixnet-title-drawer.android-logo-image.logo-font #{localesMenu['fliXnet']}
+        nav.mdl-navigation
+          a.mdl-navigation__link(href='/#{locale}') #{localesMenu['The Movie Graph']}
+          a.mdl-navigation__link(href='/#{locale}/graph/relationships/create') #{localesMenu['Create a Relationship']}
+          .android-drawer-separator
+          span.mdl-navigation__link(href='') #{localesMenu['Movies']}
+          a.mdl-navigation__link(href='/#{locale}/movies/create') #{localesMenu['Create a Movie']}
+          a.mdl-navigation__link(href='/#{locale}/movies') #{localesMenu['All Movies']}
+          .android-drawer-separator
+          span.mdl-navigation__link(href='') #{localesMenu['Persons']}
+          a.mdl-navigation__link(href='/#{locale}/persons/create') #{localesMenu['Create a Person']}
+          a.mdl-navigation__link(href='/#{locale}/persons') #{localesMenu['All Persons']}
+      .android-content.mdl-layout__content
+        block content
+        footer.android-footer.mdl-mega-footer
+          .mdl-mega-footer--top-section
+            .mdl-mega-footer--left-section
+              a(href='https://twitter.com/daten_und_bass', target='_blank')
+                button.mdl-mega-footer--social-btn.social-btn.social-btn__twitter
+            .mdl-mega-footer--right-section
+          .mdl-mega-footer--middle-section
+            p.mdl-typography--font-light #{localesMenu['The Movie Graph']} - #{localesMenu['Current Year YYYY']} 
+              a.android-link.mdl-typography--font-thin(href='https://twitter.com/daten_und_bass' target='_blank') daten&bass
+            p.mdl-typography--font-light #{localesMenu['A <female>']} 
+              a.android-link.mdl-typography--font-thin(href='https://nodejs.org' target='_blank') Node.js 
+              | #{localesMenu['sample implementation of']} 
+              a.android-link.mdl-typography--font-thin(href='http://neo4j.com' target='_blank') Neo4j
+              |'s #{localesMenu['Movie Database']}
+          .mdl-mega-footer--bottom-section
+            a#version-dropdown.android-link.android-link-menu.mdl-typography--font-light
+              | #{localesMenu['Users']} 
+              i.material-icons arrow_drop_up
+            ul.mdl-menu.mdl-js-menu.mdl-menu--top-left.mdl-js-ripple-effect(for='version-dropdown')
+              li.mdl-menu__item
+                a.mdl-menu__item(href='/#{locale}') #{localesMenu['Home']}
+            a#developers-dropdown.android-link.android-link-menu.mdl-typography--font-light
+              | #{localesMenu['Developers']} 
+              i.material-icons arrow_drop_up
+            ul.mdl-menu.mdl-js-menu.mdl-menu--top-left.mdl-js-ripple-effect(for='developers-dropdown')
+              li.mdl-menu__item
+                a.mdl-menu__item(href='https://github.com/daten-und-bass', target='blank') #{localesMenu['Github Code']}
+            a.android-link.mdl-typography--font-light(href='/#{locale}/imprint') #{localesMenu['Imprint']}
+            a.android-link.mdl-typography--font-light(href='/#{locale}/contact') #{localesMenu['Contact']}
+    // MDL APP
+    script(src="https://code.getmdl.io/1.1.3/material.min.js")
+

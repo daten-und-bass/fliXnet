@@ -1,0 +1,92 @@
+extends layout
+include mixins/readBulkMdlCards.jade
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    a.flixnet-logo-font.flixnet-slogan fli
+      a.flixnet-logo-font.flixnet-slogan(style='color: #8bc34a;') X
+        a.flixnet-logo-font.flixnet-slogan net
+    .flixnet-logo-font.flixnet-sub-slogan - #{localesMenu['The Movie Graph']} -
+  .flixnet-graph-section
+    div(class='mdl-spinner mdl-js-spinner is-active flixnet-spinner')#graph
+    script(src='//d3js.org/d3.v3.min.js' charset='utf-8')
+    script.
+      app.visualization.visualizeGraphDiv('/api/graph', '#{locale}', 960, 600, -250);
+  .flixnet-text-section
+    .mdl-typography--display-1.mdl-typography--font-thin Sample Implementation - The Famous 
+      a.flixnet-link.mdl-typography--font-thin(href='http://neo4j.com' target='_blank') Neo4j 
+      | Movie Database
+    .mdl-typography--title.mdl-typography--font-thin Modelling, storing and retrieving data as a graph.
+    br
+    .mdl-typography--display-1.mdl-typography--font-thin An HTML Web App and a JSON only API - Both Based on 
+      a.flixnet-link.mdl-typography--font-thin(href='https://nodejs.org' target='_blank') NodeJS 
+      a.flixnet-link.mdl-typography--font-thin(href='http://expressjs.com' target='_blank') Express
+    .mdl-typography--title.mdl-typography--font-thin Full-Stack JavaScript.
+    br
+    .mdl-typography--display-1.mdl-typography--font-thin Automatic API Validation and Documentation - via 
+      a.flixnet-link.mdl-typography--font-thin(href='http://swagger.io' target='_blank') Swagger
+    .mdl-typography--title.mdl-typography--font-thin REST. SOA. Microservices. Or whatever you might call it.
+    br
+    .mdl-typography--display-1.mdl-typography--font-thin Besides 
+      a.flixnet-link.mdl-typography--font-thin(href='https://d3js.org' target='_blank') D3JS 
+      | - Plain JavaScript without Framework Dependencies
+    .mdl-typography--title.mdl-typography--font-thin HTML templating server-side via 
+      a.flixnet-link.mdl-typography--font-thin(href='http://jade-lang.com' target='_blank') Jade
+      |.
+    .mdl-typography--title.mdl-typography--font-thin 
+      a.flixnet-link.mdl-typography--font-thin(href='https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest' target='_blank') XHR 
+      | for client-side calls to the JSON API.
+    br
+    .mdl-typography--display-1.mdl-typography--font-thin Using 
+      a.flixnet-link.mdl-typography--font-thin(href='https://getmdl.io' target='_blank') Material Design Lite 
+      | Layouts and Components
+    .mdl-typography--title.mdl-typography--font-thin Optimized for cross-device Use.
+  .flixnet-mdl-card-section
+    br
+    .mdl-typography--display-1-color-contrast #{localesMenu['The Movie Graph']} #{localesStrings['(... as Tables ;-> )']}:
+    .android-card-container.mdl-grid
+      .mdl-cell.mdl-cell--4-col.mdl-shadow--3dp
+        .mdl-card__media
+          i(id='nodesTableBodyI').flixnet-material-icons.material-icons linear_scale
+        .mdl-card__title
+          h4(id='nodesTableBodyH').mdl-card__title-text #{localesStrings['Relationships']}
+        .mdl-card__supporting-text(style='overflow: auto;')   
+          table(style='width: 100%;').mdl-data-table.mdl-js-data-table
+            thead
+              tr
+                th(id='nodesTableBodyTh').mdl-data-table__cell--non-numeric Type
+                th Total Amount
+            tbody(id='nodesTableBody')
+          a.android-link.mdl-button.mdl-js-button 
+            i.material-icons(id='nodesTableBodyBackward' onclick = "app.content.htmlElements.paginateNodesTableBodyBothWays(\'#{localesStrings['Relationships']}\', \'#{localesStrings['Nodes']}\')") navigate_before
+            i.material-icons(id='nodesTableBodyForward' onclick = "app.content.htmlElements.paginateNodesTableBodyBothWays(\'#{localesStrings['Relationships']}\', \'#{localesStrings['Nodes']}\')") navigate_next
+        script.
+          app.content.htmlElements.createNodesTableBody('nodesTableBody', '/api/graph/search/typeAmountRelationships'); 
+      .mdl-cell.mdl-cell--8-col.mdl-shadow--3dp
+        .mdl-card__media
+          i.flixnet-material-icons.material-icons blur_on
+        .mdl-card__title
+          h4.mdl-card__title-text #{localesStrings['<Instance>']}
+        .mdl-card__supporting-text(style='overflow: auto;')        
+          table(style='width: 100%;').mdl-data-table.mdl-js-data-table
+            thead
+              tr
+                th.mdl-data-table__cell--non-numeric Source   
+                th.mdl-data-table__cell--non-numeric Type
+                th.mdl-data-table__cell--non-numeric Properties
+                th.mdl-data-table__cell--non-numeric Target
+            tbody(id='graphTableBody')
+          a.android-link.mdl-button.mdl-js-button
+            i.material-icons(id='graphTableBodyBackward' onclick = 'app.content.htmlElements.paginateGraphTableBodyBackward()') navigate_before
+            i.material-icons(id='graphTableBodyForward' onclick = 'app.content.htmlElements.paginateGraphTableBodyForward()') navigate_next
+          script.
+            app.content.htmlElements.createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=');
+  .flixnet-mdl-card-section
+    .mdl-typography--display-1-color-contrast #{localesStrings['Latest Movies']}:
+    +moviesReadBulkMdlCards
+  .flixnet-mdl-card-section
+    .mdl-typography--display-1-color-contrast #{localesStrings['Top Actors']}:
+    .android-card-container.mdl-grid#TopActorsMdlCardsDiv
+      div(id='spinnerTopActorsMdlCardsDiv' class='mdl-spinner mdl-js-spinner is-active flixnet-spinner')
+      script.
+        app.content.htmlElements.createNodesMdlCardsDiv('TopActorsMdlCardsDiv', '/api/graph/search/topPersons?relationshipName=ACTED_IN', '#{locale}', '#{localesCommands["Show"]}');

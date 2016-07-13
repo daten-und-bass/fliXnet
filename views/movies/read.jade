@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.mdl-typography--display-1-color-contrast #{slogan}:
+    .flixnet-logo-font.flixnet-sub-slogan #{localesStrings['Movie Title']}: 
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light #{movie.title}
+    .flixnet-logo-font.flixnet-sub-slogan #{localesStrings['Movie Tagline']}: 
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light #{movie.tagline}
+    .flixnet-logo-font.flixnet-sub-slogan #{localesStrings['Movie Release Year']}: 
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light #{movie.released}
+    br
+    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='/#{locale}/movies/update/#{id}') #{localesCommands['Update']}
+    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(onclick="app.content.userInteraction.deleteNode('/#{locale}/movies/delete/#{id}', '#{movie.title}' , '#{locale}/movies', '#{localesStrings['Delete Movie (and all its relationships)']}', '#{localesStrings['Movies deleted']}')") #{localesCommands['Delete']}
+  .flixnet-graph-section
+    div(class='mdl-spinner mdl-js-spinner is-active flixnet-spinner')#graph
+    script(src='//d3js.org/d3.v3.min.js' charset='utf-8')
+    script.
+      app.visualization.visualizeGraphDiv('/api/graph/readGraphOfMovie/#{id}', '#{locale}', 960, 300, -5000);
+  .flixnet-text-section#OptionalMovieCast
+    .flixnet-logo-font-white.mdl-typography--display-1.mdl-typography--font-thin #{localesStrings['All actors of']} #{movie.title}:
+  .flixnet-mdl-card-section
+    .android-card-container.mdl-grid#MovieCast
+      div(id='spinnerMovieCast' class='mdl-spinner mdl-js-spinner is-active flixnet-spinner')
+      script.
+        app.content.htmlElements.createNodesMdlCardsDiv('MovieCast', '/api/graph/search/movieCast/#{id}', '#{locale}', "#{localesCommands['Show']}");

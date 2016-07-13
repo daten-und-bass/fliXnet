@@ -1,0 +1,24 @@
+mixin movieCreateForm
+  form(name='createMovie', action='/#{locale}/movies/create',  method='post')
+    input(type='text', placeholder='#{localesStrings["Movie Title"]}', name='title')
+    input(type='text', placeholder='#{localesStrings["Movie Tagline"]}', name='tagline')
+    input(type='number', placeholder='#{localesStrings["Movie Release Year"]}', name='released')
+    button.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(type='submit') #{localesCommands['Create']}
+
+mixin personCreateForm
+  form(name='createPerson', action='/#{locale}/persons/create',  method='post')
+    input(type='text', placeholder='#{localesStrings["Full Name"]}', name='name')
+    input(type='number', placeholder='#{localesStrings["Birth Date"]}', name='born')
+    button.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(type='submit') #{localesCommands['Create']}
+
+mixin relationshipCreateForm
+   form#createRelationship(name='createRelationship', action='/#{locale}/graph/relationships/create',  method='post', enctype='application/x-www-form-urlencoded', accept-charset='UTF-8', lang='#{locale}')
+      select#source(name='source')        
+      select#type(name='type', style='text-transform: lowercase;')
+      select#target(name='target')
+      label#asLabel(for='property') &nbsp; as* &nbsp;
+      //- pattern='[^\\s][^&<>"\'/]{0,}[&<>"\'/]{0,1}[^&<>"\'/]{0,}[&<>"\'/]{0,1}[^&<>"\'/]{0,}',
+      //- formenctype='application/x-www-form-urlencoded',
+      input#property(type='text', name='property', minlength='1' maxlength='200', placeholder='Role (in English)' required title='These characters are not allowed: &<>"\'/')
+      button#submitRelationship.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(type='submit') #{localesCommands['Create']}
+

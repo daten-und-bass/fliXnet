@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.mdl-typography--display-1-color-contrast #{slogan}:
+    .flixnet-logo-font.flixnet-sub-slogan#source #{relationship[0]}
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light#type(style='text-transform: lowercase;') #{relationship[1]}
+    .flixnet-logo-font.flixnet-sub-slogan#target '#{relationship[2]}'
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light#property
+    br
+    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(id ='updateLink' href='/#{locale}/graph/relationships/update/#{id}') #{localesCommands['Update']}
+    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(onclick="app.content.userInteraction.deleteRelationship('/#{locale}/graph/relationships/delete/#{id}', '#{relationship[0]}', '#{relationship[1]}', '#{relationship[2]}', '#{locale}/', '#{localesStrings['Delete Relationship']}', '#{localesStrings['Relationships deleted']}')") #{localesCommands['Delete']}
+    script.
+      app.content.htmlElements.toggleViewReadRelationship(!{JSON.stringify(relationship)}, '#{localesStrings["This type of relationship cannot be updated."]}');

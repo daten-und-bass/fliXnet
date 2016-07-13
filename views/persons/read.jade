@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.mdl-typography--display-1-color-contrast #{slogan}:
+    .flixnet-logo-font.flixnet-sub-slogan #{localesStrings['Full Name']}: 
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light #{person.name}
+    .flixnet-logo-font.flixnet-sub-slogan #{localesStrings['Birth Date']}:
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light #{person.born}
+    br
+    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='/#{locale}/persons/update/#{id}') #{localesCommands['Update']}
+    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(onclick="app.content.userInteraction.deleteNode('/#{locale}/persons/delete/#{id}', '#{person.name}', '#{locale}/persons', '#{localesStrings['Delete Person (and all its relationships)']}', '#{localesStrings['Persons deleted']}' )") #{localesCommands['Delete']}
+  .flixnet-graph-section
+    div(class='mdl-spinner mdl-js-spinner is-active flixnet-spinner')#graph
+    script(src='//d3js.org/d3.v3.min.js' charset='utf-8')
+    script.
+      app.visualization.visualizeGraphDiv('/api/graph/readGraphOfPerson/#{id}', '#{locale}', 960, 300, -5000); 
+  .flixnet-text-section#OptionalTopColleagues
+    .flixnet-logo-font-white.mdl-typography--display-1.mdl-typography--font-thin #{localesStrings['Also interesting? Top actor colleagues of']} #{person.name}:
+  .flixnet-mdl-card-section
+    .android-card-container.mdl-grid#TopColleagues
+      div(id='spinnerTopColleagues' class='mdl-spinner mdl-js-spinner is-active flixnet-spinner')
+      script.
+        app.content.htmlElements.createNodesMdlCardsDiv('TopColleagues', '/api/graph/search/topColleagues/#{id}?relationshipName=ACTED_IN', '#{locale}', "#{localesCommands['Show']}");

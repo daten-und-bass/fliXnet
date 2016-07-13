@@ -1,0 +1,24 @@
+extends ../layout
+include ../mixins/readBulkMdlCards.jade
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.mdl-typography--display-1-color-contrast #{localesStrings['<InstancePlural>']}
+    br
+    .flixnet-logo-font.mdl-typography--font-light.mdl-typography--subhead #{localesStrings['Filter Person by year of birth']}:&nbsp;
+      select#born(name='born', onchange="app.location.changeLocationReadBulk(self.location.pathname, this.options[this.selectedIndex].value, 'born')")
+        option(selected) #{localesStrings['All years']}
+  .flixnet-mdl-card-section
+    br
+    if inQueryParam 
+      if inQueryParam == -1
+        .flixnet-logo-font.mdl-typography--font-light.mdl-typography--display-1-color-contrast #{localesStrings['Results for all persons with unknown birth date']}: 
+      else
+        .flixnet-logo-font.mdl-typography--font-light.mdl-typography--display-1-color-contrast #{localesStrings['Results for all persons of']} #{inQueryParam} : 
+    else
+      .flixnet-logo-font.mdl-typography--font-light.mdl-typography--display-1-color-contrast #{localesStrings['Results for all persons']}:
+    br   
+    +personsReadBulkMdlCards
+  script.
+    app.content.htmlElements.createOptionsReadBulk(document.getElementById('born'), '/api/persons/search/distinctProperties?propertyName=born', '#{inQueryParam}', '#{localesStrings["Unknown"]}');
+  

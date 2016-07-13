@@ -1,0 +1,35 @@
+extends ../layout
+include ../mixins/createForms.jade
+
+block content
+
+  style.
+    input:invalid {
+      border: 1px solid red !important;
+    }
+
+    input:valid! {
+      border: 1px solid green !important;
+    }
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.flixnet-sub-slogan #{localesStrings['Create a new Relationship']}:
+    .flixnet-logo-font.mdl-typography--font-light
+      br
+      +relationshipCreateForm
+      br
+      p#asHint *Please enter multiple roles as a comma separated list
+    script(src='/purify.min.js')
+      //- console.log();
+
+      
+    script.
+      //- console.log('!{JSON.stringify(persons)}');
+      var clean = DOMPurify.sanitize("<script>alert(0)</script>");
+      console.log(clean);
+      app.content.htmlElements.createOptionsRelationship(!{JSON.stringify(persons)}, !{JSON.stringify(relationships)}, !{JSON.stringify(movies)});
+      document.getElementById('createRelationship').addEventListener('submit', function (event) {
+        if(!document.getElementById('property').checkValidity()) {
+          event.preventDefault();
+        }
+      }, false); 
+

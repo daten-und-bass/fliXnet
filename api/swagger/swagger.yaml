@@ -1,60 +1,1433 @@
+#######################
+# GENERAL INFORMATION #
 swagger: "2.0"
 info:
-  version: "0.0.1"
-  title: Hello World App
-# during dev, should point to your local machine
-host: localhost:10010
-# basePath prefixes all resource paths 
+  version: "0.0.9"
+  title: nodeTestApp16
+host: dockerHostIp:10011
 basePath: /
-# 
 schemes:
   # tip: remove http to make production-grade
   - http
   - https
-# format of bodies a client can send (Content-Type)
 consumes:
   - application/json
-# format of the responses to the client (Accepts)
 produces:
   - application/json
+tags:
+  - name: api
+    description: All JSON only API operations (returning JSON only)
+  - name: web
+    description: All HTML Web operations (returning HTML websites)
+  - name: graph
+    description: All operations where more than one nodeType (e.g. movies and persons) or where more than one node (e.g. person follows person) are involved 
+  - name: relationships
+    description: All (CRUD) operations for connections between nodes 
+  - name: graphSearch
+    description: All (read) operations for graph-wide searches 
+  - name: nodes
+    description: All operations where only one node type is involved
+  - name: movies
+    description: All operations where only nodes of the type 'movie' are involved
+  - name: persons
+    description: All operations where only nodes of the type 'person' are involved
+  - name: nodeSearch
+    description: All (read) operations for searches within one node type 
 paths:
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
+
+#######
+# APP #
+## Index ###  
+### JSON only API: Return swagger documentation in RAW fomat ###
+  /api:
+    x-swagger-pipe: swagger_raw
+
+### HTML Web: Entrypoint and service pages for website ###
+  /:
+    x-swagger-router-controller: context_html_web_index
     get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
+      tags:
+        - web
+      summary: Entrypoint for website 
+      description: Redirects to localized main html (locale is detected according to req.acceptsLanguages() and code '302' is the default for a successful redirectin express.js)
+      produces: 
+        - text/html
+      operationId: index
+      responses:
+        "302":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}:
+    x-swagger-router-controller: context_html_web_index
+    get:
+      tags:
+        - web
+        - nodes
+        - movies
+        - nodeSearch
+      summary: Redirected entrypoint for website with locale
+      description: Returns a localized main html page and the results for a server-side query for the latest four movies
+      produces: 
+        - text/html
+      operationId: index_locale
       parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
-          type: string
+        - $ref: "#/parameters/locale"
       responses:
         "200":
           description: Success
           schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/about:
+    x-swagger-router-controller: context_html_web_index
+    get:
+      tags:
+        - web
+      summary: About page
+      description: Returns a localized about page
+      produces: 
+        - text/html
+      operationId: about
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/contact:
+    x-swagger-router-controller: context_html_web_index
+    get:
+      tags:
+        - web     
+      summary: Contact page
+      description: Returns a localized contact page
+      produces: 
+        - text/html
+      operationId: contact
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/imprint:
+    x-swagger-router-controller: context_html_web_index
+    get:
+      tags:
+        - web
+      summary: Imprint page
+      description: Returns a localized imprint page
+      produces: 
+        - text/html
+      operationId: imprint
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+
+#########
+# GRAPH # 
+## Paths & Traversals ##
+### JSON only API: Graph of whole Graph, of one movie or of one person - each as JSON object ###
+  /api/graph:
+    x-swagger-router-controller: context_json_api_graph
+    get:
+      tags:
+        - api
+        - graph
+      summary: Complete graph as JSON object 
+      description: Returns the whole graph (via path traversal) as a transformed JSON with IDed nodes and links for visualization via DS3
+      operationId: readAllGraph
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphListBody"
         default:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /api/graph/readGraphOfMovie/{id}:
+    x-swagger-router-controller: context_json_api_graph
+    get:
+      tags:
+        - api
+        - graph
+      summary: Graph of one movie as JSON object 
+      description: Returns the graph (via path traversal) of one movie as a transformed JSON with IDed nodes and links for visualization via DS3
+      operationId: readGraphOfMovie
+      parameters:
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphListBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/graph/readGraphOfPerson/{id}:
+    x-swagger-router-controller: context_json_api_graph
+    get:
+      tags:
+        - api
+        - graph
+      summary: Graph of one person as JSON object
+      description: Returns the graph (via path traversal) of one person as a transformed JSON with IDed nodes and links for visualization via DS3
+      operationId: readGraphOfPerson
+      parameters:
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphListBody" 
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+## Relationships ##
+### JSON only API: Read paginated all relationships over the whole graph ###
+  /api/graph/relationships/readAllPaginated:
+    x-swagger-router-controller: context_json_api_graph_relationships
+    get:
+      tags:
+        - api
+        - graph
+        - relationships
+      summary: All relationships in paginated chunks
+      description: Returns JSON of all relationships with certain amount of pagination (offset is passed via inQeryParam)
+      operationId: readAllPaginated
+      parameters:
+        - name: pagination
+          required: true
+          in: query
+          description: amount of items for pagination
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphSearchBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+## graphSearch ##
+### JSON only API: Read all node labels and their amount over the whole graph ###
+  /api/graph/search/labelsAmountNodes:
+    x-swagger-router-controller: context_json_api_graph_search
+    get:
+      tags:
+        - api
+        - graph
+        - graphSearch
+      summary: Aggregate of nodes per label 
+      description: Returns JSON of all node labels and their amount over the complete graph
+      operationId: labelsAmountNodes
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphSearchBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+### JSON only API: Read all relationship types and their amount over the whole graph ###
+  /api/graph/search/typeAmountRelationships:
+    x-swagger-router-controller: context_json_api_graph_search
+    get:
+      tags:
+        - api
+        - graph
+        - graphSearch
+      summary: Aggregate of relationships per type 
+      description: Returns JSON of relationship types and their amount over the complete graph
+      operationId: typeAmountRelationships
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphSearchBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+### JSON only API: Search for top persons regarding their amount of relationships ###
+  /api/graph/search/topPersons:
+    x-swagger-router-controller: context_json_api_graph_search
+    get:
+      tags:
+        - api
+        - graph
+        - graphSearch
+      summary: Top four persons with the most ACTED_IN relationships
+      description: Returns JSON of the top four persons with the most ACTED_IN relationships
+      operationId: topPersons
+      parameters:
+        - $ref: "#/parameters/relationshipName"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphSearchBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+### JSON only API: Search the cast (all ACTED_IN releationships)  of a movie ###
+  /api/graph/search/movieCast/{id}:
+    x-swagger-router-controller: context_json_api_graph_search
+    get:
+      tags:
+        - api
+        - graph
+        - graphSearch
+      summary: All actors of a movie
+      description: Returns JSON with the cast (all ACTED_IN releationships) of a movie
+      operationId: movieCast
+      parameters:
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphSearchBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+### JSON only API: Search for top colleagues who acted most often together with a given person ###
+  /api/graph/search/topColleagues/{id}:
+    x-swagger-router-controller: context_json_api_graph_search
+    get:
+      tags:
+        - api
+        - graph
+        - graphSearch
+      summary: Top four colleagues of a person (most ACTED_IN relationships)
+      description: Returns JSON of the top four persons with the most ACTED_IN relationships to the person with id given via inPathParam
+      operationId: topColleagues
+      parameters:
+        - $ref: "#/parameters/id"
+        - $ref: "#/parameters/relationshipName"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphSearchBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+### HTML Web: Create, read, update and delete one relationships ###
+  /{locale}/graph/relationships/create:
+    x-swagger-router-controller: context_html_web_graph_relationships
+    get:
+      tags:
+        - web
+        - graph
+        - relationships
+      summary: Create relationship page (GET)
+      description: Returns html page for a relationship creation form
+      produces: 
+        - text/html
+      operationId: getCreate
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+    post:
+      tags:
+        - web
+        - graph
+        - relationships
+      summary: Relationship create target (POST)
+      description: Creates a new relationship entry via Web (HTML in Browser) and then redirects to read this relationship (Code '302' is the default for a successful redirect in express.js)
+      consumes:
+        - application/x-www-form-urlencoded
+      produces: 
+        - text/html
+      operationId: create
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/source"
+        - $ref: "#/parameters/type"
+        - $ref: "#/parameters/target"
+        - $ref: "#/parameters/property"
+      responses:
+        "302":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/graph/relationships/read/{id}:
+    x-swagger-router-controller: context_html_web_graph_relationships
+    get:
+      tags:
+        - web
+        - graph
+        - relationships
+      summary: Read relationship page
+      description: Returns html page for viewing one relationship
+      produces: 
+        - text/html
+      operationId: read
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/graph/relationships/update/{id}:
+    x-swagger-router-controller: context_html_web_graph_relationships
+    get:
+      tags:
+        - web
+        - graph
+        - relationships
+      summary: Update relationship page (GET)
+      description: Returns html page for a relationship update form
+      produces: 
+        - text/html
+      operationId: getUpdate
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+    post:
+      tags:
+        - web
+        - graph
+        - relationships
+      summary: Relationship update target (POST)
+      description: Updates a relationship entry via Web (HTML in Browser) without redirect and only for ACTED_IN and REVIEWED relationships
+      consumes:
+        - application/x-www-form-urlencoded
+      produces: 
+        - text/html
+      operationId: update
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+        - $ref: "#/parameters/type"
+        - $ref: "#/parameters/property"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/graph/relationships/delete/{id}:
+    x-swagger-router-controller: context_html_web_graph_relationships
+    post:
+      tags:
+        - web
+        - graph
+        - relationships
+      summary: Relationship delete target (POST)
+      description: Deletes a relationship via confirm() and alert() (witout any .jade view)
+      consumes:
+        - application/octet-stream
+      operationId: delete
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+
+## graphSearch ##
+### HTML Web: Search for the string entered in the searchField ###
+  /{locale}/graph/search/searchField:
+    x-swagger-router-controller: context_html_web_graph_search
+    get:
+      tags:
+        - web
+        - graph
+        - graphSearch
+      summary: Results for searchField
+      description: Returns search results for the string entered in the searchField in the top menu
+      produces: 
+        - text/html
+      operationId: searchField
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/searchParam"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+
+#########
+# NODES #
+## Movies ## 
+### JSON only API: Create (one), read (several), read (one), update(one), and delete (one) movie(s) ###
+  /api/movies:
+    x-swagger-router-controller: context_json_api_movies
+    post:
+      tags:
+        - api
+        - nodes
+        - movies
+      summary: Creates movie
+      description: Creates a new movie entry via JSON API
+      operationId: create
+      parameters:
+        - name: movie
+          required: true
+          in: body
+          description: a new movies details
+          schema:
+            $ref: "#/definitions/MovieBody"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/MovieBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    get:
+      tags:
+        - api
+        - nodes
+        - movies
+      summary: Reads several movies
+      description: Returns a list of movies via JSON API with optional filter by released year passed in as inQeryParam
+      operationId: readBulk
+      parameters:
+        - name: released
+          in: query
+          description: filters movies by released date
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/MoviesListBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/movies/{id}:
+    x-swagger-router-controller: context_json_api_movies
+    get:
+      tags:
+        - api
+        - nodes
+        - movies
+      summary: Reads one movie
+      description: Returns a single movie entry by a given id via inPathParam
+      operationId: read
+      parameters:
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/MovieBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      tags:
+        - api
+        - nodes
+        - movies
+      summary: Updates movie
+      description: Updates a single movie entry by a given id via inPathParam
+      operationId: update
+      parameters:
+        - $ref: "#/parameters/id"
+        - name: movie
+          required: true
+          in: body
+          description: Properties to be updated
+          schema:
+            $ref: "#/definitions/MovieBody"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/MovieBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      tags:
+        - api
+        - nodes
+        - movies
+      summary: Deletes movie
+      description: Deletes a single movie entry by a given id via inPathParam
+      operationId: delete
+      parameters:
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/DeleteResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+### nodeSearch ###          
+#### JSON only API: Read distinct values from movie properties to use e.g. in a dropdown for inQueryParams ####
+  /api/movies/search/distinctProperties:
+    x-swagger-router-controller: context_json_api_movies_search
+    get:
+      tags:
+        - api
+        - nodes
+        - movies
+        - nodeSearch
+      summary: All distinct values of a property
+      description: Returns JSON with an array of all distinct values from a movie property passed in as inQeryParam 
+      operationId: distinctProperties
+      parameters:
+        - $ref: "#/parameters/propertyName"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphSearchBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+### HTML Web:  Create (one), read (several), read (one), update(one), and delete (one) movie(s) ###
+  /{locale}/movies/create:
+    x-swagger-router-controller: context_html_web_movies
+    get:
+      tags:
+        - web
+        - nodes
+        - movies
+      summary: Create movie page (GET)
+      description: Returns a page with movie creation from
+      produces: 
+        - text/html
+      operationId: getCreate
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+    post:
+      tags:
+        - web
+        - nodes
+        - movies
+      summary: Movie create target (POST)
+      description: Creates a new movie entry via Web (HTML in Browser) and then redirects to read this movie (Code '302' is the default for a successful redirect in express.js)
+      consumes:
+        - application/x-www-form-urlencoded
+      produces: 
+        - text/html
+      operationId: create
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/title"
+        - $ref: "#/parameters/tagline"
+        - $ref: "#/parameters/released"
+      responses:
+        "302":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/movies:  
+    x-swagger-router-controller: context_html_web_movies
+    get:
+      tags:
+        - web
+        - nodes
+        - movies
+      summary: Reads several movies
+      description: Returns a page with a list of movies with optional filter by released year passed in as inQeryParam
+      produces: 
+        - text/html
+      operationId: readBulk
+      parameters:
+        - $ref: "#/parameters/locale"
+        - name: released
+          in: query
+          description: Filters movies by released date
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/movies/read/{id}:
+    x-swagger-router-controller: context_html_web_movies
+    get:
+      tags:
+        - web
+        - nodes
+        - movies
+      summary: Reads one movie
+      description: Returns a page with a single movie entry by a given id via inPathParam
+      operationId: read
+      produces: 
+        - text/html
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/movies/update/{id}:
+    x-swagger-router-controller: context_html_web_movies
+    get:
+      tags:
+        - web
+        - nodes
+        - movies
+      summary: Update movie page (GET)
+      description: Returns html page with a movie update form by a given id via inPathParam
+      produces: 
+        - text/html
+      operationId: getUpdate
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+    post:
+      summary: Movie update target (POST)
+      description: Updates a single movie entry by a given id via inPathParam (without redirect)
+      consumes:
+        - application/x-www-form-urlencoded
+      produces: 
+        - text/html
+      operationId: update
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+        - $ref: "#/parameters/title"
+        - $ref: "#/parameters/tagline"
+        - $ref: "#/parameters/released"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/movies/delete/{id}:
+    x-swagger-router-controller: context_html_web_movies
+    post:
+      tags:
+        - web
+        - nodes
+        - movies
+      summary: Movie delete target (POST)
+      description: Deletes a single movie entry by a given id via confirm() and alert() (witout any .jade view)
+      consumes:
+        - application/octet-stream
+      operationId: delete
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success 
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+
+## Persons ## 
+### JSON only API: Create (one), read (several), read (one), update(one), and delete (one) person(s) ###
+  /api/persons:
+    x-swagger-router-controller: context_json_api_persons
+    post:
+      tags:
+        - api
+        - nodes
+        - persons
+      summary: Creates person
+      description: Creates a new person entry via JSON API
+      operationId: create
+      parameters:
+        - name: person
+          required: true
+          in: body
+          description: a new persons details
+          schema:
+            $ref: "#/definitions/PersonBody"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/PersonBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    get:
+      tags:
+        - api
+        - nodes
+        - persons
+      summary: Reads several persons
+      description: Returns a list of persons via JSON API with optional filter by birth year passed in as inQeryParam
+      operationId: readBulk
+      parameters:
+        - name: born
+          in: query
+          description: filters persons by birth date
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/PersonsListBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/persons/{id}:
+    x-swagger-router-controller: context_json_api_persons
+    get:
+      tags:
+        - api
+        - nodes
+        - persons
+      summary: Reads one person
+      description: Returns a single person entry by a given id via inPathParam
+      operationId: read
+      parameters:
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/PersonBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      tags:
+        - api
+        - nodes
+        - persons
+      summary: Updates person
+      description: Updates a single person entry by a given id via inPathParam
+      operationId: update
+      parameters:
+        - $ref: "#/parameters/id"
+        - name: person
+          required: true
+          in: body
+          description: Properties to be updated
+          schema:
+            $ref: "#/definitions/PersonBody"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/PersonBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      tags:
+        - api
+        - nodes
+        - persons
+      summary: Deletes person
+      description: Deletes a single person entry by a given id via inPathParam
+      operationId: delete
+      parameters:
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/DeleteResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+### nodeSearch ###
+#### JSON only API: Read distinct values from person properties to use e.g. in a dropdown for inQueryParams ####  
+  /api/persons/search/distinctProperties:
+    x-swagger-router-controller: context_json_api_persons_search
+    get:
+      tags:
+        - api
+        - nodes
+        - persons
+        - nodeSearch
+      summary: All distinct values of a person property
+      description: Returns JSON with an array of all distinct values from a person property passed in as inQeryParam
+      operationId: distinctProperties
+      parameters:
+        - $ref: "#/parameters/propertyName"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GraphSearchBody"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+### HTML Web: Create (one), read (several), read (one), update(one), and delete (one) person(s) ###
+  /{locale}/persons/create:
+    x-swagger-router-controller: context_html_web_persons
+    get:
+      tags:
+        - web
+        - nodes
+        - persons
+      summary: Create person page (GET)
+      description: Returns html page with person creation form
+      produces: 
+        - text/html
+      operationId: getCreate
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+    post:
+      tags:
+        - web
+        - nodes
+        - persons
+      summary: Person create target (POST)
+      description: Creates a new person entry via Web (HTML in Browser) and then redirects to read this movie (Code '302' is the default for a successful redirect in express.js)
+      consumes:
+        - application/x-www-form-urlencoded
+      produces: 
+        - text/html
+      operationId: create
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/name"
+        - $ref: "#/parameters/born"
+      responses:
+        "302":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/persons:
+    x-swagger-router-controller: context_html_web_persons
+    get:
+      tags:
+        - web
+        - nodes
+        - persons
+      summary: Reads several persons
+      description: Returns a list of persons with optional filter by birth year passed in as inQeryParam
+      produces: 
+        - text/html
+      operationId: readBulk
+      parameters:
+        - $ref: "#/parameters/locale"
+        - name: born
+          in: query
+          description: filters persons by birth date
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/persons/read/{id}:
+    x-swagger-router-controller: context_html_web_persons
+    get:
+      tags:
+        - web
+        - nodes
+        - persons
+      summary: Reads one person
+      description: Returns a single person entry by a given id via inPathParam
+      operationId: read
+      produces: 
+        - text/html
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/persons/update/{id}:
+    x-swagger-router-controller: context_html_web_persons
+    get:
+      tags:
+        - web
+        - nodes
+        - persons
+      summary: Update person page (GET)
+      description: Returns html page with a person update form
+      produces: 
+        - text/html
+      operationId: getUpdate
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+    post:
+      tags:
+        - web
+        - nodes
+        - persons
+      summary: Person update target (POST)
+      description: Updates a single person entry by a given id via inPathParam (without redirect)
+      consumes:
+        - application/x-www-form-urlencoded
+      produces: 
+        - text/html
+      operationId: update
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+        - $ref: "#/parameters/name"
+        - $ref: "#/parameters/born"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/persons/delete/{id}:
+    x-swagger-router-controller: context_html_web_persons
+    post:
+      tags:
+        - web
+        - nodes
+        - persons
+      summary: Person delete target (POST)
+      description: Deletes a single person entry by a given id via confirm() and alert() (witout any .jade view)
+      consumes:
+        - application/octet-stream
+      operationId: delete
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/id"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+
+#################
+# DOCUMENTATION #
+## Swagger default route for raw documentation ##
   /swagger:
     x-swagger-pipe: swagger_raw
-# complex objects have schema definitions
+
+###############
+# DEFINITIONS #
+
+## Reusable Parameters ##
+parameters:
+
+### General ###
+  locale:
+    name: locale
+    required: true
+    in: path
+    description: Used for detecting and setting the UI language.
+    type: string
+    enum: [ en, es, de, fr ] 
+    # @TODO: Move locale (enum) to app or context config
+  id:
+    name: id
+    required: true
+    description: The id (as provided by the database) for an instance of a nodeType or a relationshipType.
+    in: path
+    type: integer
+  propertyName:
+    name: propertyName
+    required: true
+    in: query
+    description: The name of the property of which all distinct values are to be returned.
+    type: string
+    enum: [ released, born ] 
+  relationshipName:
+    name: relationshipName
+    required: true
+    in: query
+    description: The name of the relationship for which the count values are to be returned.
+    type: string
+    enum: [ ACTED_IN ]
+  searchParam:
+    name: searchParam
+    required: true
+    in: query
+    description: The search string as entered in the searchField
+    type: string
+
+### Movies ###
+  title:
+    name: title
+    required: true
+    in: formData
+    description: The (main) title of the movie.
+    type: string
+  tagline:
+    name: tagline
+    required: true
+    in: formData
+    description: The tagline, slogan or subtitle which the movie has.
+    type: string
+  released:
+    name: released
+    required: true
+    in: formData
+    description: They year YYYY which the movie was released in.
+    type: integer
+
+### Persons ###
+  name:
+    name: name
+    required: true
+    in: formData
+    description: a new persons full name
+    type: string
+  born:
+    name: born
+    required: true
+    in: formData
+    description: a new persons birth date
+    type: integer
+
+### Relationships ###
+  source:
+    name: source
+    required: true
+    in: formData
+    description: A new relationships startpoint (person)
+    type: string
+  type:  
+    name: type
+    required: true
+    in: formData
+    description: A new relationships type
+    type: string
+  target:
+    name: target
+    required: true
+    in: formData
+    description: A new relationships endpoint (movie or person)
+    type: string
+  property:
+    name: property
+    required: false
+    in: formData
+    description: A new relationships property (optional and only for the types ACTED_IN and REVIEWED)
+    type: string
+
+## Complex Objects ##
 definitions:
-  HelloWorldResponse:
+
+### Graph ###
+  GraphListBody:
     required:
-      - message
+      - graph
     properties:
-      message:
+      graph:
+        type: object
+        required:
+          - nodes
+          # - links
+        properties:
+          nodes:
+            type: array
+            items:
+              $ref: "#/definitions/Node"
+          links:
+            type: array
+            items:
+              $ref: "#/definitions/Link"
+  
+  Node:
+    type: object
+    required:
+      - id
+    properties:
+      id:
         type: string
+      label:
+        type: string
+      tagline:
+        type: string
+      title:
+        type: string
+      released:
+        type: integer
+      name:
+        type: string
+      born:
+        type: integer
+
+  Link:
+    type: object
+    required:
+      - source
+      - target
+    properties:
+      source:
+        type: integer
+      target:
+        type: integer
+      value:
+        type: string
+
+  GraphSearchBody:
+    required:
+      - columns
+      - data
+    properties:
+      columns:
+        type: array
+        items:
+          type: string
+      data:
+        type: array
+        items:
+          type: object
+          required:
+            - row
+          # properties:
+          #   row:
+          #   meta:
+
+### Movies ###
+  MoviesListBody:
+    required:
+      - movies
+    properties:
+      movies:
+        type: array
+        items:
+          $ref: "#/definitions/Movie"
+  
+  Movie:
+    type: object
+    required:
+      # - tagline
+      - title
+      # - released
+    properties:
+      tagline:
+        type: string
+      title:
+        type: string
+      released:
+        type: integer
+      # rank:
+      #   type: integer
+      #   default: 5
+      #   minimum: 1
+      #   maximum: 10
+
+  MovieBody:
+    required:
+      - movie
+    properties:
+      movie:
+        $ref: "#/definitions/Movie"
+
+### Persons ###
+  PersonsListBody:
+    required:
+      - persons
+    properties:
+      persons:
+        type: array
+        items:
+          $ref: "#/definitions/Person"
+
+  Person:
+    type: object
+    required:
+      - name
+      # - born
+    properties:
+      name:
+        type: string
+      born:
+        type: integer
+      rank:
+        type: integer
+        default: 5
+        minimum: 1
+        maximum: 10
+
+  PersonBody:
+    required:
+      - person
+    properties:
+      person:
+        $ref: "#/definitions/Person"
+
+### Responses ###
+  DeleteResponse:
+    required:
+      - nodes_deleted
+    properties:
+      nodes_deleted:
+        type: integer
   ErrorResponse:
     required:
       - message
     properties:
       message:
         type: string
+  ErrorResponseWeb:
+    # description: Error
+    type: string

@@ -1,0 +1,24 @@
+extends ../layout
+include ../mixins/readBulkMdlCards.jade
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.mdl-typography--display-1-color-contrast #{localesStrings['<InstancePlural>']}
+    br
+    .flixnet-logo-font.mdl-typography--font-light.mdl-typography--subhead #{localesStrings['Filter Movies by Release Year']}:&nbsp;
+      select#released(name='released', onchange="app.location.changeLocationReadBulk(self.location.pathname, this.options[this.selectedIndex].value, 'released')")
+        option(selected) #{localesStrings['All years']}
+  .flixnet-mdl-card-section
+    br
+    if inQueryParam
+      if inQueryParam === -1
+        .flixnet-logo-font.mdl-typography--font-light.mdl-typography--display-1-color-contrast #{localesStrings['Results for all movies with unknown release year']}  : 
+      else
+        .flixnet-logo-font.mdl-typography--font-light.mdl-typography--display-1-color-contrast #{localesStrings['Results for all movies of']} #{inQueryParam} : 
+    else
+      .flixnet-logo-font.mdl-typography--font-light.mdl-typography--display-1-color-contrast #{localesStrings['Results for all movies']}: 
+    br
+    +moviesReadBulkMdlCards
+  script.
+    app.content.htmlElements.createOptionsReadBulk(document.getElementById('released'), '/api/movies/search/distinctProperties?propertyName=released', '#{inQueryParam}', "#{localesStrings['Unknown']}");
+
