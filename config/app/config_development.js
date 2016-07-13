@@ -6,9 +6,8 @@ var appConfig = {
   environment: function() {
     var environment = {
       name: 'development',
-      // directory: '../../../nodeTestAppsEnvironments/nodeTestApp16Env/development/',
       directory: process.env.APP_CONFIG_ENV_DIR,
-      file:'nodeApp01Env.json',
+      file:'dev1_env_vars.json',
     };
     console.log(process.env.APP_CONFIG_ENV_DIR);
     return environment;
@@ -43,16 +42,12 @@ var appConfig = {
       },
       https: {
         port: 7473,
-        ca: '/etc/ssl/ca_nodeApp01Dev_root.pem',
-        // ca: 'pki/ca_nodeTestApp16Dev_root.pem',
-        // ca: process.env.APP_CONFIG_ENV_DIR + 'ca_nodeApp01Dev_root.pem',
-        // url: 'https://' + db.ip  + ':' + db.https.port + '/db/data/transaction/commit'
+        ca: '/etc/ssl/ca_dev1_root.pem',
       },
       request: {
         method: 'POST'  // not used
       },
       batch: {
-        // url: 'https://' + appConfig.db.ip  + ':' + appConfig.db.https.port +'/db/data/batch',
         job: {
           method: 'POST',
           url:'/cypher',
@@ -72,7 +67,6 @@ var appConfig = {
   var env = {};
   var file = appConfig.environment().directory + appConfig.environment().file;
 
-  // if (fs.existsSync(file)) 
   try {
     env = fs.readFileSync(file, 'UTF-8');
     env = JSON.parse(env);
