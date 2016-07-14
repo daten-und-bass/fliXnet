@@ -1270,6 +1270,7 @@ parameters:
     in: formData
     description: A new relationships property (optional and only for the types ACTED_IN and REVIEWED)
     type: string
+    #enum:@TODO
 
 ## Complex Objects ##
 definitions:
