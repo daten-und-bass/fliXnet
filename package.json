@@ -3,7 +3,16 @@
   "version": "0.9.0",
   "private": true,
   "description": "A Containerized NodeJS Sample Implementation of Neo4j's Graph Movie Database via OpenAPI (Swagger)",
-  "keywords": [],
+  "keywords": [
+    "express",
+    "jade",
+    "nosql",
+    "neo4j",
+    "web app",
+    "swagger",
+    "openapi",
+    "api"
+  ],
   "author": "arne-at-daten-und-bass",
   "license": "MIT",
   "main": "app.js",
