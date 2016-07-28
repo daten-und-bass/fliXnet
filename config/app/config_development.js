@@ -7,7 +7,7 @@ var appConfig = {
     var environment = {
       name: 'development',
       directory: process.env.APP_CONFIG_ENV_DIR,
-      file:'dev1_env_vars.json',
+      file:process.env.APP_CONFIG_ENV_FILE,
     };
     console.log(process.env.APP_CONFIG_ENV_DIR);
     return environment;
@@ -15,14 +15,14 @@ var appConfig = {
 
   web: function() {
     var web = {
-      ip: '192.168.3.11', // not used
+      ip: '192.168.101.1', // not used
       http: {
         port: 10010, // not used
       },
       https: {
         port: 10011,
-        key: '/etc/ssl/dev1_s3_wb_1_key.pem',
-        crt: '/etc/ssl/dev1_s3_wb_1_pub.pem',
+        key: '/etc/ssl/app1_dev1_s2_wb_1_key.pem',
+        crt: '/etc/ssl/app1_dev1_s2_wb_1_pub.pem',
       },
     };
 
@@ -31,7 +31,7 @@ var appConfig = {
 
   db: function() {
     var db = {
-      ip: '192.168.3.12',
+      ip: '192.168.101.11',
       headers: {
         Authorization: process.env.DB_PASS,
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ var appConfig = {
       },
       https: {
         port: 7473,
-        ca: '/etc/ssl/ca_dev1_root.pem',
+        ca: '/etc/ssl/pki1_dev1_ca_pub.pem',
       },
       request: {
         method: 'POST'  // not used

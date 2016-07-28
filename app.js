@@ -18,7 +18,7 @@ var app = require('express')();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.set('trust proxy', 'loopback, 192.168.2.11');
+app.set('trust proxy', 'loopback, 192.168.1.1');
 
 // Force to use ONLY HTTPS
 app.use(helmet());

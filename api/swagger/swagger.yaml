@@ -4,11 +4,11 @@ swagger: "2.0"
 info:
   version: "0.0.9"
   title: nodeTestApp16
-host: dockerHostIp:10011
+host: 192.168.1.11:10011
 basePath: /
 schemes:
   # tip: remove http to make production-grade
-  - http
+  #- http
   - https
 consumes:
   - application/json
