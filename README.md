@@ -20,3 +20,5 @@ https://fliXnet.daten-und-bass.io/api
 ![fliXnet ALL MOVIES page](/public/images/screenshots/ALL_MOVIES_page.png?raw=true "fliXnet ALL MOVIES page")
 
 ![fliXnet ONE PERSON page](/public/images/screenshots/ONE_PERSON_page.png?raw=true "fliXnet ONE PERSON page")
+
+![fliXnet SEARCHResults page](/public/images/screenshots/SEARCH_Results_page.png?raw=true "fliXnet SEARCH Results page")
