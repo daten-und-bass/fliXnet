@@ -182,10 +182,11 @@ var callbacks = {
 
               switch (operationId) {
                 case api.paths[basePath + '/create'].get.operationId:
-                  responseObjectToSwagger.persons = callbacks.utils.escapeStringProperties(responseBodyFromNeo[0].body.data);
-                  // responseObjectToSwagger.persons = responseBodyFromNeo[0].body.data;
+                  // responseObjectToSwagger.persons = callbacks.utils.escapeStringProperties(responseBodyFromNeo[0].body.data);
+                  responseObjectToSwagger.persons = responseBodyFromNeo[0].body.data;
                   responseObjectToSwagger.relationships = relationshipTypes;
-                  responseObjectToSwagger.movies = callbacks.utils.escapeStringProperties(responseBodyFromNeo[1].body.data);
+                  responseObjectToSwagger.movies = responseBodyFromNeo[1].body.data;
+                  // responseObjectToSwagger.movies = callbacks.utils.escapeStringProperties(responseBodyFromNeo[1].body.data);
                   break;
                 case api.paths[basePath + '/create'].post.operationId:
                   responseObjectToSwagger.slogan = responseObjectToSwagger.localesStrings['New Relationship created'];

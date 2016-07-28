@@ -593,6 +593,7 @@ var app = (function() {
         asHint.style.display = 'none';
         property.style.display = 'none';
         target.options.length = 0;
+        property.required = false;
         target.appendChild(personsList.cloneNode(true));
         break;
       default:

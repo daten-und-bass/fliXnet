@@ -17,15 +17,8 @@ block content
       br
       +relationshipCreateForm
       br
-      p#asHint *Please enter multiple roles as a comma separated list
-    script(src='/purify.min.js')
-      //- console.log();
-
-      
+      p#asHint *Please enter multiple roles as a comma separated list      
     script.
-      //- console.log('!{JSON.stringify(persons)}');
-      var clean = DOMPurify.sanitize("<script>alert(0)</script>");
-      console.log(clean);
       app.content.htmlElements.createOptionsRelationship(!{JSON.stringify(persons)}, !{JSON.stringify(relationships)}, !{JSON.stringify(movies)});
       document.getElementById('createRelationship').addEventListener('submit', function (event) {
         if(!document.getElementById('property').checkValidity()) {
