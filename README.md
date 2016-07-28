@@ -16,3 +16,7 @@ https://fliXnet.daten-und-bass.io/api
 ![fliXnet HOME page 2](/public/images/screenshots/HOME_page_2.png?raw=true "fliXnet HOME page 2")
 
 ![fliXnet SITE MENU](/public/images/screenshots/SITE_MENU.png?raw=true "fliXnet SITE MENU")
+
+![fliXnet ALL MOVIES page](/public/images/screenshots/ALL_MOVIES_page.png?raw=true "fliXnet ALL MOVIES page")
+
+![fliXnet ONE PERSON page](/public/images/screenshots/ONE_PERSON_page.png?raw=true "fliXnet ONE PERSON page")
