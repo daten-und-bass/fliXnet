@@ -11,10 +11,6 @@ https://fliXnet.daten-und-bass.io/api
 
 ## Screen Shots ##
 
-[Read more words!](docs/more_words.md)
-
-
-
 ![fliXnet HOME page 1](/public/images/screenshots/HOME_page_1.png?raw=true "fliXnet HOME page 1")
 
 ![fliXnet HOME page 2](/public/images/screenshots/HOME_page_2.pngraw=true "fliXnet HOME page 2")
