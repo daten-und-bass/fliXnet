@@ -8,7 +8,7 @@ var https = require('https');
 var helmet = require('helmet');
 var forceSSL = require('express-force-ssl');
 var app_config = require('./config/app');
-var options = {key: process.env.WEB_HTTPS_KEY, cert: process.env.WEB_HTTPS_CRT};
+// var options = {key: process.env.WEB_HTTPS_KEY, cert: process.env.WEB_HTTPS_CRT};
 
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
@@ -18,7 +18,7 @@ var app = require('express')();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.set('trust proxy', 'loopback, 192.168.1.1');
+app.set('trust proxy', 'loopback, 192.168.0.31');
 
 // Force to use ONLY HTTPS
 app.use(helmet());
@@ -56,6 +56,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
 // Create HTTPS Server with options from above and port from (non-swagger) config file app_config
 var httpsServer = https.createServer({key: process.env.WEB_HTTPS_KEY, cert: process.env.WEB_HTTPS_CRT}, app);
+// var httpsServer = https.createServer({key: process.env.FLIXNET_WEB_HTTPS_KEY, cert: process.env.FLIXNET_WEB_HTTPS_CRT}, app);
 httpsServer.listen(app_config.web().https.port);
 
 module.exports = app; 
