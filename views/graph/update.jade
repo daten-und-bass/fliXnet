@@ -2,6 +2,15 @@ extends ../layout
 include ../mixins/updateForms.jade
 
 block content
+
+  style.
+    input:invalid {
+      border: 1px solid red !important;
+    }
+
+    input:valid! {
+      border: 1px solid green !important;
+    }
   .flixnet-top-section.mdl-typography--text-center
     .flixnet-logo-font.flixnet-sub-slogan #{localesStrings['Update Relationship']}:
     .flixnet-logo-font.mdl-typography--font-light
@@ -14,5 +23,12 @@ block content
       document.getElementById('optionType').textContent = '#{relationship[1]}';
       document.getElementById('optionTarget').textContent = "#{relationship[2]}";
       document.getElementById('property').value = '#{relationship[3]}';
+      document.getElementById('rating').value = '#{relationship[4]}';
 
       app.content.htmlElements.toggleViewUpdateRelationship(!{JSON.stringify(relationship)});
+
+      document.getElementById('updateRelationship').addEventListener('submit', function (event) {
+        if(!document.getElementById('property').checkValidity() || !document.getElementById('rating').checkValidity() ) {
+          event.preventDefault();
+        }
+      }, false); 

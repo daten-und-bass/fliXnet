@@ -5,18 +5,6 @@ var app = (function() {
   var paginationNodesTable = 1;
   var paginationGraphTable = 0;
 
-  var personsList;
-  var relationshipsList;
-  var movieList;
-
-  var source;
-  var type;
-  var target;
-  var asLabel;
-  var property;
-
-  var updateLink;
-
   function searchField(event, locale) {
     var searchField = document.getElementById('search-field');
     if (event.keyCode == 13 && searchField.value.length > 0) {
@@ -360,7 +348,6 @@ var app = (function() {
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        // elementArray = JSON.parse(xhr.responseText).data;
         elementArray = parseJsonTryer(xhr.responseText).data;
         
         if (element === 'TopColleagues' && elementArray.length === 0) {
@@ -395,12 +382,10 @@ var app = (function() {
                   innnerIMovieMedia.className = 'material-icons';
                   innnerIMovieMedia.style.opacity = '0.46';
                   if (element === 'MovieCast') {
-                    // console.log(element);
                     innnerIMovieMedia.textContent = 'perm_contact_calendar \v'; 
                   } else {
                     innnerIMovieMedia.textContent = 'movie \v';
                   }
-                  // innnerIMovieMedia.textContent = 'movie &nbsp;';
               var innnerH4AmountRoles = document.createElement('h4');
                   innnerH4AmountRoles.className ='mdl-card__title-text';
                   innnerH4AmountRoles.textContent = elementArray[index].row[2];
@@ -471,8 +456,9 @@ var app = (function() {
   }
 
   function toggleViewReadRelationship(value, titleString) {
-    property = document.getElementById('property');
-    updateLink = document.getElementById('updateLink'); 
+    var property = document.getElementById('property');
+    var rating = document.getElementById('rating');
+    var updateLink = document.getElementById('updateLink');
 
     switch(value[1]) {
       case 'ACTED_IN':
@@ -484,39 +470,36 @@ var app = (function() {
       case 'WROTE':
       case 'FOLLOWS':
         property.style.display = 'none';
+        rating.style.display = 'none';
         updateLinkDeactivator(updateLink, titleString);
         break;
-      // case 'PRODUCED':
-      //   property.style.display = 'none';
-      //   updateLinkDeactivator(updateLink, titleString);
-      //   break;
       case 'REVIEWED':
         property.style.display = 'block';
         property.textContent = 'Summary: ' + value[3] + '.';
+        if (value[4]) {
+          rating.textContent = 'Rating: ' + value[4] + '.';
+        } else {
+          rating.textContent = 'Rating: n.a.';
+        }
+        
         break;
-      // case 'WROTE':
-      //   property.style.display = 'none';
-      //   updateLinkDeactivator(updateLink, titleString);
-      //   break;
-      // case 'FOLLOWS':
-      //   property.style.display = 'none';
-      //   updateLinkDeactivator(updateLink, titleString);
-      //   break;
       default:
         console.log('default');
     }
   }
 
   function toggleViewUpdateRelationship(value) {
-    asLabel = document.getElementById('asLabel')
-    property = document.getElementById('property');
-    asHint = document.getElementById('asHint');
+    var asLabel = document.getElementById('asLabel')
+    var property = document.getElementById('property');
+    var rating = document.getElementById('rating');
+    var asHint = document.getElementById('asHint');
 
     switch(value[1]) {
       case 'ACTED_IN':
         property.style.display = 'inline';
         asLabel.style.display = 'inline';
         asHint.style.display = 'inline';
+        rating.style.display = 'none';
         break;
       case 'DIRECTED':
       case 'PRODUCED':
@@ -525,82 +508,15 @@ var app = (function() {
         property.style.display = 'none';
         asLabel.style.display = 'none';
         asHint.style.display = 'none';
+        rating.style.display = 'none';
         break;
-      // case 'PRODUCED':
-      //   property.style.display = 'none';
-      //   asLabel.style.display = 'none';
-      //   break;
       case 'REVIEWED':
+        asHint.style.display = 'none';
         property.style.display = 'inline';
+        rating.style.display = 'inline';
         asLabel.textContent = ' Summary: '
         property.textContent = value[4];
-        break;
-      // case 'WROTE':
-      //   property.style.display = 'none';
-      //   asLabel.style.display = 'none';
-      //   break;
-      // case 'FOLLOWS':
-      //   property.style.display = 'none';
-      //   asLabel.style.display = 'none';
-      //   break;
-      default:
-        console.log('default');
-    }
-  }
-
-  function optionCreator(elementArray, unknownString, hasID) {
-    var documentFragment = document.createDocumentFragment();
-    elementArray.forEach(function(element, index) {
-      var option = document.createElement('option');
-      if (element === -1) {
-        option.textContent = unknownString;
-      } else {
-        option.textContent = hasID ? element[0] : element;
-      } 
-      option.value = hasID ? element[1] : element;
-      documentFragment.appendChild(option);
-    });
-    return documentFragment;
-  }
-
-  function targetFieldChanger() {
-    var valueText = type.options[type.selectedIndex].value;
-    switch(valueText) {
-      case 'ACTED_IN':
-        target.options.length = 0;
-        target.appendChild(movieList.cloneNode(true));
-        asLabel.style.display = 'inline';
-        asHint.style.display = 'inline';
-        property.required = true;
-        property.placeholder = 'Role (in English)';
-        property.size=20;
-        property.style.display = 'inline';
-        break;
-      case 'DIRECTED':
-      case 'PRODUCED':
-      case 'REVIEWED':
-      case 'WROTE':
-        target.options.length = 0;
-        target.appendChild(movieList.cloneNode(true));
-        asLabel.style.display = 'none';
-        asHint.style.display = 'none';
-        if(valueText === 'REVIEWED') {
-          property.placeholder='Summary (in English)';
-          property.size=50;
-          property.style.display = 'inline';
-          property.required = true;
-        } else {
-          property.style.display = 'none';
-          property.required = false;
-        }  
-        break;
-      case 'FOLLOWS':
-        asLabel.style.display = 'none';
-        asHint.style.display = 'none';
-        property.style.display = 'none';
-        target.options.length = 0;
-        property.required = false;
-        target.appendChild(personsList.cloneNode(true));
+        rating.textContent = value[5];
         break;
       default:
         console.log('default');
@@ -608,21 +524,85 @@ var app = (function() {
   }
 
   function createOptionsRelationship(persons, relationships, movies) {
-    personsList = optionCreator(persons, '', true);
-    relationshipsList = optionCreator(relationships, '', false);
-    movieList = optionCreator(movies, '', true);
+    var personsList = optionCreator(persons, '', true);
+    var relationshipsList = optionCreator(relationships, '', false);
+    var movieList = optionCreator(movies, '', true);
 
-    source = document.getElementById('source');
-    type = document.getElementById('type');
-    target = document.getElementById('target');
-    asLabel = document.getElementById('asLabel');
-    property = document.getElementById('property');
+    var source = document.getElementById('source');
+    var type = document.getElementById('type');
+    var target = document.getElementById('target');
+    var asLabel = document.getElementById('asLabel');
+    var property = document.getElementById('property');
+    var rating = document.getElementById('rating');
 
     type.onchange = targetFieldChanger;
     
     source.appendChild(personsList.cloneNode(true));
     type.appendChild(relationshipsList.cloneNode(true));
     target.appendChild(movieList.cloneNode(true));
+
+    function optionCreator(elementArray, unknownString, hasID) {
+      var documentFragment = document.createDocumentFragment();
+      elementArray.forEach(function(element, index) {
+        var option = document.createElement('option');
+        if (element === -1) {
+          option.textContent = unknownString;
+        } else {
+          option.textContent = hasID ? element[0] : element;
+        } 
+        option.value = hasID ? element[1] : element;
+        documentFragment.appendChild(option);
+      });
+      return documentFragment;
+    }
+
+    function targetFieldChanger() {
+      var valueText = type.options[type.selectedIndex].value;
+      switch(valueText) {
+        case 'ACTED_IN':
+          target.options.length = 0;
+          target.appendChild(movieList.cloneNode(true));
+          asLabel.style.display = 'inline';
+          asHint.style.display = 'inline';
+          property.required = true;
+          property.placeholder = 'Role (in English)';
+          property.size=20;
+          property.style.display = 'inline';
+          rating.style.display = 'none';
+          break;
+        case 'DIRECTED':
+        case 'PRODUCED':
+        case 'REVIEWED':
+        case 'WROTE':
+          target.options.length = 0;
+          target.appendChild(movieList.cloneNode(true));
+          asLabel.style.display = 'none';
+          asHint.style.display = 'none';
+          if(valueText === 'REVIEWED') {
+            property.placeholder='Summary (in English)';
+            rating.placeholder='Rating 0-100';
+            property.size=50;
+            property.style.display = 'inline';
+            rating.style.display = 'inline';
+            property.required = true;
+          } else {
+            property.style.display = 'none';
+            rating.style.display = 'none';
+            property.required = false;
+          }  
+          break;
+        case 'FOLLOWS':
+          asLabel.style.display = 'none';
+          asHint.style.display = 'none';
+          property.style.display = 'none';
+          target.options.length = 0;
+          property.required = false;
+          target.appendChild(personsList.cloneNode(true));
+          break;
+        default:
+          console.log('default');
+      }
+    }
   }
 
   function createOptionsReadBulk(element, url, inQueryParam, unknownString) {
@@ -634,10 +614,9 @@ var app = (function() {
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        // distinctValues = JSON.parse(xhr.responseText).data[0].row[0];
+        
         distinctValues = parseJsonTryer(xhr.responseText).data[0].row[0];;
         isPropertyInAll = parseJsonTryer(xhr.responseText).data[0].row[1];
-        // if(JSON.parse(xhr.responseText).data[0].row[1] === false) {
         if(isPropertyInAll === false) {
           distinctValues.unshift(-1); 
         }        
@@ -697,7 +676,6 @@ var app = (function() {
       xhr.open('POST', encodeURI(url));
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-          // alert(deletedString + ": " + JSON.parse(xhr.responseText).relationship_deleted);
           alert(deletedString + ": " + parseJsonTryer(xhr.responseText).relationship_deleted);
           window.location.href = back;
         }
@@ -730,7 +708,6 @@ var app = (function() {
       xhr.open('POST', encodeURI(url));
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-          // alert(deletedString + ': ' + JSON.parse(xhr.responseText).nodes_deleted);
           alert(deletedString + ': ' + parseJsonTryer(xhr.responseText).nodes_deleted);
           window.location.href = back;
         }
@@ -755,7 +732,6 @@ var app = (function() {
     } catch(err) {
       alert(err.message);
     }
-    // console.log(typeof result);
 
     return result;
   }
