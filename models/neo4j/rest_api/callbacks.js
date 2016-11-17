@@ -1,7 +1,5 @@
 'use strict';
 
-var validator = require('validator');
-
 var callbacks = {
   main: function (api) {
     
@@ -183,11 +181,9 @@ var callbacks = {
 
               switch (operationId) {
                 case api.paths[basePath + '/create'].get.operationId:
-                  // responseObjectToSwagger.persons = callbacks.utils.escapeStringProperties(responseBodyFromNeo[0].body.data);
                   responseObjectToSwagger.persons = responseBodyFromNeo[0].body.data;
                   responseObjectToSwagger.relationships = relationshipTypes;
                   responseObjectToSwagger.movies = responseBodyFromNeo[1].body.data;
-                  // responseObjectToSwagger.movies = callbacks.utils.escapeStringProperties(responseBodyFromNeo[1].body.data);
                   break;
                 case api.paths[basePath + '/create'].post.operationId:
                   responseObjectToSwagger.slogan = responseObjectToSwagger.localesStrings['New Relationship created'];
@@ -197,7 +193,6 @@ var callbacks = {
                   return res.redirect(url);
                 case api.paths[basePath + '/read' + idPathTemplate].get.operationId:
                   responseObjectToSwagger.slogan = responseObjectToSwagger.localesStrings['Relationship'];
-                  // responseObjectToSwagger.relationship = callbacks.utils.escapeAllProperties(responseBodyFromNeo.results[0].data[0].row);
                   responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0].row;
                   break;
                 case api.paths[basePath + '/update' + idPathTemplate].get.operationId:
@@ -341,35 +336,6 @@ var callbacks = {
       });
 
       return { nodes:nodes, links:links };
-    },
-    escapeStringProperties: function (dirty) {
-      var clean = [];
-
-      dirty.map(function(element, index) {
-        clean[index] = [validator.escape(element[0]), element[1]];          
-      });
-
-      return clean;
-    },
-    escapeAllProperties: function (dirty) {
-      var clean = [];
-      
-      dirty.forEach(function(element, index) {
-        if(typeof(element) === 'string') {
-          clean[index] = validator.escape(element); 
-        } else if (Array.isArray(element)) {
-          var innerClean = [];
-          element.forEach(function (innerElement, innerIndex) {
-            innerClean[innerIndex] = validator.escape(innerElement);
-          });
-          clean[index] = innerClean;
-          // console.log(innerClean);
-        } else {
-          clean[index] = element; 
-        }
-      });
-      
-      return clean;
     },
   },
 };
