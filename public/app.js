@@ -95,7 +95,8 @@ var app = (function() {
 
       var linkLine = link.append('line');  
 
-      var linkText = link.append('text')
+      var linkText = link.append("svg:a")
+          .append('text')
           .attr('text-anchor', 'middle')
           .attr('dy', function(d) { return 1 - d.linkCount + 'em'; })
           .text(function(d) { return d.value; });
@@ -133,6 +134,8 @@ var app = (function() {
           .attr('dy', '.35em')
           .style('fill', function(d) { return color(d.label); });
 
+      linkText.on('dblclick', function (d) {return self.location = '/' + locale + '/graph/relationships/read/' + d.id;});
+
       node.on('dblclick', dblclick);
 
       nodeIcon.on('mouseenter', mouseenter);
@@ -148,6 +151,7 @@ var app = (function() {
 
         linkText.attr('transform', function(d) {
               var angle = Math.atan((d.source.y - d.target.y) / (d.source.x - d.target.x)) * 180 / Math.PI;
+              if(isNaN(angle)) { angle = 0; }
               return 'translate(' + [((d.source.x + d.target.x) / 2), ((d.source.y + d.target.y) / 2)] + ')rotate(' + angle + ')';
             });
 
@@ -263,7 +267,7 @@ var app = (function() {
     createNodesTableBody('nodesTableBody', url);
   }
 
-  function createGraphTableBody(element, url) {
+  function createGraphTableBody(element, url, locale) {
     var elementArray = [];
     var oldTBody = document.getElementById(element);
     var newTBody = document.createElement('tbody');
@@ -300,6 +304,8 @@ var app = (function() {
             innterTd4.textContent = elementArray[index].row[3];
             innterTd4.className = 'mdl-data-table__cell--non-numeric';
           outerTr.appendChild(innterTd4);
+          outerTr.style.cursor = 'pointer';
+          outerTr.onclick = function () {return self.location = '/' + locale + '/graph/relationships/read/' + elementArray[index].row[4];};
 
           documentFragment.appendChild(outerTr);
         });
@@ -332,16 +338,16 @@ var app = (function() {
       }
     };
     xhr.send();
-  }
 
-  function paginateGraphTableBodyBackward() {
-    paginationGraphTable = paginationGraphTable - 6;
-    createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', paginationGraphTable);
-  }
+    function paginateGraphTableBodyBackward() {
+      paginationGraphTable = paginationGraphTable - 6;
+      createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', locale);
+    }
 
-  function paginateGraphTableBodyForward() {
-    paginationGraphTable = paginationGraphTable + 6;
-    createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', paginationGraphTable);
+    function paginateGraphTableBodyForward() {
+      paginationGraphTable = paginationGraphTable + 6;
+      createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', locale);
+    }
   }
 
   function createNodesMdlCardsDiv(element, url, locale, showString) {
@@ -646,6 +652,28 @@ var app = (function() {
     xhr.send();
   }
 
+  function checkInput(inputsArray, checkIcon, checkMessage, checkMessageString ) {
+    var valid = false;
+
+    valid = inputsArray.every(function (element, index, inputsArray) {
+      return element.checkValidity();
+    });
+
+    if(valid) {
+      checkIcon.style.color = 'rgb(76,175,80)';
+      checkIcon.innerText = 'check_circle';
+      checkMessage.innerText = '';
+
+      return true;
+    } else {
+      checkIcon.style.color = 'rgb(244,67,54)';
+      checkIcon.innerText = 'error';
+      checkMessage.innerText = checkMessageString;
+
+      return false;
+    }
+  }
+
   function urlValidator(url) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, false);
@@ -660,7 +688,6 @@ var app = (function() {
 
     var back;
     if (urlValidator(document.referrer)){
-      // console.log(urlValidator(document.referrer));
       back = document.referrer;
     } else {
       back = window.location.origin + '/' + nodeType;
@@ -694,7 +721,6 @@ var app = (function() {
     var back;
 
     if (urlValidator(document.referrer)){
-      console.log(urlValidator(document.referrer));
       back = document.referrer;
     } else {
       back = window.location.origin + '/' + nodeType;
@@ -729,7 +755,7 @@ var app = (function() {
     } catch(err) {
       alert(err.message);
     }
-    console.log(typeof result);
+    // console.log(typeof result);
 
     return result;
   }
@@ -753,13 +779,14 @@ var app = (function() {
         createNodesTableBody: createNodesTableBody,
         paginateNodesTableBodyBothWays: paginateNodesTableBodyBothWays,
         createGraphTableBody: createGraphTableBody,
-        paginateGraphTableBodyBackward: paginateGraphTableBodyBackward,
-        paginateGraphTableBodyForward: paginateGraphTableBodyForward,
         createNodesMdlCardsDiv: createNodesMdlCardsDiv,
         toggleViewReadRelationship: toggleViewReadRelationship,
         toggleViewUpdateRelationship: toggleViewUpdateRelationship,
         createOptionsRelationship: createOptionsRelationship,
         createOptionsReadBulk: createOptionsReadBulk,
+      },
+      validation: {
+        checkInput: checkInput,
       },
       userInteraction: {
         deleteRelationship: deleteRelationship,

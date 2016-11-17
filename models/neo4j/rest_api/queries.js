@@ -14,7 +14,7 @@ var queries = {
         create_REVIEWED: 'MATCH (p:Person), (m:Movie) WHERE id(p)={source} AND id(m)={target} CREATE (p)-[r:REVIEWED {summary: {property} }]->(m) RETURN p.name, type(r), id(r), m.title, r.summary',
         create_WROTE: 'MATCH (p:Person), (m:Movie) WHERE id(p)={source} AND id(m)={target} CREATE (p)-[r:WROTE]->(m) RETURN p.name, type(r), id(r), m.title',
         read: 'MATCH (m)-[r]->(n) WHERE id(r)={id} RETURN coalesce(m.title, m.name), type(r), coalesce(n.title, n.name), coalesce(r.roles, r.summary)',
-        readAllPaginated: 'MATCH (s)-[r]->(t) RETURN coalesce(s.name, s.title), type(r), r, coalesce(t.name, t.title) ORDER BY type(r) SKIP {offset} LIMIT {amount}',
+        readAllPaginated: 'MATCH (s)-[r]->(t) RETURN coalesce(s.name, s.title), type(r), r, coalesce(t.name, t.title), id(r) ORDER BY type(r) SKIP {offset} LIMIT {amount}',
         getUpdate: 'MATCH (m)-[r]->(n) WHERE id(r)={id} RETURN coalesce(m.title, m.name), type(r), coalesce(n.title, n.name), coalesce(r.roles, r.summary)',
         update_ACTED_IN: 'MATCH (m)-[r]->(n) WHERE id(r)={id} SET r.roles={property} RETURN coalesce(m.title, m.name), type(r), coalesce(n.title, n.name), coalesce(r.roles, r.summary)',   
         update_REVIEWED: 'MATCH (m)-[r]->(n) WHERE id(r)={id} SET r.summary={property} RETURN coalesce(m.title, m.name), type(r), coalesce(n.title, n.name), coalesce(r.roles, r.summary)',

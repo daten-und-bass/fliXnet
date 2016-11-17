@@ -136,6 +136,7 @@
   display: none; 
 }
 .link {
+  cursor: pointer;
   font-size: xx-small;
   stroke: #999;
   stroke-opacity: .6;

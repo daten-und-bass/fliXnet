@@ -332,6 +332,7 @@ var callbacks = {
         links = links.concat(row.graph.relationships.map(function(r) {
 
           return {
+            id: r.id,
             source: callbacks.utils.idIndex(nodes, r.startNode),
             target: callbacks.utils.idIndex(nodes, r.endNode),
             value: r.type,
