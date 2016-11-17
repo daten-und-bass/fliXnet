@@ -73,7 +73,8 @@ var callbacks = {
               default:
                 responseObjectToSwagger[nodeType] = responseBodyFromNeo.results[0].data[0].row[0];
             }
-
+            // console.log(responseBodyFromNeo);
+            // console.log(responseObjectToSwagger);
             return res.render(template, responseObjectToSwagger);
           },
 
@@ -100,7 +101,7 @@ var callbacks = {
         };
       },
 
-      graph: function (res, operationId, type, locales, template, nodeId, subType, relationshipTypes) {
+      graph: function (res, operationId, type, locales, template, nodeId, subType, relationshipTypes, searchParam) {
         
         return {
           api: function (error, responseBodyFromNeo) {
@@ -196,14 +197,15 @@ var callbacks = {
                   return res.redirect(url);
                 case api.paths[basePath + '/read' + idPathTemplate].get.operationId:
                   responseObjectToSwagger.slogan = responseObjectToSwagger.localesStrings['Relationship'];
-                  responseObjectToSwagger.relationship = callbacks.utils.escapeAllProperties(responseBodyFromNeo.results[0].data[0].row);
+                  // responseObjectToSwagger.relationship = callbacks.utils.escapeAllProperties(responseBodyFromNeo.results[0].data[0].row);
+                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0].row;
                   break;
                 case api.paths[basePath + '/update' + idPathTemplate].get.operationId:
-                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0];
+                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0].row;
                   break;
                 case api.paths[basePath + '/update' + idPathTemplate].post.operationId:
                   responseObjectToSwagger.slogan = responseObjectToSwagger.localesStrings['Relationship updated'];
-                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0];
+                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0].row;
                   break;
                 case api.paths[basePath + '/delete' + idPathTemplate].post.operationId:
                   responseObjectToSwagger.relationship_deleted = responseBodyFromNeo.results[0].stats.relationship_deleted;
@@ -244,6 +246,8 @@ var callbacks = {
                 localesCommands: locales.localesCommands,
                 localesStrings: locales.localesStrings,
                 id: typeof nodeId === 'undefined' ? -1 : parseInt(nodeId),
+                searchParam: searchParam,
+                message: "No Results found."
               };
 
               switch (operationId) {

@@ -16,7 +16,7 @@ var queries = {
         read: 'MATCH (m)-[r]->(n) WHERE id(r)={id} RETURN coalesce(m.title, m.name), type(r), coalesce(n.title, n.name), coalesce(r.roles, r.summary)',
         readAllPaginated: 'MATCH (s)-[r]->(t) RETURN coalesce(s.name, s.title), type(r), r, coalesce(t.name, t.title) ORDER BY type(r) SKIP {offset} LIMIT {amount}',
         getUpdate: 'MATCH (m)-[r]->(n) WHERE id(r)={id} RETURN coalesce(m.title, m.name), type(r), coalesce(n.title, n.name), coalesce(r.roles, r.summary)',
-        update_ACTED_IN: 'MATCH (m)-[r]->(n) WHERE id(r)={id} SET r.roles=[{property}] RETURN coalesce(m.title, m.name), type(r), coalesce(n.title, n.name), coalesce(r.roles, r.summary)',   
+        update_ACTED_IN: 'MATCH (m)-[r]->(n) WHERE id(r)={id} SET r.roles={property} RETURN coalesce(m.title, m.name), type(r), coalesce(n.title, n.name), coalesce(r.roles, r.summary)',   
         update_REVIEWED: 'MATCH (m)-[r]->(n) WHERE id(r)={id} SET r.summary={property} RETURN coalesce(m.title, m.name), type(r), coalesce(n.title, n.name), coalesce(r.roles, r.summary)',
         delete: 'MATCH ()-[r]->() WHERE id(r)={id} DELETE r',
       },
@@ -30,6 +30,7 @@ var queries = {
         topColleagues: {
           ACTED_IN: 'MATCH (p:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(c:Person) WHERE id(p)={id} RETURN c.name, id(c), count(m), collect(m.title), collect(id(m)) ORDER BY count(m) DESC LIMIT 4',
         },
+        // Do NOT do this in production! No relevance, no performace! It touches every node and all its properties accross the whole graph coalesce
         searchField: 'MATCH (n) WHERE n.title=~{searchParam} OR n.tagline=~{searchParam} OR n.released=toInt({searchParam}) OR n.name=~{searchParam} OR n.born=toInt({searchParam}) RETURN DISTINCT n AS n, NULL AS m, NULL AS r UNION MATCH (n)-[r]->(m) WHERE n.title=~{searchParam} OR n.tagline=~{searchParam} OR n.released=toInt({searchParam}) OR n.name=~{searchParam} OR n.born=toInt({searchParam}) OR ANY(label IN labels(n) WHERE label=~{searchParam}) OR m.title=~{searchParam} OR m.tagline=~{searchParam} OR m.released=toInt({searchParam}) OR m.name=~{searchParam} OR m.born=toInt({searchParam}) OR ANY(label IN labels(m) WHERE label=~{searchParam}) OR ANY(role IN r.roles WHERE role=~{searchParam}) OR type(r)=~{searchParam} OR r.summary=~{searchParam} RETURN DISTINCT n AS n, m AS m, r AS r',
       },
     };
