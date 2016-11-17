@@ -13,9 +13,14 @@ var htmlWebIndex = function (api, localesUtils) {
     index: function(req, res) {
       var guessedLocale = req.acceptsLanguages(that.supportedLocales);
 
+      
       if (guessedLocale) {
+        locales = localesUtils.setLocales(locale, guessedLocale, that.strings);
+        locale = guessedLocale;
         res.redirect('/' + guessedLocale);
       } else {
+        locales = localesUtils.setLocales(locale, that.defaultLocale, that.strings);
+        locale = that.defaultLocale;
         res.redirect(that.defaultLocale);
       }
     },
