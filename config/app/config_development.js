@@ -82,8 +82,8 @@ var appConfig = {
     throw (err);
   }
 
-  fs.unlinkSync(file)
-  fs.rmdirSync(appConfig.environment().directory.toString());
+  // fs.unlinkSync(file)
+  // fs.rmdirSync(appConfig.environment().directory.toString());
 })();
 
 (function loadOtherFiles () {
@@ -94,7 +94,7 @@ var appConfig = {
   process.env.DB_HTTPS_CA = fs.readFileSync(appConfig.db().https.ca, 'utf8');
   // process.env.FLIXNET_DB_HTTPS_CA = fs.readFileSync(appConfig.db().https.ca, 'utf8');
 
-  fs.unlinkSync(appConfig.web().https.key)  
+  // fs.unlinkSync(appConfig.web().https.key)  
 })();
 
 module.exports = appConfig;
