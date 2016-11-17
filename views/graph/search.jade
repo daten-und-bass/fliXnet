@@ -7,7 +7,9 @@ block content
         .mdl-card__media
           i.flixnet-material-icons.material-icons blur_on
         .mdl-card__title
-          h4.mdl-card__title-text #{localesStrings['Search results']}:
+          h4.mdl-card__title-text #{localesStrings['Search results']} for "#{searchParam}":
+        unless graph.length > 0
+          .flixnet-search-mdl-card__supporting-text.mdl-card__supporting-text #{message}
         .flixnet-search-mdl-card__supporting-text.mdl-card__supporting-text
           table.flixnet-search-main-table
             tbody
