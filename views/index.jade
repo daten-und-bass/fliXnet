@@ -99,7 +99,6 @@ block content
             i.material-icons(id='graphTableBodyForward') navigate_next
           script.
             app.content.htmlElements.createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', '#{locale}');
-            console.log('#{locale}');
   .flixnet-mdl-card-section
     .mdl-typography--display-1-color-contrast #{localesStrings['Latest Movies']}:
     +moviesReadBulkMdlCards

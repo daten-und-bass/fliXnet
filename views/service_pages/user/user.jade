@@ -17,4 +17,4 @@ block content
     br
     br
     a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='/#{locale}/user/update') #{localesCommands['Update']}
-    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(onclick="app.content.userInteraction.deleteUser('/#{locale}/user/delete/', '#{user.user}', '#{locale}','Delete', 'User deleted')") #{localesCommands['Delete']}
+    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(onclick="app.content.userInteraction.deleteUser('/#{locale}/user/delete/', '#{user.user}', '#{locale}', \'#{localesUser['Delete user']}\', \'#{localesUser['User deleted']}\')") #{localesCommands['Delete']}

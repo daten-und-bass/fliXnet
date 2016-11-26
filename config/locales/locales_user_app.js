@@ -25,11 +25,35 @@ var localesStringsUser = {
     'es': {'ES': 'Contraseña'},
     'fr': {'FR': 'Mot de Passe'},
   },
+  'That user name is already taken': {
+    'de': {'DE': 'Diesr Nutzername ist bereits vergeben'},
+    'en': {'EN': 'That user name is already taken'},
+    'es': {'ES': 'Nombre de Usuario ... '},
+    'fr': {'FR': 'Nom d’Utilisateur ... '},
+  },
   'Login required for this command - You will be redirected to repeat your command': {
     'de': {'DE': 'Login erforderlich für diese Aktion - Sie werden zurückgeleitet, um Ihre Aktion zu wiederholen'},
     'en': {'EN': 'Login required for this command - You will be redirected to repeat your command'},
     'es': {'ES': 'Necesario iniciar sesión - Usted será redirigido por repetir su acción'},
     'fr': {'FR': 'Login requis pour cette commande - Vous serez redirigé pour répéter votre action'},
+  },
+  'Wrong password': {
+    'de': {'DE': 'Falsches Passwort'},
+    'en': {'EN': 'Wrong password'},
+    'es': {'ES': 'Contraseña incorrecta'},
+    'fr': {'FR': 'Mauvais mot de passe'},
+  },
+  'Login Name not found': {
+    'de': {'DE': 'Nutzername nicht gefunden'},
+    'en': {'EN': 'Login Name not found'},
+    'es': {'ES': 'Nombre de Usuario no encontrado'},
+    'fr': {'FR': 'Nom d’Utilisateur introuvable'},
+  },
+  'Something went wrong': {
+    'de': {'DE': 'Etwas ist schief gelaufen'},
+    'en': {'EN': 'Something went wrong'},
+    'es': {'ES': 'Algo salió mal'},
+    'fr': {'FR': 'Quelque-chose s\'est mal passé'},
   },
   'Please specify a valid login name (one word with max. 64 of [a-z] and [0-9] and [._%@+-] allowed characters) and a well-formatted password (with at least 8 charcters)': {
     'de': {'DE': 'Bitte geben Sie einen validen Nutzernamen (ein Wort mit max. 64 aus [a-z] und [0-9] und [._%@+-] erlaubten Zeichen) und ein wohl formatiertes Passwort (min. 8 Zeichen) an'},
@@ -144,6 +168,18 @@ var localesStringsUser = {
     'en': {'EN': 'Repeat'},
     'es': {'ES': 'Repetir '},
     'fr': {'FR': 'Répéter'},
+  },
+  'Delete user': {
+    'de': {'DE': 'Nutzer löschen'},
+    'en': {'EN': 'Delete user'},
+    'es': {'ES': 'Borrar usuario'},
+    'fr': {'FR': 'Effacer utilisateur'},
+  },
+  'User deleted': {
+    'de': {'DE': 'Nutzer gelöscht'},
+    'en': {'EN': 'User deleted'},
+    'es': {'ES': 'Usuario borrado'},
+    'fr': {'FR': 'Utilisateur effacé'},
   },
 };
 

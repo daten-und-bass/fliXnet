@@ -7,13 +7,13 @@ block content
     .flixnet-logo-font.mdl-typography--font-light
       br
       unless message !== 1
-        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") #{localesUser['Login required for this command - You will be redirected to repeat your command.']}
+        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") #{localesUser['Login required for this command - You will be redirected to repeat your command']}.
       unless message !== 2
-        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") Wrong password.
+        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") #{localesUser['Wrong password']}.
       unless message !== 3
-        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") No user found.
+        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") #{localesUser['Login Name not found']}.
       unless message !== 4
-        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") Something went wrong.
+        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") #{localesUser['Something went wrong']}.
       form(name='loginUser', action=(redUrl===undefined ? '/#{locale}/user/login' : '/#{locale}/user/login/?redUrl=#{redUrl}'),  method='post')
         fieldset
           legend(style='font-weight: bold;') #{localesUser['Login Credentials']}:

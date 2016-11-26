@@ -729,17 +729,16 @@ var app = (function() {
   }
 
   function deleteUser(url, user, locale, deleteString, deletedString) {
-    var txt = deleteString + ' ?:\n "' + user + '"';
+    var txt = deleteString + ': "' + user + '" ?';
     var r = confirm(txt);
     var xhr = new XMLHttpRequest();
 
     if(r == true) {
       xhr.open('POST', encodeURI(url));
       xhr.onreadystatechange = function() {
-        console.log(xhr.responseText);
         if (xhr.readyState === 4 && xhr.status === 200) {
           if (parseJsonTryer(xhr.responseText).success === true) {
-            alert(deletedString + ': ' + user);
+            alert(deletedString + ': "' + user + '" !');
             window.location.href = '/' + locale + '/user/logout';
           } else {
             alert('Not deleted:');
