@@ -7,8 +7,6 @@ var requests = {
     return { 
       api: {
         cypherRequest: function(query, params, resultType, includeStats, callback, resNodejs) {
-          console.log(query);
-
           request.post({
             headers: dbConfig.headers,
             url: dbConfig.https.url,
@@ -16,8 +14,6 @@ var requests = {
             json: { statements: [{ statement: query, parameters: params, resultDataContents: resultType, includeStats: includeStats }] }, 
           }, function(err, res) {
               var nodesDeleted = 0
-              console.log(JSON.stringify(err));
-              // console.log(JSON.stringify(res.body));
               if(res.body.results[0] && res.body.results[0].stats) {
                 nodesDeleted = res.body.results[0].stats.nodes_deleted;
               }
@@ -37,8 +33,6 @@ var requests = {
       },
       web: {
         cypherRequest: function(query, params, resultType, includeStats, callback, locales, resNodejs, isSearchField) {
-          console.log(query);
-
           request.post({
             headers: dbConfig.headers,
             url: dbConfig.https.url,
@@ -47,7 +41,6 @@ var requests = {
           }, function(err, res) {
               var nodesDeleted = 0;
               var relationshipDeleted = 0;
-              console.log(JSON.stringify(err));
 
               if(res.body.results[0] && res.body.results[0].stats && res.body.results[0].stats.nodes_deleted > 0 ) {
                 nodesDeleted = res.body.results[0].stats.nodes_deleted;  
@@ -97,8 +90,6 @@ var requests = {
               id: 1,
             }, ], 
           }, function(err, res) {
-              console.log(err);
-              // console.log(JSON.stringify(res));
 
               if (err) {
                 errorHandlers.web.nodejsError(err, locales, resNodejs);

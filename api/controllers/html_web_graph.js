@@ -55,8 +55,6 @@ var htmlWebGraph = function (api, localesUtils) {
             query = 'Empty Query';
         }
 
-        console.log(req.swagger.params);
-
         var params = that.params.otherParams.set(req.swagger.params);
         var callback = that.callbacks.graph(res, api.paths[basePathRelationships + '/create'].post.operationId, that.type, locales, that.templateFolder + '/read', '', that.relationships.typePlural).relationships.web;
 

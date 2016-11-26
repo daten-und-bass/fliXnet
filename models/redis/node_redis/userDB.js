@@ -198,9 +198,6 @@ var userDB = function() {
 
               if (err) { return callback(err); }
 
-              console.log(userObject.auth);
-              console.log(that.usersConfig);
-              console.log(that.usersConfig.auth.local.type);
               switch (userObject.auth.toString('utf-8')){
                 case that.usersConfig.auth.local.type:
                   that.krypto.verifyPassword(password, userObject.password, function (err, verify) {

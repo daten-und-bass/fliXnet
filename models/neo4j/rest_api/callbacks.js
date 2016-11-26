@@ -71,8 +71,7 @@ var callbacks = {
               default:
                 responseObjectToSwagger[nodeType] = responseBodyFromNeo.results[0].data[0].row[0];
             }
-            // console.log(responseBodyFromNeo);
-            // console.log(responseObjectToSwagger);
+
             return res.render(template, responseObjectToSwagger);
           },
 

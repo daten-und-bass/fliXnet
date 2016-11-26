@@ -71,7 +71,7 @@ var params = {
           }
         }
       });
-      console.log(paramsToNeo);
+      
       return paramsToNeo;
     },
 
