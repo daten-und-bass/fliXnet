@@ -1,62 +1,126 @@
 'use strict';
 
 var express = require('express');
-// var router = express.Router();
 var path = require('path');
 var https = require('https');
 
 var helmet = require('helmet');
 var forceSSL = require('express-force-ssl');
-var app_config = require('./config/app');
-// var options = {key: process.env.WEB_HTTPS_KEY, cert: process.env.WEB_HTTPS_CRT};
+
+var webConfig = require('./config/context').webConfig;
+var sessionsConfig = require('./config/context').sessionsConfig;
 
 var SwaggerExpress = require('swagger-express-mw');
-var app = require('express')();
-// module.exports = app; // for testing
+var SwaggerUi = require('swagger-tools/middleware/swagger-ui');
 
-// view engine setup
+var userDB = require('./config/context').userDB;
+var passport = require('passport');
+require('./config/authentication/passport')(passport, userDB); 
+
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+
+var app = express();
+
+var httpsServer = https.createServer({key: process.env.FLIXNET_WEB_HTTPS_KEY, cert: process.env.FLIXNET_WEB_HTTPS_CRT}, app);
+httpsServer.listen(webConfig.https.port); 
+
+app.set('trust proxy', webConfig.proxies);
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.set('trust proxy', 'loopback, 192.168.0.31');
+app.set("forceSSLOptions", { httpsPort: webConfig.https.port });
 
-// Force to use ONLY HTTPS
 app.use(helmet());
-app.set("forceSSLOptions", { httpsPort: app_config.web().https.port });
 app.use(forceSSL);
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/en', express.static(path.join(__dirname, 'public')));
-app.use('/es', express.static(path.join(__dirname, 'public')));
-app.use('/de', express.static(path.join(__dirname, 'public')));
-app.use('/fr', express.static(path.join(__dirname, 'public')));
 
+var sessionOptions = sessionsConfig.session.options;
+sessionOptions.store = new RedisStore(sessionsConfig.store.options);
+app.use(session(sessionOptions));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(function(req, res, next){
+    res.locals.session = req.session;
+    res.locals.user = req.user;
+    next();
+});
+
+// check if reqauthenticated()and others return correctly for each case???
 var config = {
-  appRoot: __dirname // required config
+  appRoot: __dirname, // required config
+  swaggerSecurityHandlers: {
+    'local-register': function(req, def, scopes, callback) {
+      passport.authenticate('local-register', function(err, newUser, info) {
+          var locale = req.swagger.params.locale.value;
+          
+          if(err) { return callback(err); }
+
+          if(newUser) {
+            req.logIn(newUser, function(err) {
+
+              if (err) { return callback(err); }
+
+              return req.res.redirect('/' + locale);
+            });
+          } else  {
+            return req.res.redirect('/' + locale + '/user/register/?authMsg=' + parseInt(info.message)); 
+          }
+      })(req, null, callback); 
+    },
+    'local-login': function(req, def, scopes, callback) {
+      passport.authenticate('local-login', function(err, user, info) {
+        var locale = req.swagger.params.locale.value;
+
+        if(err) { return callback(err); }
+        
+        if(user) {
+          req.logIn(user, function(err) {
+
+            if (err) { return callback(err); }
+
+            return req.swagger.params.redUrl.value === undefined ? req.res.redirect('/' + locale) : req.res.redirect(req.swagger.params.redUrl.value);
+            
+          });
+        } else {
+          return req.res.redirect('/' + locale + '/user/login/?authMsg=' + parseInt(info.message));
+        }
+      })(req, null, callback); 
+    },
+    'local-auth': function(req, def, scopes, callback) {
+      var locale = req.swagger.params.locale.value;
+
+      if (req.isAuthenticated()){
+
+        return callback();
+      } else {
+        return req.res.redirect('/' + locale + '/user/login/?authMsg=1&redUrl=' + req.url);
+      }
+    },
+  },
 };
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }
 
-  // install middleware
-  app.use(function (req, res, next) {
-	console.log('Time: %d', Date.now());
-	next();
-  });
+  app.use(SwaggerUi(swaggerExpress.runner.swagger));
 
+  app.use(swaggerExpress.runner.swaggerTools.swaggerSecurity(config.swaggerSecurityHandlers));
+ 
   swaggerExpress.register(app);
 
   var port = process.env.PORT || 10010;
   app.listen(port);
 
-  if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
+  if (swaggerExpress.runner.swagger.paths['/']) {
+    console.log('Project started.');
   }
 });
 
-// Create HTTPS Server with options from above and port from (non-swagger) config file app_config
-var httpsServer = https.createServer({key: process.env.WEB_HTTPS_KEY, cert: process.env.WEB_HTTPS_CRT}, app);
-// var httpsServer = https.createServer({key: process.env.FLIXNET_WEB_HTTPS_KEY, cert: process.env.FLIXNET_WEB_HTTPS_CRT}, app);
-httpsServer.listen(app_config.web().https.port);
-
 module.exports = app; 
+
+

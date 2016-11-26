@@ -2,16 +2,15 @@
 # GENERAL INFORMATION #
 swagger: "2.0"
 info:
-  version: "0.0.9"
-  title: nodeTestApp16
-host: 192.168.1.11:10011
+  version: "0.10.0"
+  title: fliXnet
+host: flixnet.daten-und-bass.io
 basePath: /
 schemes:
-  # tip: remove http to make production-grade
-  #- http
   - https
 consumes:
   - application/json
+  - application/x-www-form-urlencoded
 produces:
   - application/json
 tags:
@@ -19,6 +18,8 @@ tags:
     description: All JSON only API operations (returning JSON only)
   - name: web
     description: All HTML Web operations (returning HTML websites)
+  - name: app
+    description: All operation where service page or user settings are involved
   - name: graph
     description: All operations where more than one nodeType (e.g. movies and persons) or where more than one node (e.g. person follows person) are involved 
   - name: relationships
@@ -32,7 +33,10 @@ tags:
   - name: persons
     description: All operations where only nodes of the type 'person' are involved
   - name: nodeSearch
-    description: All (read) operations for searches within one node type 
+    description: All (read) operations for searches within one node type
+  - name: user
+    description: All (HTML web only) operations where users are involved
+
 paths:
 
 #######
@@ -42,7 +46,7 @@ paths:
   /api:
     x-swagger-pipe: swagger_raw
 
-### HTML Web: Entrypoint and service pages for website ###
+### HTML Web: Entrypoint and service pages for website and app user operations ###
   /:
     x-swagger-router-controller: context_html_web_index
     get:
@@ -91,6 +95,7 @@ paths:
     get:
       tags:
         - web
+        - app
       summary: About page
       description: Returns a localized about page
       produces: 
@@ -111,7 +116,8 @@ paths:
     x-swagger-router-controller: context_html_web_index
     get:
       tags:
-        - web     
+        - web
+        - app   
       summary: Contact page
       description: Returns a localized contact page
       produces: 
@@ -133,6 +139,7 @@ paths:
     get:
       tags:
         - web
+        - app
       summary: Imprint page
       description: Returns a localized imprint page
       produces: 
@@ -142,6 +149,244 @@ paths:
         - $ref: "#/parameters/locale"
       responses:
         "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/user/register:
+    x-swagger-router-controller: context_html_web_index
+    get:
+      tags:
+        - web
+        - user
+      summary: Returns a localized page user registration
+      description: Returns a localized registration page with a registration form via Web (HTML in Browser)
+      produces: 
+        - text/html
+      operationId: getRegister
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/authMsg"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+    post:
+      tags:
+        - web
+        - user
+      summary: User registration target (POST)
+      description: Register a new user via Web (HTML in Browser) and then redirects to home page (Code '302' is the default for a successful redirect in express.js)
+      consumes:
+        - application/x-www-form-urlencoded
+      produces: 
+        - text/html
+      operationId: register
+      security:
+        - local-register: []
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/user"
+        - $ref: "#/parameters/fullname"
+        - $ref: "#/parameters/birth"
+        - $ref: "#/parameters/email"
+        - $ref: "#/parameters/password"
+        - $ref: "#/parameters/passwordConfirmed"
+      responses:
+        "302":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/user/login:
+    x-swagger-router-controller: context_html_web_index
+    get:
+      tags:
+        - web
+        - app
+        - user
+      summary: Returns a localized login page
+      description: Returns a localized login page with a login form via Web (HTML in Browser)
+      produces: 
+        - text/html
+      operationId: getLogin
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/authMsg"
+        - $ref: "#/parameters/redUrl"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+    post:
+      tags:
+        - web
+        - app
+        - user
+      summary: User Login target (POST)
+      description: Login an existing user via Web (HTML in Browser) and then redirects to home (Code '302' is the default for a successful redirect in express.js)
+      consumes:
+        - application/x-www-form-urlencoded
+      produces: 
+        - text/html
+      operationId: login
+      security:
+        - local-login: []
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/user"
+        - $ref: "#/parameters/password"
+        - $ref: "#/parameters/redUrl"
+      responses:
+        "302":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/user:
+    x-swagger-router-controller: context_html_web_index
+    get:
+      tags:
+        - web
+        - app
+        - user
+      summary: Returns a localized account page
+      description: Returns a localized account page with user details
+      produces: 
+        - text/html
+      operationId: user
+      security:
+        - local-auth: []
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/user/update:
+    x-swagger-router-controller: context_html_web_index
+    get:
+      tags:
+        - web
+        - app
+        - user
+      summary: Returns a localized account update page
+      description: Returns a localized account update page with a form for updating user details
+      produces: 
+        - text/html
+      operationId: getUpdate
+      security:
+        - local-auth: []
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+    post:
+      tags:
+        - web
+        - app
+        - user
+      summary: User update target (POST)
+      description: Update a user via Web (HTML in Browser) and then redirects to user page (Code '302' is the default for a successful redirect in express.js)
+      consumes:
+        - application/x-www-form-urlencoded
+      produces: 
+        - text/html
+      operationId: update
+      security:
+        - local-auth: []
+      parameters:
+        - $ref: "#/parameters/locale"
+        - $ref: "#/parameters/user"
+        - $ref: "#/parameters/fullname"
+        - $ref: "#/parameters/birth"
+        - $ref: "#/parameters/email"
+        - $ref: "#/parameters/password"
+        - $ref: "#/parameters/passwordNew"
+        - $ref: "#/parameters/passwordNewConfirmed"
+      responses:
+        "302":
+          description: Success
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/user/logout:
+    x-swagger-router-controller: context_html_web_index
+    get:
+      tags:
+        - web
+        - app
+        - user
+      summary: Logout target (only POST, not GET)
+      description: Logs out a user by only clicking a link in the top menu (witout any .jade view)
+      operationId: logout
+      security:
+        - local-auth: []
+      produces: 
+        - text/html
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "200":
+          description: Success 
+          schema:
+            type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseWeb"
+  /{locale}/user/delete:
+    x-swagger-router-controller: context_html_web_index
+    post:
+      tags:
+        - web
+        - app
+        - user
+      summary: Deletes a user
+      description: Deletes a user (by req.user.id) via confirm() and alert() (witout any .jade view)
+      consumes:
+        - application/octet-stream
+      operationId: delete
+      security:
+        - local-auth: []
+      parameters:
+        - $ref: "#/parameters/locale"
+      responses:
+        "302":
           description: Success
           schema:
             type: string
@@ -214,6 +459,9 @@ paths:
             $ref: "#/definitions/ErrorResponse"
 
 ## Relationships ##
+### JSON only API: Create (one), read (several), read (one), update(one), and delete (one) relationship(s) ###
+### TODO (available in HTML Web ... see below)
+
 ### JSON only API: Read paginated all relationships over the whole graph ###
   /api/graph/relationships/readAllPaginated:
     x-swagger-router-controller: context_json_api_graph_relationships
@@ -307,7 +555,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-### JSON only API: Search the cast (all ACTED_IN releationships)  of a movie ###
+### JSON only API: Search the cast (all ACTED_IN releationships) of a movie ###
   /api/graph/search/movieCast/{id}:
     x-swagger-router-controller: context_json_api_graph_search
     get:
@@ -390,12 +638,15 @@ paths:
       produces: 
         - text/html
       operationId: create
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/source"
         - $ref: "#/parameters/type"
         - $ref: "#/parameters/target"
         - $ref: "#/parameters/property"
+        - $ref: "#/parameters/rating"
       responses:
         "302":
           description: Success
@@ -465,11 +716,14 @@ paths:
       produces: 
         - text/html
       operationId: update
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
         - $ref: "#/parameters/type"
         - $ref: "#/parameters/property"
+        - $ref: "#/parameters/rating"
       responses:
         "200":
           description: Success
@@ -491,6 +745,8 @@ paths:
       consumes:
         - application/octet-stream
       operationId: delete
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
@@ -545,6 +801,8 @@ paths:
       summary: Creates movie
       description: Creates a new movie entry via JSON API
       operationId: create
+      security:
+        - oauth2: [ write:movies ]
       parameters:
         - name: movie
           required: true
@@ -612,6 +870,8 @@ paths:
       summary: Updates movie
       description: Updates a single movie entry by a given id via inPathParam
       operationId: update
+      security:
+        - oauth2: [ write:movies ]
       parameters:
         - $ref: "#/parameters/id"
         - name: movie
@@ -637,6 +897,8 @@ paths:
       summary: Deletes movie
       description: Deletes a single movie entry by a given id via inPathParam
       operationId: delete
+      security:
+        - oauth2: [ write:movies ]
       parameters:
         - $ref: "#/parameters/id"
       responses:
@@ -710,6 +972,8 @@ paths:
       produces: 
         - text/html
       operationId: create
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/title"
@@ -800,6 +1064,10 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponseWeb"
     post:
+      tags:
+        - web
+        - nodes
+        - movies
       summary: Movie update target (POST)
       description: Updates a single movie entry by a given id via inPathParam (without redirect)
       consumes:
@@ -807,6 +1075,8 @@ paths:
       produces: 
         - text/html
       operationId: update
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
@@ -834,6 +1104,8 @@ paths:
       consumes:
         - application/octet-stream
       operationId: delete
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
@@ -859,6 +1131,8 @@ paths:
       summary: Creates person
       description: Creates a new person entry via JSON API
       operationId: create
+      security:
+        - oauth2: [ write:persons ]
       parameters:
         - name: person
           required: true
@@ -926,6 +1200,8 @@ paths:
       summary: Updates person
       description: Updates a single person entry by a given id via inPathParam
       operationId: update
+      security:
+        - oauth2: [ write:persons ]
       parameters:
         - $ref: "#/parameters/id"
         - name: person
@@ -951,6 +1227,8 @@ paths:
       summary: Deletes person
       description: Deletes a single person entry by a given id via inPathParam
       operationId: delete
+      security:
+        - oauth2: [ write:persons ]
       parameters:
         - $ref: "#/parameters/id"
       responses:
@@ -1024,6 +1302,8 @@ paths:
       produces: 
         - text/html
       operationId: create
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/name"
@@ -1124,6 +1404,8 @@ paths:
       produces: 
         - text/html
       operationId: update
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
@@ -1150,6 +1432,8 @@ paths:
       consumes:
         - application/octet-stream
       operationId: delete
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
@@ -1171,11 +1455,10 @@ paths:
 
 ###############
 # DEFINITIONS #
-
 ## Reusable Parameters ##
 parameters:
 
-### General ###
+### App ###
   locale:
     name: locale
     required: true
@@ -1184,6 +1467,82 @@ parameters:
     type: string
     enum: [ en, es, de, fr ] 
     # @TODO: Move locale (enum) to app or context config
+  user:
+    name: user
+    required: true
+    in: formData
+    description: user login name (required, used as id in a hashed manner)
+    type: string
+    pattern: "^[a-z0-9._%@+-]{1,64}$"
+    minLength: 1
+    maxLength: 64
+  fullname:
+    name: fullname
+    required: false
+    in: formData
+    description: user full name (optional)
+    type: string
+    minLength: 1
+    maxLength: 64
+  birth:
+    name: birth
+    required: false
+    in: formData
+    description: user birth date (optional) in full-date format 
+    type: string
+    format: full-date
+    maxLength: 10
+  email:
+    name: email
+    required: false
+    in: formData
+    description: user email (optional, not used as id)
+    type: string
+    format: email
+  password:
+    name: password
+    required: true
+    in: formData
+    description: user password
+    type: string
+    format: password
+  passwordConfirmed:
+    name: passwordConfirmed
+    required: true
+    in: formData
+    description: confirmed user password (only at registration)
+    type: string
+    format: password
+  passwordNew:
+    name: passwordNew
+    required: false
+    in: formData
+    description: user new password (only at user update with optional password change)
+    type: string
+    format: password
+  passwordNewConfirmed:
+    name: passwordNewConfirmed
+    required: false
+    in: formData
+    description: confirmed user new password (only at user update with optional password change)
+    type: string
+    format: password
+  authMsg:
+    name: authMsg
+    required: false
+    in: query
+    description: TODO
+    type: integer
+    enum: [ 1, 2, 3, 4]
+  redUrl:
+    name: redUrl
+    required: false
+    in: query
+    description: TODO
+    type: string
+    pattern: "^\/(de|en|es|fr)\/(graph\/relationships|movies|persons)\/(create|update|read)([\/]{0,1}\\d{0,}[\/]{0,1})$"
+
+### Graph (Parameters across Nodes & Relationships) ###
   id:
     name: id
     required: true
@@ -1211,7 +1570,7 @@ parameters:
     description: The search string as entered in the searchField
     type: string
 
-### Movies ###
+### Movies (type-specific Parameters) ###
   title:
     name: title
     required: true
@@ -1231,7 +1590,7 @@ parameters:
     description: They year YYYY which the movie was released in.
     type: integer
 
-### Persons ###
+### Persons (type-specific Parameters) ###
   name:
     name: name
     required: true
@@ -1245,7 +1604,7 @@ parameters:
     description: a new persons birth date
     type: integer
 
-### Relationships ###
+### Relationships (type-specific Parameters) ###
   source:
     name: source
     required: true
@@ -1262,18 +1621,42 @@ parameters:
     name: target
     required: true
     in: formData
-    description: A new relationships endpoint (movie or person)
+    description: A relationships endpoint (movie or person)
     type: string
   property:
     name: property
     required: false
     in: formData
-    description: A new relationships property (optional and only for the types ACTED_IN and REVIEWED)
+    description: A relationships property (optional and only for the types ACTED_IN and REVIEWED)
     type: string
-    #enum:@TODO
+    #enum:@TODO or pattern
+  rating:
+    name: rating
+    required: false
+    in: formData
+    description: A REVIEWED relationships rating (optional and only for the type REVIEWED)
+    type: string
+    pattern: "^$|^0$|^[1-9][0-9]?$|^100$"
 
 ## Complex Objects ##
 definitions:
+
+### App ###
+  DeleteResponse:
+    required:
+      - nodes_deleted
+    properties:
+      nodes_deleted:
+        type: integer
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponseWeb:
+    # description: Error
+    type: string
 
 ### Graph ###
   GraphListBody:
@@ -1321,6 +1704,8 @@ definitions:
       - source
       - target
     properties:
+      id:
+        type: string
       source:
         type: integer
       target:
@@ -1343,9 +1728,6 @@ definitions:
           type: object
           required:
             - row
-          # properties:
-          #   row:
-          #   meta:
 
 ### Movies ###
   MoviesListBody:
@@ -1370,11 +1752,6 @@ definitions:
         type: string
       released:
         type: integer
-      # rank:
-      #   type: integer
-      #   default: 5
-      #   minimum: 1
-      #   maximum: 10
 
   MovieBody:
     required:
@@ -1403,11 +1780,6 @@ definitions:
         type: string
       born:
         type: integer
-      rank:
-        type: integer
-        default: 5
-        minimum: 1
-        maximum: 10
 
   PersonBody:
     required:
@@ -1416,19 +1788,37 @@ definitions:
       person:
         $ref: "#/definitions/Person"
 
-### Responses ###
-  DeleteResponse:
-    required:
-      - nodes_deleted
-    properties:
-      nodes_deleted:
-        type: integer
-  ErrorResponse:
-    required:
-      - message
-    properties:
-      message:
-        type: string
-  ErrorResponseWeb:
-    # description: Error
-    type: string
+## Security ##
+securityDefinitions:
+  local-register:
+    type: basic
+    description: Initial registration of a new user for access to HTML Web write operations
+  local-login: 
+    type: basic
+    description: Recurring login of exisiting users for access to HTML Web write operations
+  local-auth: 
+    type: basic
+    description: Actual check if authenticated on access to HTML Web write operations
+  oauth2:
+    type: oauth2
+    description: Scope-based access to JSON only API write operations
+    flow: application
+    tokenUrl: https://localhost:10011/accesstoken
+    scopes:
+      write:user: Write operations for user management
+      write:graph: Write operations for for graph relationships
+      write:movies: Write operations for nodes of the type 'person'
+      write:persons: Write operations for nodes of the type 'person'
+
+x-volos-resources:
+  oauth2:
+    provider: volos-oauth-redis
+    options:
+      tokenLifetime: 300000
+      validGrantTypes:
+        - client_credentials
+      tokenPaths:
+        token: /accesstoken
+        invalidate: /invalidate
+
+

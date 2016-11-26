@@ -541,21 +541,6 @@ var app = (function() {
     type.appendChild(relationshipsList.cloneNode(true));
     target.appendChild(movieList.cloneNode(true));
 
-    function optionCreator(elementArray, unknownString, hasID) {
-      var documentFragment = document.createDocumentFragment();
-      elementArray.forEach(function(element, index) {
-        var option = document.createElement('option');
-        if (element === -1) {
-          option.textContent = unknownString;
-        } else {
-          option.textContent = hasID ? element[0] : element;
-        } 
-        option.value = hasID ? element[1] : element;
-        documentFragment.appendChild(option);
-      });
-      return documentFragment;
-    }
-
     function targetFieldChanger() {
       var valueText = type.options[type.selectedIndex].value;
       switch(valueText) {
@@ -605,6 +590,21 @@ var app = (function() {
     }
   }
 
+  function optionCreator(elementArray, unknownString, hasID) {
+    var documentFragment = document.createDocumentFragment();
+    elementArray.forEach(function(element, index) {
+      var option = document.createElement('option');
+      if (element === -1) {
+        option.textContent = unknownString;
+      } else {
+        option.textContent = hasID ? element[0] : element;
+      } 
+      option.value = hasID ? element[1] : element;
+      documentFragment.appendChild(option);
+    });
+    return documentFragment;
+  }
+
   function createOptionsReadBulk(element, url, inQueryParam, unknownString) {
     var xhr = new XMLHttpRequest();
     var distinctValues;
@@ -631,12 +631,16 @@ var app = (function() {
     xhr.send();
   }
 
-  function checkInput(inputsArray, checkIcon, checkMessage, checkMessageString ) {
+  function checkInput(inputsArray, checkIcon, checkMessage, checkMessageString, passwordInputsArray) {
     var valid = false;
 
     valid = inputsArray.every(function (element, index, inputsArray) {
       return element.checkValidity();
     });
+
+    if (passwordInputsArray) {
+      valid = (passwordInputsArray[0] && passwordInputsArray[0] === passwordInputsArray[1] );
+    }
 
     if(valid) {
       checkIcon.style.color = 'rgb(76,175,80)';
@@ -724,6 +728,37 @@ var app = (function() {
     } 
   }
 
+  function deleteUser(url, user, locale, deleteString, deletedString) {
+    var txt = deleteString + ' ?:\n "' + user + '"';
+    var r = confirm(txt);
+    var xhr = new XMLHttpRequest();
+
+    if(r == true) {
+      xhr.open('POST', encodeURI(url));
+      xhr.onreadystatechange = function() {
+        console.log(xhr.responseText);
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          if (parseJsonTryer(xhr.responseText).success === true) {
+            alert(deletedString + ': ' + user);
+            window.location.href = '/' + locale + '/user/logout';
+          } else {
+            alert('Not deleted:');
+            window.location.href = '/' + locale + '/user';
+          }
+        }
+        else if (xhr.readyState === 4 && xhr.status === 404) {
+          alert('The user to delete no longer exists');
+          window.location.href = '/';
+        }
+        else if (xhr.readyState === 4 && xhr.status === 400 || xhr.status === 500) {
+          alert('Something went wrong');
+          window.location.href = '/';
+        }
+      };
+      xhr.send();
+    } 
+  }
+
   function parseJsonTryer(jsonToParse) {
     var result;
 
@@ -767,6 +802,7 @@ var app = (function() {
       userInteraction: {
         deleteRelationship: deleteRelationship,
         deleteNode: deleteNode,
+        deleteUser: deleteUser,
       },
     },
   }; 

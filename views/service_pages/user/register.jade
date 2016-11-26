@@ -1,0 +1,95 @@
+extends ../../layout
+include ../../mixins/formInputs.jade
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.flixnet-sub-slogan #{localesMenu['Register']}
+    .flixnet-logo-font.mdl-typography--font-light
+      br
+      unless message !== 1
+        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") That user name is already taken.
+      br
+      form(name='registerUser', action='/#{locale}/user/register',  method='post')
+        fieldset
+          legend(style='font-weight: bold;') #{localesUser['Required Information']}:
+          br
+          div(style='display: inline-block;')
+            label #{localesUser['Login Name']}
+            br
+            +userInput
+            i#checkIconUser(class="material-icons" style="vertical-align: middle;")
+          p#checkMessageUser.mdl-color-text--red
+        br
+        br
+        fieldset
+          legend(style='font-weight: bold;') #{localesUser['Optional Information']}:
+          br
+          div(style='display: inline-block;')
+            label #{localesUser['Full Name']}
+            br
+            +fullnameInput
+          div(style='display: inline-block;')
+            label &nbsp #{localesUser['Birth Date']}
+            br
+            +birthInput
+          div(style='display: inline-block;')
+            label &nbsp #{localesUser['E-Mail']}
+            br
+            +emailInput
+            i#checkIconOptionals(class="material-icons" style="vertical-align: middle;")
+          p#checkMessageOptionals.mdl-color-text--red
+        br
+        fieldset
+          legend(style='font-weight: bold;') #{localesUser['Password']}:
+          br
+          div(style='display: inline-block;')
+            label #{localesUser['Enter password']}
+            br
+            +passwordInput('password')
+          div(style='display: inline-block;')
+            label #{localesUser['Confirm password']}
+            br
+            +passwordInput('passwordConfirmed')
+          i#checkIconPassword(class="material-icons" style="vertical-align: middle;")
+          p#checkMessagePassword.mdl-color-text--red
+        br
+        button#submitButton.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(type='submit' disabled) #{localesCommands['Register']}
+
+  script.
+    function checkForm() {
+
+      var userInput = document.getElementById('user'); 
+      var fullnameInput = document.getElementById('fullname');
+      var birthInput = document.getElementById('birth');
+      var emailInput = document.getElementById('email');
+      var passwordInput = document.getElementById('password');
+      var passwordConfirmedInput = document.getElementById('passwordConfirmed');
+
+      var checkIconUser = document.getElementById('checkIconUser');
+      var checkIconOptionals = document.getElementById('checkIconOptionals');
+      var checkIconPassword = document.getElementById('checkIconPassword');
+      var checkMessageUser = document.getElementById('checkMessageUser');
+      var checkMessageOptionals = document.getElementById('checkMessageOptionals');
+      var checkMessagePassword = document.getElementById('checkMessagePassword');
+
+      var checkMessageUserString = "#{localesUser['Please specify a valid login name (one word with max. 64 of [a-z] and [0-9] and [._%@+-] allowed characters)']}."
+      var checkMessageOptionalsString =  "#{localesUser['If any please specify a valid birth date (e.g. 2001-12-31) and a well-formatted e-mail (e.g. user@domain.com)']}."
+      var checkMessagePasswordSting =  "#{localesUser['Please specify maching passwords (min. 8 characters)']}."
+
+      var submitButton = document.getElementById('submitButton');
+
+      var isUserInputValid = false; 
+      var isOptionalInputValid = false; 
+      var isPasswordInputValid = false; 
+
+      isUserInputValid = app.content.validation.checkInput([userInput], checkIconUser, checkMessageUser, checkMessageUserString);
+      isOptionalInputValid = app.content.validation.checkInput([fullnameInput, birthInput, emailInput], checkIconOptionals, checkMessageOptionals, checkMessageOptionalsString);
+      isPasswordInputValid = app.content.validation.checkInput([passwordInput, passwordConfirmedInput], checkIconPassword, checkMessagePassword, checkMessagePasswordSting, [passwordInput.value, passwordConfirmedInput.value]); 
+
+      if(isUserInputValid && isOptionalInputValid && isPasswordInputValid)
+      {
+        submitButton.disabled = false;
+      } else {
+        submitButton.disabled = true;
+      }
+    }

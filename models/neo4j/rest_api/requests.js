@@ -12,7 +12,7 @@ var requests = {
           request.post({
             headers: dbConfig.headers,
             url: dbConfig.https.url,
-            ca: process.env.DB_HTTPS_CA,
+            ca: process.env.FLIXNET_DB_HTTPS_CA,
             json: { statements: [{ statement: query, parameters: params, resultDataContents: resultType, includeStats: includeStats }] }, 
           }, function(err, res) {
               var nodesDeleted = 0
@@ -42,13 +42,12 @@ var requests = {
           request.post({
             headers: dbConfig.headers,
             url: dbConfig.https.url,
-            ca: process.env.DB_HTTPS_CA,
+            ca: process.env.FLIXNET_DB_HTTPS_CA,
             json: { statements: [{ statement: query, parameters: params, resultDataContents: resultType, includeStats: includeStats }] }, 
           }, function(err, res) {
               var nodesDeleted = 0;
               var relationshipDeleted = 0;
               console.log(JSON.stringify(err));
-              console.log(JSON.stringify(res.body.results));
 
               if(res.body.results[0] && res.body.results[0].stats && res.body.results[0].stats.nodes_deleted > 0 ) {
                 nodesDeleted = res.body.results[0].stats.nodes_deleted;  
@@ -79,7 +78,7 @@ var requests = {
           request.post({
             headers: dbConfig.headers,
             url: dbConfig.batch.url,
-            ca: process.env.DB_HTTPS_CA,
+            ca: process.env.FLIXNET_DB_HTTPS_CA,
             json: [ {
               method: dbConfig.batch.job.method,
               to: dbConfig.batch.job.url,

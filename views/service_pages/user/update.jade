@@ -1,0 +1,126 @@
+extends ../../layout
+include ../../mixins/formInputs.jade
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.flixnet-sub-slogan #{localesUser['Update Account']}:
+    .flixnet-logo-font.mdl-typography--font-light
+      br
+      br
+      form(name='updateUser', action='/#{locale}/user/update/', method='post')
+        fieldset
+          legend(style='font-weight: bold;') #{localesUser['Required Information']}:
+          br
+          div(style='display: inline-block;', title='The Login Name cannot be changed.')
+            label #{localesUser['Login Name']}
+            br
+            +userInputReadOnly
+        br
+        br
+        fieldset
+          legend(style='font-weight: bold;') #{localesUser['Optional Information']}:
+          br
+          div(style='display: inline-block;')
+            label #{localesUser['Full Name']}
+            br
+            +fullnameInput
+          div(style='display: inline-block;')
+            label &nbsp #{localesUser['Birth Date']}
+            br
+            +birthInput
+          div(style='display: inline-block;')
+            label &nbsp #{localesUser['E-Mail']}
+            br
+            +emailInput
+            i#checkIconOptionals(class="material-icons" style="vertical-align: middle;")
+          p#checkMessageOptionals(style="color: rgb(255,64,129);")
+        br
+        fieldset
+          legend(style='font-weight: bold;') #{localesUser['Confirm changes']}:
+          br
+          div(style='display: inline-block;')
+            label #{localesUser['Password']}
+            br
+            +passwordInput('password')
+            i#checkIconPassword(class="material-icons" style="vertical-align: middle;")
+          p#checkMessagePassword(style="color: rgb(255,64,129);")
+        fieldset
+          legend #{localesUser['Change Password']}:
+          input#changePassword(type='checkbox', name='changePassword', onclick="toggleChangePasswordFieldset(this)")
+        br
+        fieldset#changePasswordFieldset(style='display: none;')
+          div(style='display: inline-block;')
+            label #{localesUser['New password']}
+            br
+            +passwordInput('passwordNew')
+          div(style='display: inline-block;')
+            label #{localesUser['Repeat']}
+            br
+            +passwordInput('passwordNewConfirmed')
+          i#checkIconChangePassword(class="material-icons" style="vertical-align: middle;")
+          p#checkMessageChangePassword(style="color: rgb(255,64,129);")
+        br
+        button#cancelButton.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase #{localesCommands['Cancel']}
+        button#submitButton.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(type='submit' disabled) #{localesCommands['Update']}
+
+  script.
+    window.onload = function() {
+      document.getElementById('user').value = '#{user.user}';
+      document.getElementById('fullname').value = '#{user.fullname}';
+      document.getElementById('birth').value = '#{user.birth}';
+      document.getElementById('email').value = '#{user.email}';
+    }
+    
+    function checkForm() {
+      var fullnameInput = document.getElementById('fullname');
+      var birthInput = document.getElementById('birth');
+      var emailInput = document.getElementById('email');
+      var passwordInput = document.getElementById('password');
+      var passwordNewInput = document.getElementById('passwordNew');
+      var passwordNewConfirmedInput = document.getElementById('passwordNewConfirmed');
+
+      var checkIconOptionals = document.getElementById('checkIconOptionals');
+      var checkIconPassword = document.getElementById('checkIconPassword');
+      var checkIconChangePassword = document.getElementById('checkIconChangePassword');
+
+      var checkMessageOptionals = document.getElementById('checkMessageOptionals');
+      var checkMessagePassword = document.getElementById('checkMessagePassword');
+      var checkMessageChangePassword = document.getElementById('checkMessageChangePassword');
+
+      var checkMessageOptionalsString = "#{localesUser['If any please specify a valid birth date (e.g. 2001-12-31) and a well-formatted e-mail (e.g. user@domain.com)']}.";
+      var checkMessagePasswordString = "#{localesUser['Please specify a well-formatted password (with at least 8 charcters)']}.";
+      var checkMessageChangePasswordString = "#{localesUser['Please specify maching passwords (min. 8 characters)']}.";
+
+      var changePasswordCheckbox = document.getElementById('changePassword');
+      var submitButton = document.getElementById('submitButton');
+
+      var isOptionalInputValid = false;
+      var isPasswordInputValid = false; 
+      var isChangePasswordInputValid = false;
+
+      isOptionalInputValid = app.content.validation.checkInput([fullnameInput, birthInput, emailInput], checkIconOptionals, checkMessageOptionals, checkMessageOptionalsString);
+      isPasswordInputValid = app.content.validation.checkInput([passwordInput], checkIconPassword, checkMessagePassword, checkMessagePasswordString);
+      isChangePasswordInputValid = app.content.validation.checkInput([passwordNewInput, passwordNewConfirmedInput], checkIconChangePassword, checkMessageChangePassword, checkMessageChangePasswordString, [passwordNewInput.value, passwordNewConfirmedInput.value]); 
+
+      if(changePasswordCheckbox.checked) {
+        if(isOptionalInputValid && isPasswordInputValid && isChangePasswordInputValid) {
+          submitButton.disabled = false;
+        } else {
+          submitButton.disabled = true;
+        }
+      } else {
+        if(isOptionalInputValid && isPasswordInputValid) {
+          submitButton.disabled = false;
+        } else {
+          submitButton.disabled = true;
+        }
+      }
+    }
+
+    function toggleChangePasswordFieldset(changePasswordInput) {
+      document.getElementById("changePasswordFieldset").style.display = changePasswordInput.checked ? "block" : "none";
+      document.getElementById('passwordNew').value = '';
+      document.getElementById('passwordNewConfirmed').value = '';
+
+      checkForm();
+    }

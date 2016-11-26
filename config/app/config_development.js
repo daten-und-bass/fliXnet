@@ -6,10 +6,8 @@ var appConfig = {
   environment: function() {
     var environment = {
       name: process.env.NODE_ENV,
-      directory: process.env.DUNDB_APP_ENV_SECS_DIR,
-      file:process.env.DUNDB_APP_ENV_SECS_FILE,
     };
-    console.log(process.env.DUNDB_APP_ENV_SECS_DIR);
+
     return environment;
   },
 
@@ -24,6 +22,7 @@ var appConfig = {
         crt: '/etc/ssl/' + process.env.DUNDB_APP_ENV_S2_WB1_IRME_HTTPS_CERT1,
         key: '/etc/ssl/' + process.env.DUNDB_APP_ENV_S2_WB1_IRME_HTTPS_CERT1_KEY,
       },
+      proxies: [ process.env.DUNDB_INF1_ENV_S1_WF1_FTED_IP1, process.env.DUNDB_APP_ENV_S1_LB1_FTED_IP1 ],
     };
 
     return web;
@@ -33,7 +32,7 @@ var appConfig = {
     var db = {
       ip: process.env.DUNDB_APP_ENV_S3_DB1_BKED_IP1,
       headers: {
-        Authorization: process.env.FLIXNET_DB_PASS,
+        Authorization: process.env.DUNDB_APP_ENV_S3_DB1_PASS,
         'Content-Type': 'application/json',
         Accept: 'application/json; charset=UTF-8',
       },
@@ -61,40 +60,95 @@ var appConfig = {
 
     return db;
   },
+
+  sessions: function() {
+    var sessions = {
+      session: {
+        options:{
+          secret: process.env.DUNDB_APP_ENV_S2_WB1_SESS_SEC,
+          name: process.env.DUNDB_APP_ENV_S2_WB1_SESS_NAME,
+          resave: false,
+          saveUninitialized: false, 
+          cookie: { secure: true },
+          // genid:
+        },
+      },
+      store: {
+        options: {
+          host: process.env.DUNDB_APP_ENV_S4_DB1_BKED_IP1,
+          port: process.env.DUNDB_APP_ENV_S4_DB1_BKED_PORT,
+          db: parseInt(process.env.DUNDB_APP_ENV_S4_DB1_INST1),
+          pass: process.env.DUNDB_APP_ENV_S4_DB1_PASS,
+          // prefix: 'fliXnet:sessions:',
+        },
+      },
+    };
+
+    return sessions;
+  },
+
+  users: function() {
+    var users = {
+      secret: Buffer.from(process.env.DUNDB_APP_ENV_S2_WB1_USER_SEC),
+      store: {
+        host: process.env.DUNDB_APP_ENV_S4_DB1_BKED_IP1,
+        port: process.env.DUNDB_APP_ENV_S4_DB1_BKED_PORT,
+        options: {
+          db: parseInt(process.env.DUNDB_APP_ENV_S4_DB1_INST2),
+          auth_pass: process.env.DUNDB_APP_ENV_S4_DB1_PASS, 
+          return_buffers: true,
+          // prefix: 'fliXnet:users:',
+        },
+      },
+      auth: {
+        local: {
+          type: 'local',
+          passport: {
+            options: {
+              usernameField : 'user',
+              passwordField : 'password',
+              passReqToCallback : true,
+            },
+          },
+        },
+        oAuth: {
+          type: 'oAuth',
+          volos: {
+            options: {
+              encryptionKey: process.env.DUNDB_APP_ENV_S2_WB1_OAUT_SEC,
+              host: process.env.DUNDB_APP_ENV_S4_DB1_BKED_IP1,
+              port: process.env.DUNDB_APP_ENV_S4_DB1_BKED_PORT,
+              db: parseInt(process.env.DUNDB_APP_ENV_S4_DB1_INST3),
+              options:{
+                auth_pass: 'helloworld',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    return users;
+  },
+
+  krypto: function() {
+    var krypto = {
+      secret: Buffer.from(process.env.DUNDB_APP_ENV_S2_WB1_KRYP_SEC),
+      options: {
+        hashBytes: parseInt(process.env.DUNDB_APP_ENV_S2_WB1_KRYP_HBS),
+        saltBytes: parseInt(process.env.DUNDB_APP_ENV_S2_WB1_KRYP_SBS),
+        iterations: parseInt(process.env.DUNDB_APP_ENV_S2_WB1_KRYP_ITS),
+      },
+    };
+
+    return krypto;  
+  },
 };
 
-(function loadEnvironmentFile () {
-  var env = {};
-  var file = appConfig.environment().directory.toString() + appConfig.environment().file.toString();
-
-  try {
-    env = fs.readFileSync(file, 'UTF-8');
-    env = JSON.parse(env);
-    Object.keys(env).forEach(function(key) {
-      process.env[key] = env[key];
-    });
-  } catch (err) {
-    if(err.code === 'ENOENT') {
-      console.log('No .env-file found.');
-    } else {
-      console.log('Reading .env-file failed.');
-    }
-    throw (err);
-  }
-
-  // fs.unlinkSync(file)
-  // fs.rmdirSync(appConfig.environment().directory.toString());
-})();
-
-(function loadOtherFiles () {
-  process.env.WEB_HTTPS_KEY = fs.readFileSync(appConfig.web().https.key, 'utf8');
-  // process.env.FLIXNET_WEB_HTTPS_KEY = fs.readFileSync(appConfig.web().https.key, 'utf8');
-  process.env.WEB_HTTPS_CRT = fs.readFileSync(appConfig.web().https.crt, 'utf8');
-  // process.env.FLIXNET_WEB_HTTPS_CRT = fs.readFileSync(appConfig.web().https.crt, 'utf8');
-  process.env.DB_HTTPS_CA = fs.readFileSync(appConfig.db().https.ca, 'utf8');
-  // process.env.FLIXNET_DB_HTTPS_CA = fs.readFileSync(appConfig.db().https.ca, 'utf8');
-
-  // fs.unlinkSync(appConfig.web().https.key)  
+(function readPKIFiles() {
+  process.env.FLIXNET_WEB_HTTPS_KEY = fs.readFileSync(appConfig.web().https.key, 'utf8');
+  process.env.FLIXNET_WEB_HTTPS_CRT = fs.readFileSync(appConfig.web().https.crt, 'utf8');
+  process.env.FLIXNET_DB_HTTPS_CA = fs.readFileSync(appConfig.db().https.ca, 'utf8');
 })();
 
 module.exports = appConfig;

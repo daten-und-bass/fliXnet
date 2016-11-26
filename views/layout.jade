@@ -34,7 +34,8 @@ html(lang='#{locale}')
             nav.android-navigation.mdl-navigation
               a.mdl-navigation__link.mdl-typography--text-uppercase(href='/#{locale}') #{localesMenu['Home']}
               a.mdl-navigation__link.mdl-typography--text-uppercase(href='/#{locale}/about') #{localesMenu['About']}
-              a.mdl-navigation__link.mdl-typography--text-uppercase(disabled='' style="opacity: 0.46;") #{localesMenu['Login']}
+              //- a.mdl-navigation__link.mdl-typography--text-uppercase(disabled='' style="opacity: 0.46;") #{localesMenu['Login']}
+              //- if (session && session.user && session.user.isLoggedIn)
           span.android-mobile-title.mdl-layout-title
             a(href='/#{locale}').flixnet-title-header.logo-font #{localesMenu['fliXnet']}
           button#more-button.android-more-button.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect
@@ -47,7 +48,22 @@ html(lang='#{locale}')
             li.mdl-menu__item
               a.mdl-navigation__link(onclick='app.locale.changeLocale("#{locale}", "/es")') Español 
             li.mdl-menu__item
-              a.mdl-navigation__link(onclick='app.locale.changeLocale("#{locale}", "/fr")') Français 
+              a.mdl-navigation__link(onclick='app.locale.changeLocale("#{locale}", "/fr")') Français
+          //- div(style="position: relative;")
+          if (!user)
+            button#account-button.android-more-button.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect
+              i.material-icons account_circle
+            ul.mdl-menu.mdl-js-menu.mdl-menu--bottom-right.mdl-js-ripple-effect(for='account-button')
+              li.mdl-menu__item
+                a.mdl-navigation__link(href='/#{locale}/user/login') #{localesMenu['Login']}
+          else
+            button#account-button.android-more-button.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect
+              i.material-icons weekend
+            ul.mdl-menu.mdl-js-menu.mdl-menu--bottom-right.mdl-js-ripple-effect(for='account-button')
+              li.mdl-menu__item
+                a.mdl-navigation__link(href='/#{locale}/user') #{localesMenu['Account']}
+              li.mdl-menu__item
+                a.mdl-navigation__link(href='/#{locale}/user/logout') #{localesMenu['Logout']}
       // Fly-out Side Navigation
       .android-drawer.mdl-layout__drawer
         span.mdl-layout-title
@@ -63,6 +79,10 @@ html(lang='#{locale}')
           span.mdl-navigation__link(href='') #{localesMenu['Persons']}
           a.mdl-navigation__link(href='/#{locale}/persons/create') #{localesMenu['Create a Person']}
           a.mdl-navigation__link(href='/#{locale}/persons') #{localesMenu['All Persons']}
+          .android-drawer-separator
+          a.mdl-navigation__link(href='/#{locale}/about') #{localesMenu['About']}
+          a.mdl-navigation__link(href='/#{locale}/imprint') #{localesMenu['Imprint']}
+          a.mdl-navigation__link(href='/#{locale}/contact') #{localesMenu['Contact']}
       .android-content.mdl-layout__content
         block content
         footer.android-footer.mdl-mega-footer
@@ -73,7 +93,7 @@ html(lang='#{locale}')
             .mdl-mega-footer--right-section
           .mdl-mega-footer--middle-section
             p.mdl-typography--font-light #{localesMenu['The Movie Graph']} - #{localesMenu['Current Year YYYY']} 
-              a.android-link.mdl-typography--font-thin(href='https://twitter.com/daten_und_bass' target='_blank') daten&bass
+              a.android-link.mdl-typography--font-thin(href='https://daten-und-bass.io' target='_blank') daten&bass
             p.mdl-typography--font-light #{localesMenu['A <female>']} 
               a.android-link.mdl-typography--font-thin(href='https://nodejs.org' target='_blank') Node.js 
               | #{localesMenu['sample implementation of']} 
@@ -86,6 +106,11 @@ html(lang='#{locale}')
             ul.mdl-menu.mdl-js-menu.mdl-menu--top-left.mdl-js-ripple-effect(for='version-dropdown')
               li.mdl-menu__item
                 a.mdl-menu__item(href='/#{locale}') #{localesMenu['Home']}
+              li.mdl-menu__item
+                if (!user)
+                  a.mdl-menu__item(href='/#{locale}/user/login') #{localesMenu['Login']}
+                else
+                  a.mdl-menu__item(href='/#{locale}/user') #{localesMenu['Account']}
             a#developers-dropdown.android-link.android-link-menu.mdl-typography--font-light
               | #{localesMenu['Developers']} 
               i.material-icons arrow_drop_up
@@ -96,4 +121,5 @@ html(lang='#{locale}')
             a.android-link.mdl-typography--font-light(href='/#{locale}/contact') #{localesMenu['Contact']}
     // MDL APP
     script(src="https://code.getmdl.io/1.1.3/material.min.js")
+
 

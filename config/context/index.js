@@ -3,7 +3,12 @@
 var api = require('yamljs').load('api/swagger/swagger.yaml');
 
 var webConfig = require('../app').web();
+var sessionsConfig = require('../app').sessions();
+var usersConfig = require('../app').users();
+var kryptoConfig = require('../app').krypto();
 var dbConfig = require('../app').db();
+
+var krypto = require('../authentication/krypto');
 
 var queries = require('../../models/neo4j/rest_api/queries');
 var params = require('../../models/neo4j/rest_api/params');
@@ -13,10 +18,19 @@ var requests = require('../../models/neo4j/rest_api/requests');
 
 var localesMenuApp = require('../locales/locales_menu_app');
 var localesCommandsApp = require('../locales/locales_commands_app');
+var localesUserApp = require('../locales/locales_user_app');
 var localesUnitsApp = {};
 var localesStringsGraph = require('../locales/locales_strings_graph');
 var localesStringsMovies = require('../locales/locales_strings_movies');
 var localesStringsPersons = require('../locales/locales_strings_persons');
+
+var users = {
+  usersConfig: usersConfig,
+  krypto: krypto(kryptoConfig),
+}
+
+var userDB = require('../../models/redis/node_redis/userDB')
+               .call(users);
 
 var context = {
   index: {
@@ -28,6 +42,8 @@ var context = {
     params: params,
     callbacks: callbacks,
     requests: requests.db(dbConfig),
+    userDB: userDB,
+    // sessionDB: sessionDB,
   },
   graph: {
     type: 'graph',
@@ -92,6 +108,7 @@ var localesUnfiltered = {
   supportedLocales: context.index.supportedLocales,
   menu: localesMenuApp,
   commands: localesCommandsApp,
+  user: localesUserApp,
   units: localesUnitsApp,
   graph: localesStringsGraph,
   movies: localesStringsMovies,
@@ -123,6 +140,9 @@ var context_html_web_persons = require('../../api/controllers/html_web_nodes')
                                .call(context.nodes.persons, api, localesUtils); //(context.index.defaultLocale, context.index.supportedLocales, localesMenuApp, localesCommandsApp, localesUnitsApp, localesStringsGraph, localesStringsMovies, localesStringsPersons));
 
 module.exports = {
+  webConfig: webConfig,
+  sessionsConfig: sessionsConfig,
+  userDB: userDB,
   context_html_web_index: context_html_web_index,
   context_json_api_graph: context_json_api_graph,
   context_json_api_movies: context_json_api_movies,

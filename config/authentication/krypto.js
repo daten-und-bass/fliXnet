@@ -14,6 +14,7 @@ var krypto = function (kryptoConfig) {
       
       return encrypted;
     },
+
     decryptUserName: function(userEcrypted, secret) {
       var cipher = crypto.createDecipher('aes192', secret);
 
@@ -22,6 +23,7 @@ var krypto = function (kryptoConfig) {
       
       return decrypted;
     },
+
     hashUser: function(user, callback) {
       var secret = kryptoConfig.secret; 
 
@@ -34,9 +36,10 @@ var krypto = function (kryptoConfig) {
         userKey.writeUInt32BE(kryptoConfig.options.iterations, 0, true);
         userHash.copy(userKey, 4);
 
-        callback(null, userKey);
+        return callback(null, userKey);
       });
     },
+    
     hashPassword: function (password, callback) {
 
       crypto.randomBytes(kryptoConfig.options.saltBytes, function(err, salt) {
@@ -55,16 +58,17 @@ var krypto = function (kryptoConfig) {
           salt.copy(passwordValue, 8);
           passwordHash.copy(passwordValue, salt.length + 8);
 
-          callback(null, passwordValue);
+          return callback(null, passwordValue);
         });
       });
     },
-    verifyPassword: function(password, combined, callback) {
-      var saltBytes = combined.readUInt32BE(0);
-      var hashBytes = combined.length - saltBytes - 8;
-      var iterations = combined.readUInt32BE(4);
-      var salt = combined.slice(8, saltBytes + 8);
-      var hash = combined.toString('binary', saltBytes + 8);
+
+    verifyPassword: function(password, storedPasswordValue, callback) {
+      var saltBytes = storedPasswordValue.readUInt32BE(0);
+      var hashBytes = storedPasswordValue.length - saltBytes - 8;
+      var iterations = storedPasswordValue.readUInt32BE(4);
+      var salt = storedPasswordValue.slice(8, saltBytes + 8);
+      var hash = storedPasswordValue.toString('binary', saltBytes + 8);
 
       crypto.pbkdf2(password, salt, iterations, hashBytes, function(err, verify) {
         if (err) { return callback(err); }
@@ -79,6 +83,4 @@ var krypto = function (kryptoConfig) {
   };
 };
 
-module.exports = {
-  krypto: krypto,
-};
+module.exports = krypto;
