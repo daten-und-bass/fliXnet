@@ -1807,7 +1807,7 @@ securityDefinitions:
     scopes:
       write:user: Write operations for user management
       write:graph: Write operations for for graph relationships
-      write:movies: Write operations for nodes of the type 'person'
+      write:movies: Write operations for nodes of the type 'movies'
       write:persons: Write operations for nodes of the type 'person'
 
 x-volos-resources:

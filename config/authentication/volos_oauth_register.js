@@ -1,12 +1,14 @@
 'use strict';
 
+var fliXnetOAuthOptions = require('../app/').users().auth.oAuth.volos.options;
+
 var config = {};
 
 config.devRequest = {
-  firstName: 'Arne',
-  lastName: 'Wossning',
-  email: 'arne@daten-und-bass.io',
-  userName: 'arne@daten-und-bass.io'
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'email',
+  userName: 'userName/e-mail',
 };
 
 config.appRequest = {
@@ -18,10 +20,13 @@ config.appRequest = {
 
 var ManagementProvider = require('volos-management-redis');
 var options = {
-  encryptionKey : "abc123",
-  host: "192.168.103.21",
-  port: 6379,
-  db: 3,
+  encryptionKey : fliXnetOAuthOptions.encryptionKey,
+  host: fliXnetOAuthOptions.host,
+  port: fliXnetOAuthOptions.port,
+  db: fliXnetOAuthOptions.db,
+  options: {
+    auth_pass: fliXnetOAuthOptions.options.auth_pass
+  }
 };
 
 var management = ManagementProvider.create(options);
