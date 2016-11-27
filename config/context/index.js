@@ -34,8 +34,7 @@ var userDB = require('../../models/redis/node_redis/userDB')
 
 var context = {
   index: {
-    crudTypes: [],      // @TODO: Not used yet, better taken from Swagger ? Does each nodetype require own CRUDs? Global?
-    supportedLocales: ['de', 'en', 'es', 'fr'], 
+    supportedLocales: ['de', 'en', 'es', 'fr'],   // better taken from Swagger ?
     defaultLocale: 'en',
     strings: localesStringsGraph,
     movieQueries: queries.movies(),
@@ -43,7 +42,6 @@ var context = {
     callbacks: callbacks,
     requests: requests.db(dbConfig),
     userDB: userDB,
-    // sessionDB: sessionDB,
   },
   graph: {
     type: 'graph',
