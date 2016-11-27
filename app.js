@@ -44,10 +44,25 @@ app.use(session(sessionOptions));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function(req, res, next){
+app.use(function reqToResLocals(req, res, next){
     res.locals.session = req.session;
     res.locals.user = req.user;
     next();
+});
+
+app.use(function logErrors(err, req, res, next) {
+  console.error(err.stack);
+  next(err);
+});
+
+app.use(function clientErrorHandler(err, req, res, next) {
+  if (req.xhr) { res.status(500).send({ error: 'Something failed!' }); } 
+  else { next(err); }
+});
+
+app.use(function errorHandler(err, req, res, next) {
+  res.status(500);
+  res.render('error', { error: err });
 });
 
 // check if reqauthenticated()and others return correctly for each case???
