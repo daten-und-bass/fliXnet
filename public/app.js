@@ -17,7 +17,7 @@ var app = (function() {
 
   function changeLocale(currentLocale, newLocale) {
     var searchParam = location.search;
-    var newLocation = location.pathname.replace('/' + currentLocale + '/', newLocale + '/');
+    var newLocation = location.pathname.replace('/' + currentLocale, newLocale);
     newLocation += searchParam;
     
     location.assign(newLocation);
