@@ -27,6 +27,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
+    "redis": "^0.10.3",
     "request": "^2.73.0",
     "swagger-express-mw": "^0.1.0",
     "volos-oauth-redis": "^0.13.0",
