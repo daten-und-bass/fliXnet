@@ -97,7 +97,6 @@ var appConfig = {
           db: parseInt(process.env.DUNDB_APP_ENV_S4_DB1_INST2),
           auth_pass: process.env.DUNDB_APP_ENV_S4_DB1_PASS, 
           return_buffers: true,
-          detect_buffers: true,
           // prefix: 'fliXnet:users:',
         },
       },
