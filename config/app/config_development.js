@@ -97,6 +97,7 @@ var appConfig = {
           db: parseInt(process.env.DUNDB_APP_ENV_S4_DB1_INST2),
           auth_pass: process.env.DUNDB_APP_ENV_S4_DB1_PASS, 
           return_buffers: true,
+          detect_buffers: true,
           // prefix: 'fliXnet:users:',
         },
       },
@@ -120,7 +121,7 @@ var appConfig = {
               port: process.env.DUNDB_APP_ENV_S4_DB1_BKED_PORT,
               db: parseInt(process.env.DUNDB_APP_ENV_S4_DB1_INST3),
               options:{
-                auth_pass: 'helloworld',
+                auth_pass: process.env.DUNDB_APP_ENV_S4_DB1_PASS,
               },
             },
           },
