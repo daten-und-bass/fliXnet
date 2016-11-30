@@ -21,7 +21,7 @@ block content
     script.
       app.content.htmlElements.createOptionsRelationship(!{JSON.stringify(persons)}, !{JSON.stringify(relationships)}, !{JSON.stringify(movies)});
       document.getElementById('createRelationship').addEventListener('submit', function (event) {
-        if(!document.getElementById('property').checkValidity()) {
+        if(!document.getElementById('property').checkValidity() || !document.getElementById('rating').checkValidity() ) {
           event.preventDefault();
         }
       }, false); 

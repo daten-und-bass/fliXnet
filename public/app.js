@@ -5,18 +5,6 @@ var app = (function() {
   var paginationNodesTable = 1;
   var paginationGraphTable = 0;
 
-  var personsList;
-  var relationshipsList;
-  var movieList;
-
-  var source;
-  var type;
-  var target;
-  var asLabel;
-  var property;
-
-  var updateLink;
-
   function searchField(event, locale) {
     var searchField = document.getElementById('search-field');
     if (event.keyCode == 13 && searchField.value.length > 0) {
@@ -29,7 +17,7 @@ var app = (function() {
 
   function changeLocale(currentLocale, newLocale) {
     var searchParam = location.search;
-    var newLocation = location.pathname.replace('/' + currentLocale + '/', newLocale + '/');
+    var newLocation = location.pathname.replace('/' + currentLocale, newLocale);
     newLocation += searchParam;
     
     location.assign(newLocation);
@@ -95,7 +83,8 @@ var app = (function() {
 
       var linkLine = link.append('line');  
 
-      var linkText = link.append('text')
+      var linkText = link.append("svg:a")
+          .append('text')
           .attr('text-anchor', 'middle')
           .attr('dy', function(d) { return 1 - d.linkCount + 'em'; })
           .text(function(d) { return d.value; });
@@ -133,6 +122,8 @@ var app = (function() {
           .attr('dy', '.35em')
           .style('fill', function(d) { return color(d.label); });
 
+      linkText.on('dblclick', function (d) {return self.location = '/' + locale + '/graph/relationships/read/' + d.id;});
+
       node.on('dblclick', dblclick);
 
       nodeIcon.on('mouseenter', mouseenter);
@@ -148,6 +139,7 @@ var app = (function() {
 
         linkText.attr('transform', function(d) {
               var angle = Math.atan((d.source.y - d.target.y) / (d.source.x - d.target.x)) * 180 / Math.PI;
+              if(isNaN(angle)) { angle = 0; }
               return 'translate(' + [((d.source.x + d.target.x) / 2), ((d.source.y + d.target.y) / 2)] + ')rotate(' + angle + ')';
             });
 
@@ -263,7 +255,7 @@ var app = (function() {
     createNodesTableBody('nodesTableBody', url);
   }
 
-  function createGraphTableBody(element, url) {
+  function createGraphTableBody(element, url, locale) {
     var elementArray = [];
     var oldTBody = document.getElementById(element);
     var newTBody = document.createElement('tbody');
@@ -300,6 +292,8 @@ var app = (function() {
             innterTd4.textContent = elementArray[index].row[3];
             innterTd4.className = 'mdl-data-table__cell--non-numeric';
           outerTr.appendChild(innterTd4);
+          outerTr.style.cursor = 'pointer';
+          outerTr.onclick = function () {return self.location = '/' + locale + '/graph/relationships/read/' + elementArray[index].row[4];};
 
           documentFragment.appendChild(outerTr);
         });
@@ -332,16 +326,16 @@ var app = (function() {
       }
     };
     xhr.send();
-  }
 
-  function paginateGraphTableBodyBackward() {
-    paginationGraphTable = paginationGraphTable - 6;
-    createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', paginationGraphTable);
-  }
+    function paginateGraphTableBodyBackward() {
+      paginationGraphTable = paginationGraphTable - 6;
+      createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', locale);
+    }
 
-  function paginateGraphTableBodyForward() {
-    paginationGraphTable = paginationGraphTable + 6;
-    createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', paginationGraphTable);
+    function paginateGraphTableBodyForward() {
+      paginationGraphTable = paginationGraphTable + 6;
+      createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', locale);
+    }
   }
 
   function createNodesMdlCardsDiv(element, url, locale, showString) {
@@ -354,7 +348,6 @@ var app = (function() {
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        // elementArray = JSON.parse(xhr.responseText).data;
         elementArray = parseJsonTryer(xhr.responseText).data;
         
         if (element === 'TopColleagues' && elementArray.length === 0) {
@@ -389,12 +382,10 @@ var app = (function() {
                   innnerIMovieMedia.className = 'material-icons';
                   innnerIMovieMedia.style.opacity = '0.46';
                   if (element === 'MovieCast') {
-                    // console.log(element);
                     innnerIMovieMedia.textContent = 'perm_contact_calendar \v'; 
                   } else {
                     innnerIMovieMedia.textContent = 'movie \v';
                   }
-                  // innnerIMovieMedia.textContent = 'movie &nbsp;';
               var innnerH4AmountRoles = document.createElement('h4');
                   innnerH4AmountRoles.className ='mdl-card__title-text';
                   innnerH4AmountRoles.textContent = elementArray[index].row[2];
@@ -465,8 +456,9 @@ var app = (function() {
   }
 
   function toggleViewReadRelationship(value, titleString) {
-    property = document.getElementById('property');
-    updateLink = document.getElementById('updateLink'); 
+    var property = document.getElementById('property');
+    var rating = document.getElementById('rating');
+    var updateLink = document.getElementById('updateLink');
 
     switch(value[1]) {
       case 'ACTED_IN':
@@ -478,39 +470,36 @@ var app = (function() {
       case 'WROTE':
       case 'FOLLOWS':
         property.style.display = 'none';
+        rating.style.display = 'none';
         updateLinkDeactivator(updateLink, titleString);
         break;
-      // case 'PRODUCED':
-      //   property.style.display = 'none';
-      //   updateLinkDeactivator(updateLink, titleString);
-      //   break;
       case 'REVIEWED':
         property.style.display = 'block';
         property.textContent = 'Summary: ' + value[3] + '.';
+        if (value[4]) {
+          rating.textContent = 'Rating: ' + value[4] + '.';
+        } else {
+          rating.textContent = 'Rating: n.a.';
+        }
+        
         break;
-      // case 'WROTE':
-      //   property.style.display = 'none';
-      //   updateLinkDeactivator(updateLink, titleString);
-      //   break;
-      // case 'FOLLOWS':
-      //   property.style.display = 'none';
-      //   updateLinkDeactivator(updateLink, titleString);
-      //   break;
       default:
         console.log('default');
     }
   }
 
   function toggleViewUpdateRelationship(value) {
-    asLabel = document.getElementById('asLabel')
-    property = document.getElementById('property');
-    asHint = document.getElementById('asHint');
+    var asLabel = document.getElementById('asLabel')
+    var property = document.getElementById('property');
+    var rating = document.getElementById('rating');
+    var asHint = document.getElementById('asHint');
 
     switch(value[1]) {
       case 'ACTED_IN':
         property.style.display = 'inline';
         asLabel.style.display = 'inline';
         asHint.style.display = 'inline';
+        rating.style.display = 'none';
         break;
       case 'DIRECTED':
       case 'PRODUCED':
@@ -519,26 +508,85 @@ var app = (function() {
         property.style.display = 'none';
         asLabel.style.display = 'none';
         asHint.style.display = 'none';
+        rating.style.display = 'none';
         break;
-      // case 'PRODUCED':
-      //   property.style.display = 'none';
-      //   asLabel.style.display = 'none';
-      //   break;
       case 'REVIEWED':
+        asHint.style.display = 'none';
         property.style.display = 'inline';
+        rating.style.display = 'inline';
         asLabel.textContent = ' Summary: '
         property.textContent = value[4];
+        rating.textContent = value[5];
         break;
-      // case 'WROTE':
-      //   property.style.display = 'none';
-      //   asLabel.style.display = 'none';
-      //   break;
-      // case 'FOLLOWS':
-      //   property.style.display = 'none';
-      //   asLabel.style.display = 'none';
-      //   break;
       default:
         console.log('default');
+    }
+  }
+
+  function createOptionsRelationship(persons, relationships, movies) {
+    var personsList = optionCreator(persons, '', true);
+    var relationshipsList = optionCreator(relationships, '', false);
+    var movieList = optionCreator(movies, '', true);
+
+    var source = document.getElementById('source');
+    var type = document.getElementById('type');
+    var target = document.getElementById('target');
+    var asLabel = document.getElementById('asLabel');
+    var property = document.getElementById('property');
+    var rating = document.getElementById('rating');
+
+    type.onchange = targetFieldChanger;
+    
+    source.appendChild(personsList.cloneNode(true));
+    type.appendChild(relationshipsList.cloneNode(true));
+    target.appendChild(movieList.cloneNode(true));
+
+    function targetFieldChanger() {
+      var valueText = type.options[type.selectedIndex].value;
+      switch(valueText) {
+        case 'ACTED_IN':
+          target.options.length = 0;
+          target.appendChild(movieList.cloneNode(true));
+          asLabel.style.display = 'inline';
+          asHint.style.display = 'inline';
+          property.required = true;
+          property.placeholder = 'Role (in English)';
+          property.size=20;
+          property.style.display = 'inline';
+          rating.style.display = 'none';
+          break;
+        case 'DIRECTED':
+        case 'PRODUCED':
+        case 'REVIEWED':
+        case 'WROTE':
+          target.options.length = 0;
+          target.appendChild(movieList.cloneNode(true));
+          asLabel.style.display = 'none';
+          asHint.style.display = 'none';
+          if(valueText === 'REVIEWED') {
+            property.placeholder='Summary (in English)';
+            rating.placeholder='Rating 0-100';
+            property.size=50;
+            property.style.display = 'inline';
+            rating.style.display = 'inline';
+            property.required = true;
+          } else {
+            property.style.display = 'none';
+            rating.style.display = 'none';
+            property.required = false;
+          }  
+          break;
+        case 'FOLLOWS':
+          asLabel.style.display = 'none';
+          asHint.style.display = 'none';
+          property.style.display = 'none';
+          target.options.length = 0;
+          property.required = false;
+          target.appendChild(personsList.cloneNode(true));
+          break;
+        default:
+          console.log('default');
+      }
     }
   }
 
@@ -557,68 +605,6 @@ var app = (function() {
     return documentFragment;
   }
 
-  function targetFieldChanger() {
-    var valueText = type.options[type.selectedIndex].value;
-    switch(valueText) {
-      case 'ACTED_IN':
-        target.options.length = 0;
-        target.appendChild(movieList.cloneNode(true));
-        asLabel.style.display = 'inline';
-        asHint.style.display = 'inline';
-        property.required = true;
-        property.placeholder = 'Role (in English)';
-        property.size=20;
-        property.style.display = 'inline';
-        break;
-      case 'DIRECTED':
-      case 'PRODUCED':
-      case 'REVIEWED':
-      case 'WROTE':
-        target.options.length = 0;
-        target.appendChild(movieList.cloneNode(true));
-        asLabel.style.display = 'none';
-        asHint.style.display = 'none';
-        if(valueText === 'REVIEWED') {
-          property.placeholder='Summary (in English)';
-          property.size=50;
-          property.style.display = 'inline';
-          property.required = true;
-        } else {
-          property.style.display = 'none';
-          property.required = false;
-        }  
-        break;
-      case 'FOLLOWS':
-        asLabel.style.display = 'none';
-        asHint.style.display = 'none';
-        property.style.display = 'none';
-        target.options.length = 0;
-        property.required = false;
-        target.appendChild(personsList.cloneNode(true));
-        break;
-      default:
-        console.log('default');
-    }
-  }
-
-  function createOptionsRelationship(persons, relationships, movies) {
-    personsList = optionCreator(persons, '', true);
-    relationshipsList = optionCreator(relationships, '', false);
-    movieList = optionCreator(movies, '', true);
-
-    source = document.getElementById('source');
-    type = document.getElementById('type');
-    target = document.getElementById('target');
-    asLabel = document.getElementById('asLabel');
-    property = document.getElementById('property');
-
-    type.onchange = targetFieldChanger;
-    
-    source.appendChild(personsList.cloneNode(true));
-    type.appendChild(relationshipsList.cloneNode(true));
-    target.appendChild(movieList.cloneNode(true));
-  }
-
   function createOptionsReadBulk(element, url, inQueryParam, unknownString) {
     var xhr = new XMLHttpRequest();
     var distinctValues;
@@ -628,10 +614,9 @@ var app = (function() {
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        // distinctValues = JSON.parse(xhr.responseText).data[0].row[0];
+        
         distinctValues = parseJsonTryer(xhr.responseText).data[0].row[0];;
         isPropertyInAll = parseJsonTryer(xhr.responseText).data[0].row[1];
-        // if(JSON.parse(xhr.responseText).data[0].row[1] === false) {
         if(isPropertyInAll === false) {
           distinctValues.unshift(-1); 
         }        
@@ -644,6 +629,32 @@ var app = (function() {
     };
 
     xhr.send();
+  }
+
+  function checkInput(inputsArray, checkIcon, checkMessage, checkMessageString, passwordInputsArray) {
+    var valid = false;
+
+    valid = inputsArray.every(function (element, index, inputsArray) {
+      return element.checkValidity();
+    });
+
+    if (passwordInputsArray) {
+      valid = (passwordInputsArray[0] && passwordInputsArray[0] === passwordInputsArray[1] );
+    }
+
+    if(valid) {
+      checkIcon.style.color = 'rgb(76,175,80)';
+      checkIcon.innerText = 'check_circle';
+      checkMessage.innerText = '';
+
+      return true;
+    } else {
+      checkIcon.style.color = 'rgb(244,67,54)';
+      checkIcon.innerText = 'error';
+      checkMessage.innerText = checkMessageString;
+
+      return false;
+    }
   }
 
   function urlValidator(url) {
@@ -660,7 +671,6 @@ var app = (function() {
 
     var back;
     if (urlValidator(document.referrer)){
-      // console.log(urlValidator(document.referrer));
       back = document.referrer;
     } else {
       back = window.location.origin + '/' + nodeType;
@@ -670,7 +680,6 @@ var app = (function() {
       xhr.open('POST', encodeURI(url));
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-          // alert(deletedString + ": " + JSON.parse(xhr.responseText).relationship_deleted);
           alert(deletedString + ": " + parseJsonTryer(xhr.responseText).relationship_deleted);
           window.location.href = back;
         }
@@ -694,7 +703,6 @@ var app = (function() {
     var back;
 
     if (urlValidator(document.referrer)){
-      console.log(urlValidator(document.referrer));
       back = document.referrer;
     } else {
       back = window.location.origin + '/' + nodeType;
@@ -704,7 +712,6 @@ var app = (function() {
       xhr.open('POST', encodeURI(url));
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-          // alert(deletedString + ': ' + JSON.parse(xhr.responseText).nodes_deleted);
           alert(deletedString + ': ' + parseJsonTryer(xhr.responseText).nodes_deleted);
           window.location.href = back;
         }
@@ -721,6 +728,36 @@ var app = (function() {
     } 
   }
 
+  function deleteUser(url, user, locale, deleteString, deletedString) {
+    var txt = deleteString + ': "' + user + '" ?';
+    var r = confirm(txt);
+    var xhr = new XMLHttpRequest();
+
+    if(r == true) {
+      xhr.open('POST', encodeURI(url));
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          if (parseJsonTryer(xhr.responseText).success === true) {
+            alert(deletedString + ': "' + user + '" !');
+            window.location.href = '/' + locale + '/user/logout';
+          } else {
+            alert('Not deleted:');
+            window.location.href = '/' + locale + '/user';
+          }
+        }
+        else if (xhr.readyState === 4 && xhr.status === 404) {
+          alert('The user to delete no longer exists');
+          window.location.href = '/';
+        }
+        else if (xhr.readyState === 4 && xhr.status === 400 || xhr.status === 500) {
+          alert('Something went wrong');
+          window.location.href = '/';
+        }
+      };
+      xhr.send();
+    } 
+  }
+
   function parseJsonTryer(jsonToParse) {
     var result;
 
@@ -729,7 +766,6 @@ var app = (function() {
     } catch(err) {
       alert(err.message);
     }
-    console.log(typeof result);
 
     return result;
   }
@@ -753,17 +789,19 @@ var app = (function() {
         createNodesTableBody: createNodesTableBody,
         paginateNodesTableBodyBothWays: paginateNodesTableBodyBothWays,
         createGraphTableBody: createGraphTableBody,
-        paginateGraphTableBodyBackward: paginateGraphTableBodyBackward,
-        paginateGraphTableBodyForward: paginateGraphTableBodyForward,
         createNodesMdlCardsDiv: createNodesMdlCardsDiv,
         toggleViewReadRelationship: toggleViewReadRelationship,
         toggleViewUpdateRelationship: toggleViewUpdateRelationship,
         createOptionsRelationship: createOptionsRelationship,
         createOptionsReadBulk: createOptionsReadBulk,
       },
+      validation: {
+        checkInput: checkInput,
+      },
       userInteraction: {
         deleteRelationship: deleteRelationship,
         deleteNode: deleteNode,
+        deleteUser: deleteUser,
       },
     },
   }; 

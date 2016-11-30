@@ -1,7 +1,5 @@
 'use strict';
 
-var validator = require('validator');
-
 var callbacks = {
   main: function (api) {
     
@@ -100,7 +98,7 @@ var callbacks = {
         };
       },
 
-      graph: function (res, operationId, type, locales, template, nodeId, subType, relationshipTypes) {
+      graph: function (res, operationId, type, locales, template, nodeId, subType, relationshipTypes, searchParam) {
         
         return {
           api: function (error, responseBodyFromNeo) {
@@ -182,11 +180,9 @@ var callbacks = {
 
               switch (operationId) {
                 case api.paths[basePath + '/create'].get.operationId:
-                  // responseObjectToSwagger.persons = callbacks.utils.escapeStringProperties(responseBodyFromNeo[0].body.data);
                   responseObjectToSwagger.persons = responseBodyFromNeo[0].body.data;
                   responseObjectToSwagger.relationships = relationshipTypes;
                   responseObjectToSwagger.movies = responseBodyFromNeo[1].body.data;
-                  // responseObjectToSwagger.movies = callbacks.utils.escapeStringProperties(responseBodyFromNeo[1].body.data);
                   break;
                 case api.paths[basePath + '/create'].post.operationId:
                   responseObjectToSwagger.slogan = responseObjectToSwagger.localesStrings['New Relationship created'];
@@ -196,14 +192,14 @@ var callbacks = {
                   return res.redirect(url);
                 case api.paths[basePath + '/read' + idPathTemplate].get.operationId:
                   responseObjectToSwagger.slogan = responseObjectToSwagger.localesStrings['Relationship'];
-                  responseObjectToSwagger.relationship = callbacks.utils.escapeAllProperties(responseBodyFromNeo.results[0].data[0].row);
+                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0].row;
                   break;
                 case api.paths[basePath + '/update' + idPathTemplate].get.operationId:
-                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0];
+                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0].row;
                   break;
                 case api.paths[basePath + '/update' + idPathTemplate].post.operationId:
                   responseObjectToSwagger.slogan = responseObjectToSwagger.localesStrings['Relationship updated'];
-                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0];
+                  responseObjectToSwagger.relationship = responseBodyFromNeo.results[0].data[0].row;
                   break;
                 case api.paths[basePath + '/delete' + idPathTemplate].post.operationId:
                   responseObjectToSwagger.relationship_deleted = responseBodyFromNeo.results[0].stats.relationship_deleted;
@@ -244,6 +240,8 @@ var callbacks = {
                 localesCommands: locales.localesCommands,
                 localesStrings: locales.localesStrings,
                 id: typeof nodeId === 'undefined' ? -1 : parseInt(nodeId),
+                searchParam: searchParam,
+                message: "No Results found."
               };
 
               switch (operationId) {
@@ -328,6 +326,7 @@ var callbacks = {
         links = links.concat(row.graph.relationships.map(function(r) {
 
           return {
+            id: r.id,
             source: callbacks.utils.idIndex(nodes, r.startNode),
             target: callbacks.utils.idIndex(nodes, r.endNode),
             value: r.type,
@@ -336,35 +335,6 @@ var callbacks = {
       });
 
       return { nodes:nodes, links:links };
-    },
-    escapeStringProperties: function (dirty) {
-      var clean = [];
-
-      dirty.map(function(element, index) {
-        clean[index] = [validator.escape(element[0]), element[1]];          
-      });
-
-      return clean;
-    },
-    escapeAllProperties: function (dirty) {
-      var clean = [];
-      
-      dirty.forEach(function(element, index) {
-        if(typeof(element) === 'string') {
-          clean[index] = validator.escape(element); 
-        } else if (Array.isArray(element)) {
-          var innerClean = [];
-          element.forEach(function (innerElement, innerIndex) {
-            innerClean[innerIndex] = validator.escape(innerElement);
-          });
-          clean[index] = innerClean;
-          // console.log(innerClean);
-        } else {
-          clean[index] = element; 
-        }
-      });
-      
-      return clean;
     },
   },
 };

@@ -1,0 +1,20 @@
+extends ../../layout
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.mdl-typography--display-1-color-contrast #{localesMenu['Account']}:
+    .flixnet-logo-font.flixnet-sub-slogan #{localesUser['Login Name']}: 
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light #{user.user}
+    br
+    .flixnet-logo-font.flixnet-sub-slogan #{localesUser['Full Name']}: 
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light #{user.fullname}
+    br
+    .flixnet-logo-font.flixnet-sub-slogan #{localesUser['Birth Date']}: 
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light #{user.birth}
+    br
+    .flixnet-logo-font.flixnet-sub-slogan #{localesUser['E-Mail']}: 
+    .flixnet-logo-font.flixnet-sub-slogan.mdl-typography--font-light #{user.email}
+    br
+    br
+    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(href='/#{locale}/user/update') #{localesCommands['Update']}
+    a.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(onclick="app.content.userInteraction.deleteUser('/#{locale}/user/delete/', '#{user.user}', '#{locale}', \'#{localesUser['Delete user']}\', \'#{localesUser['User deleted']}\')") #{localesCommands['Delete']}

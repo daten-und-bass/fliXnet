@@ -32,6 +32,12 @@ var localesUtils = function () {
     es: filterStrings(this.supportedLocales[2], this.defaultLocale, this.commands),
     fr: filterStrings(this.supportedLocales[3], this.defaultLocale, this.commands),
   };
+  var localesUser = {
+    de: filterStrings(this.supportedLocales[0], this.defaultLocale, this.user),
+    en: filterStrings(this.supportedLocales[1], this.defaultLocale, this.user),
+    es: filterStrings(this.supportedLocales[2], this.defaultLocale, this.user),
+    fr: filterStrings(this.supportedLocales[3], this.defaultLocale, this.user),
+  };
   // var localesUnits = {
     //   de: filterStrings(this.supportedLocales[0], localesUnits),
     //   en: filterStrings(this.supportedLocales[1], localesUnits),
@@ -69,6 +75,7 @@ var localesUtils = function () {
         locales.locale = localeOfCurrentReq;
         locales.localesMenu = localesMenu[localeOfCurrentReq];
         locales.localesCommands = localesCommands[localeOfCurrentReq];
+        locales.localesUser = localesUser[localeOfCurrentReq];
       } 
  
       switch (localesStrings['id'][that.defaultLocale][that.defaultLocale.toUpperCase()]) {

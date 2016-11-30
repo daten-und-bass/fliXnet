@@ -30,8 +30,6 @@ var errorHandlers = {
     utils: {
       responseCreator: function (error) {
         var responseObjectToSwagger = {};
-
-        console.log(process.env.NODE_ENV)
         
         responseObjectToSwagger.message = error.message;
         if (process.env.NODE_ENV === 'development') {
@@ -79,8 +77,6 @@ var errorHandlers = {
           localesCommands: locales.localesCommands,
           localesStrings: locales.localesStrings,
         };
-
-        console.log(process.env.NODE_ENV)
         
         responseObjectToSwagger.message = error.message;
         if (process.env.NODE_ENV === 'development') {

@@ -1,0 +1,60 @@
+extends ../../layout
+include ../../mixins/formInputs.jade
+
+block content
+  .flixnet-top-section.mdl-typography--text-center
+    .flixnet-logo-font.flixnet-sub-slogan #{localesMenu['Login']}
+    .flixnet-logo-font.mdl-typography--font-light
+      br
+      unless message !== 1
+        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") #{localesUser['Login required for this command - You will be redirected to repeat your command']}.
+      unless message !== 2
+        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") #{localesUser['Wrong password']}.
+      unless message !== 3
+        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") #{localesUser['Login Name not found']}.
+      unless message !== 4
+        p#loginmessage.mdl-color-text--red(style="color: rgb(255,64,129);") #{localesUser['Something went wrong']}.
+      form(name='loginUser', action=(redUrl===undefined ? '/#{locale}/user/login' : '/#{locale}/user/login/?redUrl=#{redUrl}'),  method='post')
+        fieldset
+          legend(style='font-weight: bold;') #{localesUser['Login Credentials']}:
+          br
+          div(style='display: inline-block;')
+            label #{localesUser['Login Name']}
+            br
+            +userInput
+          div(style='display: inline-block;')
+            label #{localesUser['Password']}
+            br
+            +passwordInput('password')    
+          i#checkIcon(class="material-icons" style="vertical-align: middle;")
+          p#checkMessage.mdl-color-text--red
+        button#submitButton.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(type='submit' disabled) #{localesCommands['Login']}
+      br
+      p #{localesUser['New here? Get registered']} 
+        a(href='/#{locale}/user/register') #{localesUser['here']}!
+
+  script.
+    function checkForm() {
+
+      var userInput = document.getElementById('user'); 
+      var passwordInput = document.getElementById('password');
+
+      var checkIcon = document.getElementById('checkIcon');
+      var checkMessage = document.getElementById('checkMessage');
+
+
+      var checkMessageString = "#{localesUser['Please specify a valid login name (one word with max. 64 of [a-z] and [0-9] and [._%@+-] allowed characters) and a well-formatted password (with at least 8 charcters)']}."
+
+      var submitButton = document.getElementById('submitButton');
+
+      var isInputValid = false; 
+
+      isInputValid = app.content.validation.checkInput([userInput, passwordInput], checkIcon, checkMessage, checkMessageString);
+
+      if(isInputValid)
+      {
+        submitButton.disabled = false;
+      } else {
+        submitButton.disabled = true;
+      }
+    }

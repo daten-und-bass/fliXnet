@@ -483,16 +483,18 @@ a img{
     opacity: 0;
   }
 
-  .android-more-button {
+/*  .android-more-button {
     display: none;
-  }
+  }*/
 
   .android-search-box.is-focused {
-    width: calc(100% - 48px);
+    /*width: calc(100% - 48px);*/
+    width: calc(100% - 12px);
   }
 
   .android-search-box .mdl-textfield__expandable-holder {
-    width: 100%;
+    /*width: 100%;*/
+    width: 45%;
   }
 
   .android-be-together-section {

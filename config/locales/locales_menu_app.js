@@ -58,6 +58,24 @@ var localesMenuApp = {
     'es': {'ES': 'Acceder'},
     'fr': {'FR': 'Se connecter'}, 
   },
+  'Register': {
+    'de': {'DE': 'Anmeldung'},
+    'en': {'EN': 'Register'},
+    'es': {'ES': 'Registrar'},
+    'fr': {'FR': 'Enregistrement'}, 
+  },
+  'Account': {
+    'de': {'DE': 'Account'},
+    'en': {'EN': 'Account'},
+    'es': {'ES': 'Cuenta'},
+    'fr': {'FR': 'Compte'}, 
+  },
+  'Logout': {
+    'de': {'DE': 'Logout'},
+    'en': {'EN': 'Logout'},
+    'es': {'ES': 'Cerrar Sesión'},
+    'fr': {'FR': 'Déconnexion'}, 
+  },
   'The Movie Graph': {
     'de': {'DE': 'Der Filmgraph'},
     'en': {'EN': 'The Movie Graph'},
@@ -128,7 +146,7 @@ var localesMenuApp = {
     'de': {'DE': 'Nutzer'},
     'en': {'EN': 'Users'},
     'es': {'ES': 'Usuarios'},
-    'fr': {'FR': 'Cybernautes'},
+    'fr': {'FR': 'Utilisateurs'},
   },
   'Developers': {
     'de': {'DE': 'Entwickler'},

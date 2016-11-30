@@ -7,59 +7,62 @@ var requests = {
     return { 
       api: {
         cypherRequest: function(query, params, resultType, includeStats, callback, resNodejs) {
-          console.log(query);
-
           request.post({
             headers: dbConfig.headers,
             url: dbConfig.https.url,
-            ca: process.env.DB_HTTPS_CA,
+            ca: process.env.FLIXNET_DB_HTTPS_CA,
             json: { statements: [{ statement: query, parameters: params, resultDataContents: resultType, includeStats: includeStats }] }, 
           }, function(err, res) {
               var nodesDeleted = 0
-             console.log(JSON.stringify(err));
-             console.log(JSON.stringify(res.body));
-             if(res.body.results[0] && res.body.results[0].stats) {
-              nodesDeleted = res.body.results[0].stats.nodes_deleted;
-             }
+              if(res.body.results[0] && res.body.results[0].stats) {
+                nodesDeleted = res.body.results[0].stats.nodes_deleted;
+              }
 
-             if (err) {
-              errorHandlers.api.nodejsError(err, resNodejs);
-             } else if (res.body.errors.length > 0){
-              errorHandlers.api.neo4jBadRequest(err, resNodejs, res.body);
-             } else if (res.body.results[0].data.length > 0 || nodesDeleted > 0){
-              callback(err, res.body);
-             } else {
-              errorHandlers.api.neo4jNotFound(err, resNodejs, res.body);
-             }      
+              if (err) {
+                errorHandlers.api.nodejsError(err, resNodejs);
+              } else if (res.body.errors.length > 0){
+                errorHandlers.api.neo4jBadRequest(err, resNodejs, res.body);
+              } else if (res.body.results[0].data.length > 0 || nodesDeleted > 0){
+                callback(err, res.body);
+              } else {
+                errorHandlers.api.neo4jNotFound(err, resNodejs, res.body);
+              }      
             }
           );
         },
       },
       web: {
-        cypherRequest: function(query, params, resultType, includeStats, callback, locales, resNodejs) {
-          console.log(query);
-
+        cypherRequest: function(query, params, resultType, includeStats, callback, locales, resNodejs, isSearchField) {
           request.post({
             headers: dbConfig.headers,
             url: dbConfig.https.url,
-            ca: process.env.DB_HTTPS_CA,
+            ca: process.env.FLIXNET_DB_HTTPS_CA,
             json: { statements: [{ statement: query, parameters: params, resultDataContents: resultType, includeStats: includeStats }] }, 
           }, function(err, res) {
-              var nodesDeleted = 0
-             console.log(JSON.stringify(err));
-             if(res.body.results[0] && res.body.results[0].stats) {
-              nodesDeleted = res.body.results[0].stats.nodes_deleted;
-             }
-             if (err) {
-              errorHandlers.web.nodejsError(err, locales, resNodejs);
-             } else if (res.body.errors.length > 0){
-              errorHandlers.web.neo4jBadRequest(err, locales, resNodejs, res.body);
-             } else if (res.body.results[0].data.length > 0 || nodesDeleted > 0){
-              
-              callback(err, res.body);
-             } else {
-              errorHandlers.web.neo4jNotFound(err, locales, resNodejs, res.body);
-             }      
+              var nodesDeleted = 0;
+              var relationshipDeleted = 0;
+
+              if(res.body.results[0] && res.body.results[0].stats && res.body.results[0].stats.nodes_deleted > 0 ) {
+                nodesDeleted = res.body.results[0].stats.nodes_deleted;  
+              }
+
+              if(res.body.results[0] && res.body.results[0].stats && res.body.results[0].stats.relationship_deleted > 0 ) {
+                relationshipDeleted = res.body.results[0].stats.relationship_deleted; 
+              }
+
+              if (err) {
+                errorHandlers.web.nodejsError(err, locales, resNodejs);
+              } else if (res.body.errors.length > 0){
+                errorHandlers.web.neo4jBadRequest(err, locales, resNodejs, res.body);
+              } else if (isSearchField && res.body.results[0].data.length <= 0){
+                
+                callback(err, res.body);
+              } else if (res.body.results[0].data.length > 0 || nodesDeleted > 0 || relationshipDeleted > 0){
+                
+                callback(err, res.body);
+              } else {
+                errorHandlers.web.neo4jNotFound(err, locales, resNodejs, res.body);
+              }      
             }
           );
         },
@@ -68,7 +71,7 @@ var requests = {
           request.post({
             headers: dbConfig.headers,
             url: dbConfig.batch.url,
-            ca: process.env.DB_HTTPS_CA,
+            ca: process.env.FLIXNET_DB_HTTPS_CA,
             json: [ {
               method: dbConfig.batch.job.method,
               to: dbConfig.batch.job.url,
@@ -87,8 +90,6 @@ var requests = {
               id: 1,
             }, ], 
           }, function(err, res) {
-              // console.log(err);
-              console.log(JSON.stringify(res));
 
               if (err) {
                 errorHandlers.web.nodejsError(err, locales, resNodejs);

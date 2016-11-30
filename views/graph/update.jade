@@ -2,6 +2,15 @@ extends ../layout
 include ../mixins/updateForms.jade
 
 block content
+
+  style.
+    input:invalid {
+      border: 1px solid red !important;
+    }
+
+    input:valid! {
+      border: 1px solid green !important;
+    }
   .flixnet-top-section.mdl-typography--text-center
     .flixnet-logo-font.flixnet-sub-slogan #{localesStrings['Update Relationship']}:
     .flixnet-logo-font.mdl-typography--font-light
@@ -10,9 +19,16 @@ block content
       br
       p#asHint *Please enter multiple roles as a comma separated list
     script.
-      document.getElementById('optionSource').textContent = '#{relationship.row[0]}';
-      document.getElementById('optionType').textContent = '#{relationship.row[1]}';
-      document.getElementById('optionTarget').textContent = "#{relationship.row[2]}";
-      document.getElementById('property').value = '#{relationship.row[3]}';
+      document.getElementById('optionSource').textContent = '#{relationship[0]}';
+      document.getElementById('optionType').textContent = '#{relationship[1]}';
+      document.getElementById('optionTarget').textContent = "#{relationship[2]}";
+      document.getElementById('property').value = '#{relationship[3]}';
+      document.getElementById('rating').value = '#{relationship[4]}';
 
       app.content.htmlElements.toggleViewUpdateRelationship(!{JSON.stringify(relationship)});
+
+      document.getElementById('updateRelationship').addEventListener('submit', function (event) {
+        if(!document.getElementById('property').checkValidity() || !document.getElementById('rating').checkValidity() ) {
+          event.preventDefault();
+        }
+      }, false); 

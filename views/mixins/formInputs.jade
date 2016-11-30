@@ -1,0 +1,17 @@
+mixin userInput
+  input#user(type='text', placeholder='john or john.doe@hot.com', name='user', pattern='^[a-z0-9._%@+-]{1,64}$', maxlength=64, required, onkeyup='checkForm(); return false;')
+
+mixin userInputReadOnly
+  input#user(type='text', name='user', required, readonly)
+
+mixin fullnameInput
+  input#fullname(type='text', placeholder='John Doe', name='fullname', maxlength=64, onkeyup='checkForm(); return false;')
+
+mixin birthInput
+  input#birth(type='date', placeholder='YYYY-MM-DD', name='birth', pattern='(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))', maxlength=10, onkeyup='checkForm(); return false;')
+
+mixin emailInput            
+  input#email(type='email', placeholder='john.doe@hot.com', name='email', pattern='^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$', maxlength=64, onkeyup='checkForm(); return false;')
+
+mixin passwordInput(id)
+  input(id=id, type='password', name=id, pattern='.{8,}', required, onkeyup='checkForm(); return false;')

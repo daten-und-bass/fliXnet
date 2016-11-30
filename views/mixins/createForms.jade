@@ -17,8 +17,9 @@ mixin relationshipCreateForm
       select#type(name='type', style='text-transform: lowercase;')
       select#target(name='target')
       label#asLabel(for='property') &nbsp; as* &nbsp;
-      //- pattern='[^\\s][^&<>"\'/]{0,}[&<>"\'/]{0,1}[^&<>"\'/]{0,}[&<>"\'/]{0,1}[^&<>"\'/]{0,}',
+      //- pattern='[^\\s][^&<>"\'/]{0,}[&<>"\'/]{0,1}[^&<>"\'/]{0,}[&<>"\'/]{0,1}[^&<>"\'/]{0,}', title='These characters are not allowed: &<>"\'/'
       //- formenctype='application/x-www-form-urlencoded',
-      input#property(type='text', name='property', minlength='1' maxlength='200', placeholder='Role (in English)' required title='These characters are not allowed: &<>"\'/')
+      input#property(type='text', name='property', minlength='1' maxlength='200', placeholder='Role (in English)', required)
+      input#rating(type='number', name='rating', min='0', max='100', title='optional Rating: 0-100', style='display: none;')
       button#submitRelationship.flixnet-link.mdl-button.mdl-js-button.mdl-typography--text-uppercase(type='submit') #{localesCommands['Create']}
 

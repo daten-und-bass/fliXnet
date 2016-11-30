@@ -55,8 +55,6 @@ var htmlWebGraph = function (api, localesUtils) {
             query = 'Empty Query';
         }
 
-        console.log(req.swagger.params);
-
         var params = that.params.otherParams.set(req.swagger.params);
         var callback = that.callbacks.graph(res, api.paths[basePathRelationships + '/create'].post.operationId, that.type, locales, that.templateFolder + '/read', '', that.relationships.typePlural).relationships.web;
 
@@ -139,11 +137,13 @@ var htmlWebGraph = function (api, localesUtils) {
 
         var query = that.queries.search.searchField;
         var params = that.params.otherParams.set(req.swagger.params);
-        var callback = that.callbacks.graph(res, api.paths[basePathSearch + '/searchField'].get.operationId, that.type, locales, that.templateFolder + '/search', '', that.search.type).search.web;
+        var callback = that.callbacks.graph(res, api.paths[basePathSearch + '/searchField'].get.operationId, that.type, locales, that.templateFolder + '/search', '', that.search.type, '', req.swagger.params.searchParam.value).search.web;
 
         resultType = ['graph'];
 
-        that.requests.web.cypherRequest(query, params, resultType, includeStats, callback, locales, res);
+        var isSearchField = true;
+
+        that.requests.web.cypherRequest(query, params, resultType, includeStats, callback, locales, res, isSearchField);
       },
     },
   }; 

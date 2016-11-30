@@ -37,7 +37,7 @@ var params = {
         if(key !== 'locale') {
           if(key === 'id') { 
             paramsToNeo[key] = parseInt(paramsFromSwagger[key].value); 
-          } else if (key === 'source' || key === 'type' || key === 'target' || key === 'property') {
+          } else if (key === 'source' || key === 'type' || key === 'target' || key === 'property' || key === 'rating') {
             if (isNaN(paramsFromSwagger[key].value)) {
               paramsToNeo[key] = paramsFromSwagger[key].value;
             } else {
@@ -71,7 +71,7 @@ var params = {
           }
         }
       });
-      console.log(paramsToNeo);
+      
       return paramsToNeo;
     },
 

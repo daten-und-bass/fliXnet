@@ -25,6 +25,24 @@ var localesCommandsApp = {
     'es': {'ES': 'Borrar'},
     'fr': {'FR': 'Effacer'},
   },
+  'Cancel': {
+    'de': {'DE': 'Abrechen'},
+    'en': {'EN': 'Cancel'},
+    'es': {'ES': 'Cancelar'},
+    'fr': {'FR': 'Annuler'},
+  },
+  'Login': {
+    'de': {'DE': 'Login'},
+    'en': {'EN': 'Login'},
+    'es': {'ES': 'Acceder'},
+    'fr': {'FR': 'Connecter'}, 
+  },
+  'Register': {
+    'de': {'DE': 'Anmelden'},
+    'en': {'EN': 'Register'},
+    'es': {'ES': 'Registrar'},
+    'fr': {'FR': 'Enregistrer'}, 
+  },
 };
 
 module.exports = localesCommandsApp;

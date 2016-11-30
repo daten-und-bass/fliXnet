@@ -24,8 +24,18 @@ block content
     .mdl-typography--title.mdl-typography--font-thin Full-Stack JavaScript.
     br
     .mdl-typography--display-1.mdl-typography--font-thin Automatic API Validation and Documentation - via 
-      a.flixnet-link.mdl-typography--font-thin(href='http://swagger.io' target='_blank') Swagger
+      a.flixnet-link.mdl-typography--font-thin(href='http://swagger.io' target='_blank') Swagger/openAPI
     .mdl-typography--title.mdl-typography--font-thin REST. SOA. Microservices. Or whatever you might call it.
+    br
+    .mdl-typography--display-1.mdl-typography--font-thin User Authentication - Backed by 
+      a.flixnet-link.mdl-typography--font-thin(href='http://redis.io' target='_blank') Redis 
+      | as a data structure store for key-value pairs and hash maps.
+    .mdl-typography--title.mdl-typography--font-thin For sessions, login credentials and user accounts.
+    .mdl-typography--title.mdl-typography--font-thin Based on the the npm module 
+      a.flixnet-link.mdl-typography--font-thin(href='https://www.npmjs.com/package/passport' target='_blank') Passport 
+      | and custom 
+      a.flixnet-link.mdl-typography--font-thin(href='https://github.com/apigee-127/swagger-tools/blob/master/docs/Middleware.md#swagger-security' target='_blank') Swagger Security 
+      | Handlers.
     br
     .mdl-typography--display-1.mdl-typography--font-thin Besides 
       a.flixnet-link.mdl-typography--font-thin(href='https://d3js.org' target='_blank') D3JS 
@@ -40,7 +50,15 @@ block content
     .mdl-typography--display-1.mdl-typography--font-thin Using 
       a.flixnet-link.mdl-typography--font-thin(href='https://getmdl.io' target='_blank') Material Design Lite 
       | Layouts and Components
-    .mdl-typography--title.mdl-typography--font-thin Optimized for cross-device Use.
+    .mdl-typography--title.mdl-typography--font-thin Optimized for cross-device userse.
+    br
+    .mdl-typography--display-1.mdl-typography--font-thin Easy, Reproducible Deployment - Based on 
+      a.flixnet-link.mdl-typography--font-thin(href='https://docker.com' target='_blank') Docker
+    .mdl-typography--title.mdl-typography--font-thin Containerized Infrastructure.
+    br
+    br
+    .mdl-typography--font-thin * English only * 
+    .mdl-typography--font-thin (This text section is only available in English)
   .flixnet-mdl-card-section
     br
     .mdl-typography--display-1-color-contrast #{localesMenu['The Movie Graph']} #{localesStrings['(... as Tables ;-> )']}:
@@ -77,10 +95,10 @@ block content
                 th.mdl-data-table__cell--non-numeric Target
             tbody(id='graphTableBody')
           a.android-link.mdl-button.mdl-js-button
-            i.material-icons(id='graphTableBodyBackward' onclick = 'app.content.htmlElements.paginateGraphTableBodyBackward()') navigate_before
-            i.material-icons(id='graphTableBodyForward' onclick = 'app.content.htmlElements.paginateGraphTableBodyForward()') navigate_next
+            i.material-icons(id='graphTableBodyBackward') navigate_before
+            i.material-icons(id='graphTableBodyForward') navigate_next
           script.
-            app.content.htmlElements.createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=');
+            app.content.htmlElements.createGraphTableBody('graphTableBody', '/api/graph/relationships/readAllPaginated?pagination=', '#{locale}');
   .flixnet-mdl-card-section
     .mdl-typography--display-1-color-contrast #{localesStrings['Latest Movies']}:
     +moviesReadBulkMdlCards
