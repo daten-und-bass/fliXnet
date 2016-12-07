@@ -2,7 +2,7 @@
 # GENERAL INFORMATION #
 swagger: "2.0"
 info:
-  version: "0.10.0"
+  version: "0.10.1"
   title: fliXnet
 host: flixnet.daten-und-bass.io
 basePath: /
