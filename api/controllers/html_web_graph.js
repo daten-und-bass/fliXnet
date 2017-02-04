@@ -12,14 +12,11 @@ var htmlWebGraph = function (api, localesUtils) {
   var includeStats = false;
   var resultType = ['row'];
 
-  var locale = localesUtils.getDefaultLocale(); 
-  var locales = localesUtils.setLocales('noLocale', locale, that.strings);
-
   return {
     relationships: {
       getCreate: function(req, res) {
-        locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-        locale = req.swagger.params.locale.value;
+        var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+        var locale = req.swagger.params.locale.value;
 
         var query0 = that.personQueries.search.readAllNames;
         var params0 = {};
@@ -34,8 +31,8 @@ var htmlWebGraph = function (api, localesUtils) {
       },
 
       create: function(req, res) {
-        locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-        locale = req.swagger.params.locale.value;
+        var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+        var locale = req.swagger.params.locale.value;
         
         var query;
         switch(req.swagger.params.type.value){
@@ -64,8 +61,8 @@ var htmlWebGraph = function (api, localesUtils) {
       },
 
       read: function(req, res) {
-        locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-        locale = req.swagger.params.locale.value;
+        var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+        var locale = req.swagger.params.locale.value;
 
         var query = that.queries.relationships.read;
         var params = that.params.otherParams.set(req.swagger.params);
@@ -77,8 +74,8 @@ var htmlWebGraph = function (api, localesUtils) {
       },
 
       getUpdate: function(req, res) {
-        locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-        locale = req.swagger.params.locale.value;
+        var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+        var locale = req.swagger.params.locale.value;
 
         var query = that.queries.relationships.getUpdate;
         var params = that.params.otherParams.set(req.swagger.params);
@@ -90,8 +87,8 @@ var htmlWebGraph = function (api, localesUtils) {
       },
 
       update: function(req, res) {
-        locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-        locale = req.swagger.params.locale.value;
+        var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+        var locale = req.swagger.params.locale.value;
 
         var query;
         switch(req.swagger.params.type.value){
@@ -117,8 +114,8 @@ var htmlWebGraph = function (api, localesUtils) {
       },
 
       delete: function(req, res) {
-        locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-        locale = req.swagger.params.locale.value;
+        var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+        var locale = req.swagger.params.locale.value;
 
         var query = that.queries.relationships.delete;
         var params = that.params.otherParams.set(req.swagger.params);
@@ -132,8 +129,8 @@ var htmlWebGraph = function (api, localesUtils) {
     },
     search: {
       searchField: function(req, res) {
-        locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-        locale = req.swagger.params.locale.value;
+        var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+        var locale = req.swagger.params.locale.value;
 
         var query = that.queries.search.searchField;
         var params = that.params.otherParams.set(req.swagger.params);

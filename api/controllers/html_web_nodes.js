@@ -10,20 +10,17 @@ var htmlWebNodes = function (api, localesUtils) {
   var includeStats = false;
   var resultType = ['row'];
 
-  var locale = localesUtils.getDefaultLocale(); 
-  var locales = localesUtils.setLocales('noLocale', locale, that.strings);
-
   return {
     getCreate: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       res.render(that.templateFolder + '/create', locales);  
     },
 
     create: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       var query = that.queries.create;
       var params = that.params.otherParams.set(req.swagger.params);
@@ -35,8 +32,8 @@ var htmlWebNodes = function (api, localesUtils) {
     }, 
 
     readBulk: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       var query;
       var params;
@@ -63,8 +60,8 @@ var htmlWebNodes = function (api, localesUtils) {
     }, 
 
     read: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       resultType = ['row'];
 
@@ -76,8 +73,8 @@ var htmlWebNodes = function (api, localesUtils) {
     },
 
     getUpdate: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       var query = that.queries.getUpate;
       var params = that.params.otherParams.set(req.swagger.params);
@@ -89,8 +86,8 @@ var htmlWebNodes = function (api, localesUtils) {
     },
 
     update: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       var query = that.queries.update;
       var params = that.params.otherParams.set(req.swagger.params);
@@ -102,8 +99,8 @@ var htmlWebNodes = function (api, localesUtils) {
     },
 
     delete: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       var query = that.queries.delete;
       var params = that.params.otherParams.set(req.swagger.params);

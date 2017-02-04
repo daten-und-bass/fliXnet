@@ -3,9 +3,6 @@
 var htmlWebIndex = function (api, localesUtils) {
   var that = this;
 
-  var locale = localesUtils.getDefaultLocale(); 
-  var locales = localesUtils.setLocales('noLocale', locale, that.strings);
-
   var includeStats = false;
   var resultType = ['row'];
 
@@ -14,19 +11,19 @@ var htmlWebIndex = function (api, localesUtils) {
       var guessedLocale = req.acceptsLanguages(that.supportedLocales);
 
       if (guessedLocale) {
-        locales = localesUtils.setLocales(locale, guessedLocale, that.strings);
-        locale = guessedLocale;
+        var locales = localesUtils.setLocales(locale, guessedLocale, that.strings);
+        var locale = guessedLocale;
         res.redirect('/' + guessedLocale);
       } else {
-        locales = localesUtils.setLocales(locale, that.defaultLocale, that.strings);
-        locale = that.defaultLocale;
+        var locales = localesUtils.setLocales(locale, that.defaultLocale, that.strings);
+        var locale = that.defaultLocale;
         res.redirect(that.defaultLocale);
       }
     },
 
     index_locale: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       var query = that.movieQueries.search.readLatestFourNodes;
       var params = {};
@@ -38,8 +35,8 @@ var htmlWebIndex = function (api, localesUtils) {
     },
 
     about: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       res.render('service_pages/about', 
         { locale: locale,
@@ -49,8 +46,8 @@ var htmlWebIndex = function (api, localesUtils) {
     },
 
     contact: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       res.render('service_pages/contact', 
         { locale: locale,
@@ -60,8 +57,8 @@ var htmlWebIndex = function (api, localesUtils) {
     },
     
     imprint: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       res.render('service_pages/imprint', 
         { locale: locale,
@@ -71,8 +68,8 @@ var htmlWebIndex = function (api, localesUtils) {
     },
 
     getRegister: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       if(req.isAuthenticated()) { 
         return res.redirect('back');
@@ -88,15 +85,15 @@ var htmlWebIndex = function (api, localesUtils) {
     },
 
     register: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       console.log('login called');
     },
 
     getLogin: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       if(req.isAuthenticated()) { 
         return res.redirect('back');
@@ -113,15 +110,15 @@ var htmlWebIndex = function (api, localesUtils) {
     },
 
     login: function(req, res, next) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       console.log('login called');
     },
 
     user: function(req, res, next) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       var responseObjectToSwagger = {
         locale: locales.locale,
@@ -149,8 +146,8 @@ var htmlWebIndex = function (api, localesUtils) {
     },
 
     getUpdate: function(req, res, next) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       var responseObjectToSwagger = {
         locale: locales.locale,
@@ -178,8 +175,8 @@ var htmlWebIndex = function (api, localesUtils) {
     },
 
     update: function(req, res, next) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       var responseObjectToSwagger = {
         locale: locales.locale,
@@ -209,8 +206,8 @@ var htmlWebIndex = function (api, localesUtils) {
     },
 
     logout: function(req, res) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
       
       req.logout();
       
@@ -220,8 +217,8 @@ var htmlWebIndex = function (api, localesUtils) {
     },
 
     delete: function(req, res, next) {
-      locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
-      locale = req.swagger.params.locale.value;
+      var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
+      var locale = req.swagger.params.locale.value;
 
       that.userDB.delete(req.user.id.id, function (err, success) {
 
