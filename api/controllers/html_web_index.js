@@ -13,11 +13,11 @@ var htmlWebIndex = function (api, localesUtils) {
       if (guessedLocale) {
         var locales = localesUtils.setLocales(locale, guessedLocale, that.strings);
         var locale = guessedLocale;
-        res.redirect('/' + guessedLocale);
+        res.redirect(302, '/' + guessedLocale);
       } else {
         var locales = localesUtils.setLocales(locale, that.defaultLocale, that.strings);
         var locale = that.defaultLocale;
-        res.redirect(that.defaultLocale);
+        res.redirect(302, '/' + that.defaultLocale);
       }
     },
 
@@ -95,7 +95,8 @@ var htmlWebIndex = function (api, localesUtils) {
       var locales = localesUtils.setLocales(locale, req.swagger.params.locale.value, that.strings); 
       var locale = req.swagger.params.locale.value;
 
-      if(req.isAuthenticated()) { 
+      if(req.isAuthenticated()) {
+        res.contentType('text/html');
         return res.redirect('back');
       } else {
         res.render('service_pages/user/login', 
