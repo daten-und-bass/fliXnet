@@ -13,16 +13,16 @@ var appConfig = {
 
   web: function() {
     var web = {
-      ip: process.env.DUNDB_APP_ENV_S2_WB1_IRME_IP1, // not used
-      http: {
-        port: process.env.DUNDB_APP_ENV_S2_WB1_IRME_HTTP_PORT, // not used
-      },
+      // ip: process.env.DNB_APP_ENV_S1_WB_FTED_IP1, // not used
+      // http: {
+      //   port: process.env.DNB_APP_ENV_S1_WB_FTED_HTTP_PORT, // not used
+      // },
       https: {
-        port: process.env.DUNDB_APP_ENV_S2_WB1_IRME_HTTPS_PORT,
-        crt: '/etc/ssl/' + process.env.DUNDB_APP_ENV_S2_WB1_IRME_HTTPS_CERT1,
-        key: '/etc/ssl/' + process.env.DUNDB_APP_ENV_S2_WB1_IRME_HTTPS_CERT1_KEY,
+        port: process.env.DNB_NODE_OAI_HTTPS_PORT,
+        crt: '/etc/ssl/' + process.env.DNB_APP_ENV_S1_WB_FTED_HTTPS_CERT1,
+        key: '/etc/ssl/' + process.env.DNB_APP_ENV_S1_WB_FTED_HTTPS_CERT1_KEY,
       },
-      proxies: [ process.env.DUNDB_INF1_ENV_S1_WF1_FTED_IP1, process.env.DUNDB_APP_ENV_S1_LB1_FTED_IP1 ],
+      // proxies: [ process.env.DNB_INF1_ENV_S1_WF1_FTED_IP1, process.env.DNB_APP_ENV_S1_LB1_FTED_IP1 ],
     };
 
     return web;
@@ -30,18 +30,19 @@ var appConfig = {
 
   db: function() {
     var db = {
-      ip: process.env.DUNDB_APP_ENV_S3_DB1_BKED_IP1,
+      // ip: process.env.DNB_APP_ENV_S2_DB_BKED_IP1,
+      ip: process.env.DNB_APP_ENV_S2_DB,
       headers: {
-        Authorization: process.env.DUNDB_APP_ENV_S3_DB1_PASS,
+        Authorization: process.env.DNB_APP_ENV_S2_DB_PASS,
         'Content-Type': 'application/json',
         Accept: 'application/json; charset=UTF-8',
       },
       http: {
-        port: process.env.DUNDB_APP_ENV_S3_DB1_BKED_HTTP_PORT,
+        port: process.env.DNB_NEO_HTTP_PORT,
       },
       https: {
-        port: process.env.DUNDB_APP_ENV_S3_DB1_BKED_HTTPS_PORT,
-        ca: '/etc/ssl/' + process.env.DUNDB_INF_ENV_PKI1_CA_CERT,
+        port: process.env.DNB_NEO_HTTPS_PORT,
+        ca: '/etc/ssl/' + process.env.DNB_INF_ENV_PKI1_CA_CERT,
       },
       request: {
         method: 'POST'  // not used
@@ -65,8 +66,8 @@ var appConfig = {
     var sessions = {
       session: {
         options:{
-          secret: process.env.DUNDB_APP_ENV_S2_WB1_SESS_SEC,
-          name: process.env.DUNDB_APP_ENV_S2_WB1_SESS_NAME,
+          secret: process.env.DNB_APP_ENV_S1_WB_SESS_SEC,
+          name: process.env.DNB_APP_ENV_S1_WB_SESS_NAME,
           resave: false,
           saveUninitialized: false, 
           cookie: { secure: true },
@@ -75,10 +76,12 @@ var appConfig = {
       },
       store: {
         options: {
-          host: process.env.DUNDB_APP_ENV_S4_DB1_BKED_IP1,
-          port: process.env.DUNDB_APP_ENV_S4_DB1_BKED_PORT,
-          db: parseInt(process.env.DUNDB_APP_ENV_S4_DB1_INST1),
-          pass: process.env.DUNDB_APP_ENV_S4_DB1_PASS,
+          // host: process.env.DNB_APP_ENV_S3_DB_BKED_IP1,
+          host: process.env.DNB_APP_ENV_S3_DB,
+          // port: process.env.DNB_APP_ENV_S3_DB_BKED_PORT,
+          port: process.env.DNB_REDIS_PORT,
+          db: parseInt(process.env.DNB_APP_ENV_S3_DB_INST1),
+          pass: process.env.DNB_APP_ENV_S3_DB_PASS,
           // prefix: 'fliXnet:sessions:',
         },
       },
@@ -89,13 +92,15 @@ var appConfig = {
 
   users: function() {
     var users = {
-      secret: Buffer.from(process.env.DUNDB_APP_ENV_S2_WB1_USER_SEC),
+      secret: Buffer.from(process.env.DNB_APP_ENV_S1_WB_USER_SEC),
       store: {
-        host: process.env.DUNDB_APP_ENV_S4_DB1_BKED_IP1,
-        port: process.env.DUNDB_APP_ENV_S4_DB1_BKED_PORT,
+        // host: process.env.DNB_APP_ENV_S3_DB_BKED_IP1,
+        host: process.env.DNB_APP_ENV_S3_DB,
+        // port: process.env.DNB_APP_ENV_S3_DB_BKED_PORT,
+        port: process.env.DNB_REDIS_PORT,
         options: {
-          db: parseInt(process.env.DUNDB_APP_ENV_S4_DB1_INST2),
-          auth_pass: process.env.DUNDB_APP_ENV_S4_DB1_PASS, 
+          db: parseInt(process.env.DNB_APP_ENV_S3_DB_INST2),
+          auth_pass: process.env.DNB_APP_ENV_S3_DB_PASS, 
           return_buffers: true,
           // prefix: 'fliXnet:users:',
         },
@@ -115,12 +120,14 @@ var appConfig = {
           type: 'oAuth',
           volos: {
             options: {
-              encryptionKey: process.env.DUNDB_APP_ENV_S2_WB1_OAUT_SEC,
-              host: process.env.DUNDB_APP_ENV_S4_DB1_BKED_IP1,
-              port: process.env.DUNDB_APP_ENV_S4_DB1_BKED_PORT,
-              db: parseInt(process.env.DUNDB_APP_ENV_S4_DB1_INST3),
+              encryptionKey: process.env.DNB_APP_ENV_S1_WB_OAUT_SEC,
+              // host: process.env.DNB_APP_ENV_S3_DB_BKED_IP1,
+              host: process.env.DNB_APP_ENV_S3_DB,
+              // port: process.env.DNB_APP_ENV_S3_DB_BKED_PORT,
+              port: process.env.DNB_REDIS_PORT,
+              db: parseInt(process.env.DNB_APP_ENV_S3_DB_INST3),
               options:{
-                auth_pass: process.env.DUNDB_APP_ENV_S4_DB1_PASS,
+                auth_pass: process.env.DNB_APP_ENV_S3_DB_PASS,
               },
             },
           },
@@ -133,11 +140,11 @@ var appConfig = {
 
   krypto: function() {
     var krypto = {
-      secret: Buffer.from(process.env.DUNDB_APP_ENV_S2_WB1_KRYP_SEC),
+      secret: Buffer.from(process.env.DNB_APP_ENV_S1_WB_KRYP_SEC),
       options: {
-        hashBytes: parseInt(process.env.DUNDB_APP_ENV_S2_WB1_KRYP_HBS),
-        saltBytes: parseInt(process.env.DUNDB_APP_ENV_S2_WB1_KRYP_SBS),
-        iterations: parseInt(process.env.DUNDB_APP_ENV_S2_WB1_KRYP_ITS),
+        hashBytes: parseInt(process.env.DNB_APP_ENV_S1_WB_KRYP_HBS),
+        saltBytes: parseInt(process.env.DNB_APP_ENV_S1_WB_KRYP_SBS),
+        iterations: parseInt(process.env.DNB_APP_ENV_S1_WB_KRYP_ITS),
       },
     };
 
