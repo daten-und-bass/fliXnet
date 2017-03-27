@@ -1,9 +1,9 @@
 language: node_js
 node_js:
   - "6"
-before_script:
-  - npm install
-  - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
-  - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
+# before_script:
+#   - npm install
+#   - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
+#   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
 # script:
 #   - swagger project start
