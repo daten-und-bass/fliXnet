@@ -9,7 +9,7 @@ before_script:
 script:
   - swagger project start &
   - sleep 20
-  - exit ${?}
+  - exit
   # - swagger project test
 
 services:
