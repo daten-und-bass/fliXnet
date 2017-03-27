@@ -19,8 +19,8 @@ var appConfig = {
       // },
       https: {
         port: process.env.DNB_NODE_OAI_HTTPS_PORT,
-        crt: '/etc/ssl/' + process.env.DNB_APP_ENV_S1_WB_FTED_HTTPS_CERT1,
-        key: '/etc/ssl/' + process.env.DNB_APP_ENV_S1_WB_FTED_HTTPS_CERT1_KEY,
+        crt: process.env.HOME + '/' + process.env.DNB_APP_ENV_S1_WB_FTED_HTTPS_CERT1,
+        key: process.env.HOME + '/' + process.env.DNB_APP_ENV_S1_WB_FTED_HTTPS_CERT1_KEY,
       },
       // proxies: [ process.env.DNB_INF1_ENV_S1_WF1_FTED_IP1, process.env.DNB_APP_ENV_S1_LB1_FTED_IP1 ],
     };
@@ -42,7 +42,7 @@ var appConfig = {
       },
       https: {
         port: process.env.DNB_NEO_HTTPS_PORT,
-        ca: '/etc/ssl/' + process.env.DNB_INF_ENV_PKI1_CA_CERT,
+        ca: process.env.HOME + '/' + process.env.DNB_INF_ENV_PKI1_CA_CERT,
       },
       request: {
         method: 'POST'  // not used

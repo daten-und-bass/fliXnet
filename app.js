@@ -25,7 +25,7 @@ var app = express();
 var httpsServer = https.createServer({key: process.env.FLIXNET_WEB_HTTPS_KEY, cert: process.env.FLIXNET_WEB_HTTPS_CRT}, app);
 httpsServer.listen(webConfig.https.port); 
 
-app.set('trust proxy', webConfig.proxies);
+// app.set('trust proxy', webConfig.proxies);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

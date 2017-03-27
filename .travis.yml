@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "6"
+before_script:
+  - npm install
+  - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
+  - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
+  - cp ./config/travis/pki1_tst2_ca_pub.pem ~
+script:
+  - swagger project start &
+  - sleep 20
+  # - swagger project test
+
+services:
+  - neo4j
+
+services:
+  - redis-server

@@ -2,17 +2,17 @@
 # GENERAL INFORMATION #
 swagger: "2.0"
 info:
-  version: "0.10.1"
+  version: "0.11.0"
   title: fliXnet
 host: flixnet.daten-und-bass.io
 basePath: /
 schemes:
   - https
-consumes:
-  - application/json
-  - application/x-www-form-urlencoded
-produces:
-  - application/json
+# consumes:
+#   - application/json
+#   # - application/x-www-form-urlencoded
+# produces:
+#   - application/json
 tags:
   - name: api
     description: All JSON only API operations (returning JSON only)
@@ -54,9 +54,13 @@ paths:
         - web
       summary: Entrypoint for website 
       description: Redirects to localized main html (locale is detected according to req.acceptsLanguages() and code '302' is the default for a successful redirectin express.js)
-      produces: 
-        - text/html
       operationId: index
+      consumes:
+        - text/plain
+        - text/html
+      produces: 
+        - text/plain
+        - text/html
       responses:
         "302":
           description: Success
@@ -76,9 +80,11 @@ paths:
         - nodeSearch
       summary: Redirected entrypoint for website with locale
       description: Returns a localized main html page and the results for a server-side query for the latest four movies
+      operationId: index_locale
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: index_locale
       parameters:
         - $ref: "#/parameters/locale"
       responses:
@@ -98,9 +104,11 @@ paths:
         - app
       summary: About page
       description: Returns a localized about page
+      operationId: about
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: about
       parameters:
         - $ref: "#/parameters/locale"
       responses:
@@ -120,9 +128,11 @@ paths:
         - app   
       summary: Contact page
       description: Returns a localized contact page
+      operationId: contact
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: contact
       parameters:
         - $ref: "#/parameters/locale"
       responses:
@@ -142,9 +152,11 @@ paths:
         - app
       summary: Imprint page
       description: Returns a localized imprint page
+      operationId: imprint
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: imprint
       parameters:
         - $ref: "#/parameters/locale"
       responses:
@@ -164,9 +176,11 @@ paths:
         - user
       summary: Returns a localized page user registration
       description: Returns a localized registration page with a registration form via Web (HTML in Browser)
+      operationId: getRegister
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: getRegister
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/authMsg"
@@ -185,11 +199,15 @@ paths:
         - user
       summary: User registration target (POST)
       description: Register a new user via Web (HTML in Browser) and then redirects to home page (Code '302' is the default for a successful redirect in express.js)
+      # consumes:
+      #   - application/x-www-form-urlencoded
+      # produces: 
+      #   - text/html
+      operationId: register
       consumes:
         - application/x-www-form-urlencoded
       produces: 
         - text/html
-      operationId: register
       security:
         - local-register: []
       parameters:
@@ -218,9 +236,11 @@ paths:
         - user
       summary: Returns a localized login page
       description: Returns a localized login page with a login form via Web (HTML in Browser)
+      operationId: getLogin
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: getLogin
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/authMsg"
@@ -241,11 +261,11 @@ paths:
         - user
       summary: User Login target (POST)
       description: Login an existing user via Web (HTML in Browser) and then redirects to home (Code '302' is the default for a successful redirect in express.js)
+      operationId: login
       consumes:
         - application/x-www-form-urlencoded
       produces: 
         - text/html
-      operationId: login
       security:
         - local-login: []
       parameters:
@@ -271,9 +291,11 @@ paths:
         - user
       summary: Returns a localized account page
       description: Returns a localized account page with user details
+      operationId: user
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: user
       security:
         - local-auth: []
       parameters:
@@ -296,9 +318,11 @@ paths:
         - user
       summary: Returns a localized account update page
       description: Returns a localized account update page with a form for updating user details
+      operationId: getUpdate
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: getUpdate
       security:
         - local-auth: []
       parameters:
@@ -319,11 +343,11 @@ paths:
         - user
       summary: User update target (POST)
       description: Update a user via Web (HTML in Browser) and then redirects to user page (Code '302' is the default for a successful redirect in express.js)
+      operationId: update
       consumes:
         - application/x-www-form-urlencoded
       produces: 
         - text/html
-      operationId: update
       security:
         - local-auth: []
       parameters:
@@ -346,6 +370,7 @@ paths:
             $ref: "#/definitions/ErrorResponseWeb"
   /{locale}/user/logout:
     x-swagger-router-controller: context_html_web_index
+    # post:
     get:
       tags:
         - web
@@ -354,10 +379,12 @@ paths:
       summary: Logout target (only POST, not GET)
       description: Logs out a user by only clicking a link in the top menu (witout any .jade view)
       operationId: logout
-      security:
-        - local-auth: []
+      consumes:
+        - text/html
       produces: 
         - text/html
+      security:
+        - local-auth: []
       parameters:
         - $ref: "#/parameters/locale"
       responses:
@@ -378,9 +405,11 @@ paths:
         - user
       summary: Deletes a user
       description: Deletes a user (by req.user.id) via confirm() and alert() (witout any .jade view)
+      operationId: delete
       consumes:
         - application/octet-stream
-      operationId: delete
+      produces: 
+        - text/html
       security:
         - local-auth: []
       parameters:
@@ -408,6 +437,10 @@ paths:
       summary: Complete graph as JSON object 
       description: Returns the whole graph (via path traversal) as a transformed JSON with IDed nodes and links for visualization via DS3
       operationId: readAllGraph
+      consumes:
+        - application/json
+      produces:
+        - application/json
       responses:
         "200":
           description: Success
@@ -426,6 +459,10 @@ paths:
       summary: Graph of one movie as JSON object 
       description: Returns the graph (via path traversal) of one movie as a transformed JSON with IDed nodes and links for visualization via DS3
       operationId: readGraphOfMovie
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - $ref: "#/parameters/id"
       responses:
@@ -446,6 +483,10 @@ paths:
       summary: Graph of one person as JSON object
       description: Returns the graph (via path traversal) of one person as a transformed JSON with IDed nodes and links for visualization via DS3
       operationId: readGraphOfPerson
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - $ref: "#/parameters/id"
       responses:
@@ -473,6 +514,10 @@ paths:
       summary: All relationships in paginated chunks
       description: Returns JSON of all relationships with certain amount of pagination (offset is passed via inQeryParam)
       operationId: readAllPaginated
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - name: pagination
           required: true
@@ -501,6 +546,10 @@ paths:
       summary: Aggregate of nodes per label 
       description: Returns JSON of all node labels and their amount over the complete graph
       operationId: labelsAmountNodes
+      consumes:
+        - application/json
+      produces:
+        - application/json
       responses:
         "200":
           description: Success
@@ -522,6 +571,10 @@ paths:
       summary: Aggregate of relationships per type 
       description: Returns JSON of relationship types and their amount over the complete graph
       operationId: typeAmountRelationships
+      consumes:
+        - application/json
+      produces:
+        - application/json
       responses:
         "200":
           description: Success
@@ -543,6 +596,10 @@ paths:
       summary: Top four persons with the most ACTED_IN relationships
       description: Returns JSON of the top four persons with the most ACTED_IN relationships
       operationId: topPersons
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - $ref: "#/parameters/relationshipName"
       responses:
@@ -566,6 +623,10 @@ paths:
       summary: All actors of a movie
       description: Returns JSON with the cast (all ACTED_IN releationships) of a movie
       operationId: movieCast
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - $ref: "#/parameters/id"
       responses:
@@ -589,6 +650,10 @@ paths:
       summary: Top four colleagues of a person (most ACTED_IN relationships)
       description: Returns JSON of the top four persons with the most ACTED_IN relationships to the person with id given via inPathParam
       operationId: topColleagues
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - $ref: "#/parameters/id"
         - $ref: "#/parameters/relationshipName"
@@ -612,9 +677,11 @@ paths:
         - relationships
       summary: Create relationship page (GET)
       description: Returns html page for a relationship creation form
+      operationId: getCreate
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: getCreate
       parameters:
         - $ref: "#/parameters/locale"
       responses:
@@ -633,11 +700,11 @@ paths:
         - relationships
       summary: Relationship create target (POST)
       description: Creates a new relationship entry via Web (HTML in Browser) and then redirects to read this relationship (Code '302' is the default for a successful redirect in express.js)
+      operationId: create
       consumes:
         - application/x-www-form-urlencoded
       produces: 
         - text/html
-      operationId: create
       security:
         - local-auth: []
       parameters:
@@ -665,9 +732,11 @@ paths:
         - relationships
       summary: Read relationship page
       description: Returns html page for viewing one relationship
+      operationId: read
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: read
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
@@ -689,9 +758,11 @@ paths:
         - relationships
       summary: Update relationship page (GET)
       description: Returns html page for a relationship update form
+      operationId: getUpdate
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: getUpdate
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
@@ -711,11 +782,11 @@ paths:
         - relationships
       summary: Relationship update target (POST)
       description: Updates a relationship entry via Web (HTML in Browser) without redirect and only for ACTED_IN and REVIEWED relationships
+      operationId: update
       consumes:
         - application/x-www-form-urlencoded
       produces: 
         - text/html
-      operationId: update
       security:
         - local-auth: []
       parameters:
@@ -742,9 +813,11 @@ paths:
         - relationships
       summary: Relationship delete target (POST)
       description: Deletes a relationship via confirm() and alert() (witout any .jade view)
+      operationId: delete
       consumes:
         - application/octet-stream
-      operationId: delete
+      produces: 
+        - text/html
       security:
         - local-auth: []
       parameters:
@@ -771,9 +844,11 @@ paths:
         - graphSearch
       summary: Results for searchField
       description: Returns search results for the string entered in the searchField in the top menu
+      operationId: searchField
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: searchField
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/searchParam"
@@ -801,6 +876,10 @@ paths:
       summary: Creates movie
       description: Creates a new movie entry via JSON API
       operationId: create
+      consumes:
+        - application/json
+      produces:
+        - application/json
       security:
         - oauth2: [ write:movies ]
       parameters:
@@ -827,6 +906,10 @@ paths:
       summary: Reads several movies
       description: Returns a list of movies via JSON API with optional filter by released year passed in as inQeryParam
       operationId: readBulk
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - name: released
           in: query
@@ -851,6 +934,10 @@ paths:
       summary: Reads one movie
       description: Returns a single movie entry by a given id via inPathParam
       operationId: read
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - $ref: "#/parameters/id"
       responses:
@@ -870,6 +957,10 @@ paths:
       summary: Updates movie
       description: Updates a single movie entry by a given id via inPathParam
       operationId: update
+      consumes:
+        - application/json
+      produces:
+        - application/json
       security:
         - oauth2: [ write:movies ]
       parameters:
@@ -897,6 +988,10 @@ paths:
       summary: Deletes movie
       description: Deletes a single movie entry by a given id via inPathParam
       operationId: delete
+      consumes:
+        - application/json
+      produces:
+        - application/json
       security:
         - oauth2: [ write:movies ]
       parameters:
@@ -924,6 +1019,10 @@ paths:
       summary: All distinct values of a property
       description: Returns JSON with an array of all distinct values from a movie property passed in as inQeryParam 
       operationId: distinctProperties
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - $ref: "#/parameters/propertyName"
       responses:
@@ -946,9 +1045,11 @@ paths:
         - movies
       summary: Create movie page (GET)
       description: Returns a page with movie creation from
+      operationId: getCreate
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: getCreate
       parameters:
         - $ref: "#/parameters/locale"
       responses:
@@ -967,11 +1068,11 @@ paths:
         - movies
       summary: Movie create target (POST)
       description: Creates a new movie entry via Web (HTML in Browser) and then redirects to read this movie (Code '302' is the default for a successful redirect in express.js)
+      operationId: create
       consumes:
         - application/x-www-form-urlencoded
       produces: 
         - text/html
-      operationId: create
       security:
         - local-auth: []
       parameters:
@@ -997,9 +1098,11 @@ paths:
         - movies
       summary: Reads several movies
       description: Returns a page with a list of movies with optional filter by released year passed in as inQeryParam
+      operationId: readBulk
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: readBulk
       parameters:
         - $ref: "#/parameters/locale"
         - name: released
@@ -1025,6 +1128,8 @@ paths:
       summary: Reads one movie
       description: Returns a page with a single movie entry by a given id via inPathParam
       operationId: read
+      consumes:
+        - text/html
       produces: 
         - text/html
       parameters:
@@ -1048,9 +1153,11 @@ paths:
         - movies
       summary: Update movie page (GET)
       description: Returns html page with a movie update form by a given id via inPathParam
+      operationId: getUpdate
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: getUpdate
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
@@ -1070,11 +1177,11 @@ paths:
         - movies
       summary: Movie update target (POST)
       description: Updates a single movie entry by a given id via inPathParam (without redirect)
+      operationId: update
       consumes:
         - application/x-www-form-urlencoded
       produces: 
         - text/html
-      operationId: update
       security:
         - local-auth: []
       parameters:
@@ -1101,9 +1208,11 @@ paths:
         - movies
       summary: Movie delete target (POST)
       description: Deletes a single movie entry by a given id via confirm() and alert() (witout any .jade view)
+      operationId: delete
       consumes:
         - application/octet-stream
-      operationId: delete
+      produces: 
+        - application/json
       security:
         - local-auth: []
       parameters:
@@ -1131,6 +1240,10 @@ paths:
       summary: Creates person
       description: Creates a new person entry via JSON API
       operationId: create
+      consumes:
+        - application/json
+      produces:
+        - application/json
       security:
         - oauth2: [ write:persons ]
       parameters:
@@ -1157,6 +1270,10 @@ paths:
       summary: Reads several persons
       description: Returns a list of persons via JSON API with optional filter by birth year passed in as inQeryParam
       operationId: readBulk
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - name: born
           in: query
@@ -1181,6 +1298,10 @@ paths:
       summary: Reads one person
       description: Returns a single person entry by a given id via inPathParam
       operationId: read
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - $ref: "#/parameters/id"
       responses:
@@ -1200,6 +1321,10 @@ paths:
       summary: Updates person
       description: Updates a single person entry by a given id via inPathParam
       operationId: update
+      consumes:
+        - application/json
+      produces:
+        - application/json
       security:
         - oauth2: [ write:persons ]
       parameters:
@@ -1227,6 +1352,10 @@ paths:
       summary: Deletes person
       description: Deletes a single person entry by a given id via inPathParam
       operationId: delete
+      consumes:
+        - application/json
+      produces:
+        - application/json
       security:
         - oauth2: [ write:persons ]
       parameters:
@@ -1254,6 +1383,10 @@ paths:
       summary: All distinct values of a person property
       description: Returns JSON with an array of all distinct values from a person property passed in as inQeryParam
       operationId: distinctProperties
+      consumes:
+        - application/json
+      produces:
+        - application/json
       parameters:
         - $ref: "#/parameters/propertyName"
       responses:
@@ -1276,9 +1409,11 @@ paths:
         - persons
       summary: Create person page (GET)
       description: Returns html page with person creation form
+      operationId: getCreate
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: getCreate
       parameters:
         - $ref: "#/parameters/locale"
       responses:
@@ -1297,11 +1432,11 @@ paths:
         - persons
       summary: Person create target (POST)
       description: Creates a new person entry via Web (HTML in Browser) and then redirects to read this movie (Code '302' is the default for a successful redirect in express.js)
+      operationId: create
       consumes:
         - application/x-www-form-urlencoded
       produces: 
         - text/html
-      operationId: create
       security:
         - local-auth: []
       parameters:
@@ -1326,9 +1461,11 @@ paths:
         - persons
       summary: Reads several persons
       description: Returns a list of persons with optional filter by birth year passed in as inQeryParam
+      operationId: readBulk
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: readBulk
       parameters:
         - $ref: "#/parameters/locale"
         - name: born
@@ -1354,6 +1491,8 @@ paths:
       summary: Reads one person
       description: Returns a single person entry by a given id via inPathParam
       operationId: read
+      consumes:
+        - text/html
       produces: 
         - text/html
       parameters:
@@ -1377,9 +1516,11 @@ paths:
         - persons
       summary: Update person page (GET)
       description: Returns html page with a person update form
+      operationId: getUpdate
+      consumes:
+        - text/html
       produces: 
         - text/html
-      operationId: getUpdate
       parameters:
         - $ref: "#/parameters/locale"
         - $ref: "#/parameters/id"
@@ -1399,11 +1540,11 @@ paths:
         - persons
       summary: Person update target (POST)
       description: Updates a single person entry by a given id via inPathParam (without redirect)
+      operationId: update
       consumes:
         - application/x-www-form-urlencoded
       produces: 
         - text/html
-      operationId: update
       security:
         - local-auth: []
       parameters:
@@ -1429,9 +1570,11 @@ paths:
         - persons
       summary: Person delete target (POST)
       description: Deletes a single person entry by a given id via confirm() and alert() (witout any .jade view)
+      operationId: delete
       consumes:
         - application/octet-stream
-      operationId: delete
+      produces: 
+        - application/json
       security:
         - local-auth: []
       parameters:
