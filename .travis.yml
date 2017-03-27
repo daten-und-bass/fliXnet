@@ -10,3 +10,9 @@ script:
   - swagger project start &
   - sleep 10
   - swagger project test
+
+services:
+  - neo4j
+
+services:
+  - redis-server
