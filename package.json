@@ -1,6 +1,6 @@
 {
   "name": "fliXnet",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "private": true,
   "description": "A Containerized NodeJS Sample Implementation of Neo4j's Graph Movie Database via OpenAPI (Swagger)",
   "keywords": [
