@@ -42,7 +42,7 @@ var appConfig = {
       },
       https: {
         port: process.env.DNB_NEO_HTTPS_PORT,
-        ca: '/etc/ssl/' + process.env.DNB_INF_ENV_PKI1_CA_CERT,
+        ca: process.env.HOME + '/' + process.env.DNB_INF_ENV_PKI1_CA_CERT,
       },
       request: {
         method: 'POST'  // not used
