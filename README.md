@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=master)](https://travis-ci.org/daten-und-bass/fliXnet)
+
 # fliXnet
 A Containerized NodeJS Sample Implementation of Neo4j's Graph Movie Database via OpenAPI (Swagger)
 
