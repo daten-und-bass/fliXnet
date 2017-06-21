@@ -1,17 +1,15 @@
 language: node_js
 node_js:
   - "6"
-env:
-  - neo4j
-  - redis-server
 
 before_script:
   - npm install
   - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
-  - sh -c "if [ '$DB' = 'neo4j' ]; then sh -c 'cp ./config/travis/createMovieDB.cql ~;' fi"
-  - sh -c "if [ '$DB' = 'neo4j' ]; then sh -c '/var/lib/neo4j/bin/neo4j-shell -file ~/createMovieDB.cql;' fi"
+  - cp ./config/travis/createMovieDB.cql ~
+  - /var/lib/neo4j/bin/neo4j-shell -file ~/createMovieDB.cql
+
 script:
   - swagger project start &
   - sleep 20
