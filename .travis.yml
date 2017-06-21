@@ -15,9 +15,9 @@ before_script:
   - sudo mkdir /var/lib/neo4j-server/data/databases
   - sudo tar -zxf ~/graph.db.tar.gz -C /var/lib/neo4j-server/data/databases
   - ls /var/lib/neo4j-server/data/databases/
-  - curl -X POST http://neo4j:neo4j@127.0.0.1:7474/user/neo4j/password -d 'password=travis'
 
 script:
+  - curl -X POST http://neo4j:neo4j@127.0.0.1:7474/user/neo4j/password -d 'password=travis'
   - swagger project start &
   - sleep 30
   - swagger project test
