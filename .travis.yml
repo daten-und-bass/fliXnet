@@ -9,9 +9,9 @@ before_script:
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
   - cp ./config/travis/graph.db.tar.gz ~
-  - cd /var/lib/neo4j-server/data/ && sudo mkdir databases
+  - sudo mkdir /var/lib/neo4j-server/data/databases
   - sudo cp ~/graph.db.tar.gz /var/lib/neo4j-server/data/databases
-  - cd /var/lib/neo4j-server/data/databases && sudo tar -zxf graph.db.tar.gz
+  - sudo tar -zxf /var/lib/neo4j-server/data/graph.db.tar.gz
 
 script:
   - swagger project start &
