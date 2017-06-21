@@ -11,7 +11,8 @@ before_script:
   - cp ./config/travis/graph.db.tar.gz ~
   - sudo mkdir /var/lib/neo4j-server/data/databases
   - sudo cp ~/graph.db.tar.gz /var/lib/neo4j-server/data/databases
-  - sudo tar -zxf /var/lib/neo4j-server/data/graph.db.tar.gz
+  - sudo tar -zxf /var/lib/neo4j-server/data/databases/graph.db.tar.gz
+  - sudo rm graph.db.tar.gz
 
 script:
   - swagger project start &
