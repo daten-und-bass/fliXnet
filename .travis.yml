@@ -8,7 +8,7 @@ before_script:
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
   - cp ./config/travis/createMovieDB.cql ~
-  - ls -al /var/lib/neo4j-server/bin
+  - ls -al /var/lib/neo4j-server
 #  - /var/lib/neo4j/bin/neo4j-shell -file ~/createMovieDB.cql
 
 script:
