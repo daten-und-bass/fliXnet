@@ -17,9 +17,10 @@ before_script:
   - ls /var/lib/neo4j-server/data/databases/
 
 script:
+  - sleep 20
   - curl -X POST http://neo4j:neo4j@127.0.0.1:7474/user/neo4j/password -d 'password=travis'
   - swagger project start &
-  - sleep 30
+  - sleep 20
   - swagger project test
 
 services:
