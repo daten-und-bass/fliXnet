@@ -9,6 +9,7 @@ before_script:
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
   - cp ./config/travis/graph.db.tar.gz ~
+  - sudo mkdir /var/lib/neo4j-server/data/certificates
   - sudo cp ./config/travis/app3_tst2_s2_db_key.pem /var/lib/neo4j-server/certificates/neo4j.key
   - sudo cp ./config/travis/app3_tst2_s2_db_pub.pem /var/lib/neo4j-server/certificates/neo4j.cert
   - sudo mkdir /var/lib/neo4j-server/data/databases
