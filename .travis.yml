@@ -13,10 +13,11 @@ before_script:
   - sudo cp ~/graph.db.tar.gz /var/lib/neo4j-server/data/databases
   - sudo tar -zxf /var/lib/neo4j-server/data/databases/graph.db.tar.gz
   - sudo rm /var/lib/neo4j-server/data/databases/graph.db.tar.gz
+  - ls /var/lib/neo4j-server/data/databases/
 
 script:
   - swagger project start &
-  - sleep 20
+  - sleep 30
   - swagger project test
 
 services:
