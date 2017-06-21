@@ -12,6 +12,7 @@ before_script:
   - sudo mkdir /var/lib/neo4j-server/data/databases
   - sudo tar -zxf ~/graph.db.tar.gz -C /var/lib/neo4j-server/data/databases
   - ls /var/lib/neo4j-server/data/databases/
+  - curl -X POST https://neo4j:neo4j@localhost:7473/user/neo4j/password -d 'password=j4oen' --insecure
 
 script:
   - swagger project start &
