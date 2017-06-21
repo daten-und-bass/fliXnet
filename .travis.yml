@@ -10,9 +10,7 @@ before_script:
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
   - cp ./config/travis/graph.db.tar.gz ~
   - sudo mkdir /var/lib/neo4j-server/data/databases
-  - sudo cp ~/graph.db.tar.gz /var/lib/neo4j-server/data/databases
-  - sudo tar -zxf /var/lib/neo4j-server/data/databases/graph.db.tar.gz
-  - sudo rm /var/lib/neo4j-server/data/databases/graph.db.tar.gz
+  - sudo tar -zxf ~/graph.db.tar.gz -C /var/lib/neo4j-server/data/databases
   - ls /var/lib/neo4j-server/data/databases/
 
 script:
