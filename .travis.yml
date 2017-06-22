@@ -5,15 +5,15 @@ language: node_js
 node_js:
   - "6"
 
-services:
-  - neo4j
-  - redis-server
-
 before_install:
   - cp ./config/travis/databases.tar ~
   - sudo rm -rd /var/lib/neo4j/data/databases/graph.db
   - (cd /var/lib/neo4j/data && sudo tar xvf ~/databases.tar --strip 1)
   - ls -al /var/lib/neo4j/data/databases
+
+services:
+  - neo4j
+  - redis-server
 
 before_script:
   - npm install
@@ -21,7 +21,6 @@ before_script:
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
 #  - cp ./config/travis/databases.tar ~
-  - ls -al /var/lib/neo4j/import
   - sudo rm /var/lib/neo4j/certificates/neo4j.key
   - sudo rm /var/lib/neo4j/certificates/neo4j.cert
   - sudo cp ./config/travis/app3_tst2_s2_db_key.pem /var/lib/neo4j/certificates/neo4j.key
