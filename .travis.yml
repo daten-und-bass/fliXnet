@@ -5,13 +5,18 @@ language: node_js
 node_js:
   - "6"
 
+services:
+  - neo4j
+  - redis-server
+
 before_script:
   - npm install
   - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
   - cp ./config/travis/graph.db.tar.gz ~
-  - sudo mkdir /var/lib/neo4j-server/certificates
+  - ls -al /var/lib/
+  - sudo mkdir /var/lib/neo4j/certificates
   - sudo cp ./config/travis/app3_tst2_s2_db_key.pem /var/lib/neo4j-server/certificates/neo4j.key
   - sudo cp ./config/travis/app3_tst2_s2_db_pub.pem /var/lib/neo4j-server/certificates/neo4j.cert
   - sudo mkdir /var/lib/neo4j-server/data/databases
@@ -24,8 +29,3 @@ script:
   - sleep 20
   - swagger project test
 
-services:
-  - neo4j
-
-services:
-  - redis-server
