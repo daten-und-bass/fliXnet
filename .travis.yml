@@ -15,19 +15,17 @@ before_script:
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
   - sudo service neo4j stop
-  - cp ./config/travis/databases.tar ~
+  - cp ./config/travis/data.tar ~
   - sudo rm /var/lib/neo4j/certificates/neo4j.key
   - sudo rm /var/lib/neo4j/certificates/neo4j.cert
   - sudo cp ./config/travis/app3_tst2_s2_db_key.pem /var/lib/neo4j/certificates/neo4j.key
   - sudo cp ./config/travis/app3_tst2_s2_db_pub.pem /var/lib/neo4j/certificates/neo4j.cert
-  - sudo rm -rd /var/lib/neo4j/data/databases/graph.db
-  - (cd /var/lib/neo4j/data && sudo tar xvf ~/databases.tar --strip 1)
-#  - ls -al /var/lib/neo4j/data/databases
-  - ls -al /var/lib/neo4j/data/dbms/
-  - ls -al /var/lib/neo4j/data/dbms/auth
+  - sudo rm -rd /var/lib/neo4j/data/databases/
+  - sudo rm -rd /var/lib/neo4j/data/dbms/  
+  - (cd /var/lib/neo4j/data && sudo tar xvf ~/data.tar --strip 1)
   - sudo service neo4j start
   - sleep 20
-  - curl -vX POST http://neo4j:neo4j@localhost:7474/user/neo4j/password -d 'password=travis'
+#  - curl -vX POST http://neo4j:neo4j@localhost:7474/user/neo4j/password -d 'password=travis'
 
 script:
   - curl https://localhost:7473/db/data/labels --insecure
