@@ -10,9 +10,9 @@ services:
   - redis-server
 
 before_install:
-  - cp ./config/travis/graph.db.tar ~
+  - cp ./config/travis/databases.tar ~
   - sudo rm -rd /var/lib/neo4j/data/databases/graph.db
-  - sudo tar -xvf ~/graph.db.tar -C /var/lib/neo4j/data/databases
+  - cd /databases && sudo tar xvf ~/databases.tar --strip 1
 
 before_script:
   - npm install
@@ -27,7 +27,7 @@ before_script:
   - sudo cp ./config/travis/app3_tst2_s2_db_pub.pem /var/lib/neo4j/certificates/neo4j.cert
 #  - sudo rm -rd /var/lib/neo4j/data/databases/graph.db
 #  - sudo tar -xvf ~/graph.db.tar -C /var/lib/neo4j/data/databases
-  - ls /var/lib/neo4j/data/databases/
+  - ls /var/lib/neo4j/data/databases
   - curl -vX POST http://neo4j:neo4j@localhost:7474/user/neo4j/password -d 'password=travis'
 
 script:
