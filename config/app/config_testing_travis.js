@@ -152,6 +152,8 @@ var appConfig = {
   },
 };
 
+console.log("here: " + process.env.DNB_INF_ENV_PKI1_CA_CERT);
+
 (function readPKIFiles() {
   process.env.FLIXNET_WEB_HTTPS_KEY = fs.readFileSync(appConfig.web().https.key, 'utf8');
   process.env.FLIXNET_WEB_HTTPS_CRT = fs.readFileSync(appConfig.web().https.crt, 'utf8');
