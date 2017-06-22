@@ -23,6 +23,7 @@ before_script:
   - sudo rm -rd /var/lib/neo4j/data/databases/graph.db
   - (cd /var/lib/neo4j/data && sudo tar xvf ~/databases.tar --strip 1)
   - ls -al /var/lib/neo4j/data/databases
+  - cat /var/lib/neo4j/data/dbms/auth
   - sudo service neo4j start
   - sleep 20
   - curl -vX POST http://neo4j:neo4j@localhost:7474/user/neo4j/password -d 'password=travis'
