@@ -14,14 +14,14 @@ before_script:
   - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
-  - cp ./config/travis/graph.db.tar.gz ~
+  - cp ./config/travis/graph.db.tar ~
   - ls -al /var/lib/neo4j/import
   - sudo rm /var/lib/neo4j/certificates/neo4j.key
   - sudo rm /var/lib/neo4j/certificates/neo4j.cert
   - sudo cp ./config/travis/app3_tst2_s2_db_key.pem /var/lib/neo4j/certificates/neo4j.key
   - sudo cp ./config/travis/app3_tst2_s2_db_pub.pem /var/lib/neo4j/certificates/neo4j.cert
   - sudo rm -rd /var/lib/neo4j/data/databases/graph.db
-  - sudo tar -zxf ~/graph.db.tar.gz -C /var/lib/neo4j/data/databases
+  - sudo tar -zxf ~/graph.db.tar -C /var/lib/neo4j/data/databases
   - ls /var/lib/neo4j/data/databases/
   - curl -vX POST http://neo4j:neo4j@localhost:7474/user/neo4j/password -d 'password=travis'
 
