@@ -2,6 +2,9 @@
 
 var fs = require('fs');
 
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 var appConfig = {
   environment: function() {
     var environment = {
@@ -151,8 +154,6 @@ var appConfig = {
     return krypto;  
   },
 };
-
-console.log("here: " + process.env.DNB_INF_ENV_PKI1_CA_CERT);
 
 (function readPKIFiles() {
   process.env.FLIXNET_WEB_HTTPS_KEY = fs.readFileSync(appConfig.web().https.key, 'utf8');

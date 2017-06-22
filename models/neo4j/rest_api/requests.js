@@ -44,7 +44,6 @@ var requests = {
 
               console.log(err);
               console.log(res);
-              console.log(process.env.FLIXNET_DB_HTTPS_CA);
 
               if(res.body.results[0] && res.body.results[0].stats && res.body.results[0].stats.nodes_deleted > 0 ) {
                 nodesDeleted = res.body.results[0].stats.nodes_deleted;  
