@@ -26,6 +26,7 @@ before_script:
   - curl -vX POST http://neo4j:neo4j@localhost:7474/user/neo4j/password -d 'password=travis'
 
 script:
+  - curl https://localhost:7473/db/data/labels --insecure
   - swagger project start &
   - sleep 20
   - swagger project test
