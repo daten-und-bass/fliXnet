@@ -1,4 +1,6 @@
-# sudo: required
+dist: trusty
+sudo: required
+
 language: node_js
 node_js:
   - "6"
@@ -15,10 +17,9 @@ before_script:
   - sudo mkdir /var/lib/neo4j-server/data/databases
   - sudo tar -zxf ~/graph.db.tar.gz -C /var/lib/neo4j-server/data/databases
   - ls /var/lib/neo4j-server/data/databases/
+  - curl -vX POST http://neo4j:neo4j@localhost:7474/user/neo4j/password -d 'password=travis'
 
 script:
-  - sleep 20
-  - curl -X POST http://neo4j:neo4j@127.0.0.1:7474/user/neo4j/password -d 'password=travis'
   - swagger project start &
   - sleep 20
   - swagger project test
