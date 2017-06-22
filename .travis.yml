@@ -24,13 +24,13 @@ before_script:
   - (cd /var/lib/neo4j/data && sudo tar xvf ~/data.tar --strip 1)
   - ls -al /var/lib/neo4j/data
   - ls -al /var/lib/neo4j/data/databases
-  - ls -al /var/lib/neo4j/data/dbms
+  - cat /var/lib/neo4j/data/dbms/auth
   - sudo service neo4j start
   - sleep 30
-  - curl -vX POST http://neo4j:travis@localhost:7474/user/neo4j/password -d 'password=travis'
+#  - curl -vX POST http://neo4j:travis@localhost:7474/user/neo4j/password -d 'password=travis'
 
 script:
-  - curl http://neo4j:travis@localhost:7474/db/data/labels --insecure
+  - curl http://neo4j:travis@localhost:7474/db/data/labels
   - swagger project start &
   - sleep 20
   - swagger project test
