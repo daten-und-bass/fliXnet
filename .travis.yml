@@ -32,8 +32,8 @@ before_script:
 #  - cat /var/lib/neo4j/data/dbms/auth
 #  - sudo service neo4j start
 #  - sleep 30
-#  - curl -vX POST http://neo4j:travis@localhost:7474/user/neo4j/password -d 'password=travis'
-  - curl -vH "Content-Type:application/json" -X POST -d '{"password":"travis"}' -u neo4j:neo4j http://0.0.0.0:7474/user/neo4j/password
+  - curl -vX POST http://neo4j:travis@localhost:7474/user/neo4j/password -d 'password=travis'
+#  - curl -vH "Content-Type:application/json" -X POST -d '{"password":"travis"}' -u neo4j:neo4j http://0.0.0.0:7474/user/neo4j/password
 
 script:
   - curl http://neo4j:neo4j@localhost:7474/db/data/labels
