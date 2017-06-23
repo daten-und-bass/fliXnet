@@ -1,7 +1,6 @@
-|            |        |             |
-|:---        |  :---: |    :---:    |
 |Branch:     | master | development |
-|Status:   | [![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=master)](https://travis-ci.org/daten-und-bass/fliXnet) | [![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=development)](https://travis-ci.org/daten-und-bass/fliXnet)  |
+|:---        |  :---: |    :---:    |
+|***Status:***   | [![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=master)](https://travis-ci.org/daten-und-bass/fliXnet) | [![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=development)](https://travis-ci.org/daten-und-bass/fliXnet)  |
 
 
 
@@ -20,7 +19,7 @@ https://fliXnet.daten-und-bass.io/docs
 https://fliXnet.daten-und-bass.io/api
 
 ## OpenAPI Definition ##
-### OpenAPI/Swagger YAML File ###
+### OpenAPI/ Swagger YAML File ###
 https://github.com/daten-und-bass/fliXnet/blob/master/api/swagger/swagger.yaml
 
 ## Screen Shots ##
