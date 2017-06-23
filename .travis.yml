@@ -26,6 +26,7 @@ before_script:
 #  - sudo cp ./config/travis/app3_tst2_s2_db_key.pem /var/lib/neo4j/certificates/neo4j.key
 #  - sudo cp ./config/travis/app3_tst2_s2_db_pub.pem /var/lib/neo4j/certificates/neo4j.cert
   - sudo rm -rd /var/lib/neo4j/data/databases
+  - rm /var/lib/neo4j/data/databases/graph.db/store_lock
   - (cd /var/lib/neo4j/data && sudo tar xvf ~/data.tar --strip 1)
 #  - ls -al /var/lib/neo4j/data
 #  - ls -al /var/lib/neo4j/data/databases
