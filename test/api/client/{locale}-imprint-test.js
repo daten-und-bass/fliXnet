@@ -16,6 +16,7 @@ describe('/{locale}/imprint', function() {
           timeout: 4000,
           url: 'https://localhost:10011' + currentValue,
           ca: process.env.FLIXNET_DB_HTTPS_CA,
+          strictSSL: false,
           method: 'GET',
           headers: {
             'Content-Type': 'text/html'
@@ -36,6 +37,7 @@ describe('/{locale}/imprint', function() {
           timeout: 4000,
           url: 'https://localhost:10011' + currentValue + '/ee',
           ca: process.env.FLIXNET_DB_HTTPS_CA,
+          strictSSL: false,
           method: 'GET',
           headers: {
             'Content-Type': 'text/html'

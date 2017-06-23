@@ -13,6 +13,7 @@ describe('/', function() {
       	timeout: 4000,
         url: 'https://localhost:10011/',
         ca: process.env.FLIXNET_DB_HTTPS_CA,
+        strictSSL: false,
         method: 'GET',
         headers: {
           'Content-Type': 'text/plain'
@@ -34,6 +35,7 @@ describe('/', function() {
       	timeout: 4000,
         url: 'https://localhost:10011/',
         ca: process.env.FLIXNET_DB_HTTPS_CA,
+        strictSSL: false,
         method: 'GET',
         headers: {
           'Content-Type': 'text/plain'
@@ -54,6 +56,7 @@ describe('/', function() {
       	timeout: 4000,
         url: 'https://localhost:10011/ee',
         ca: process.env.FLIXNET_DB_HTTPS_CA,
+        strictSSL: false,
         method: 'GET',
         headers: {
           'Content-Type': 'text/html'
