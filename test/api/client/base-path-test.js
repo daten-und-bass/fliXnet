@@ -3,7 +3,7 @@ var chai = require('chai');
 var request = require('request');
 var expect = chai.expect;
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 describe('/', function() {
   describe('get', function() {
@@ -12,6 +12,7 @@ describe('/', function() {
       	followRedirect: false,
       	timeout: 4000,
         url: 'https://localhost:10011/',
+        ca: process.env.FLIXNET_DB_HTTPS_CA,
         method: 'GET',
         headers: {
           'Content-Type': 'text/plain'
@@ -32,6 +33,7 @@ describe('/', function() {
       	followRedirect: true,
       	timeout: 4000,
         url: 'https://localhost:10011/',
+        ca: process.env.FLIXNET_DB_HTTPS_CA,
         method: 'GET',
         headers: {
           'Content-Type': 'text/plain'
@@ -51,6 +53,7 @@ describe('/', function() {
       request({
       	timeout: 4000,
         url: 'https://localhost:10011/ee',
+        ca: process.env.FLIXNET_DB_HTTPS_CA,
         method: 'GET',
         headers: {
           'Content-Type': 'text/html'
