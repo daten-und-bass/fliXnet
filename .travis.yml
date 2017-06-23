@@ -36,7 +36,7 @@ before_script:
   - curl -vH "Content-Type:application/json" -X POST -d '{"password":"travis"}' -u neo4j:neo4j http://0.0.0.0:7474/user/neo4j/password
 
 script:
-  - curl http://neo4j:travis@localhost:7474/db/data/labels
+  - curl http://neo4j:neo4j@localhost:7474/db/data/labels
   - swagger project start &
   - sleep 20
   - swagger project test
