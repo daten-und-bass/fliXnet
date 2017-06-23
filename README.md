@@ -1,15 +1,25 @@
-[![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=master)](https://travis-ci.org/daten-und-bass/fliXnet)
+
+[![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=master)](https://travis-ci.org/daten-und-bass/fliXnet) [![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=development)](https://travis-ci.org/daten-und-bass/fliXnet)
+
+
 
 # fliXnet
-A Containerized NodeJS Sample Implementation of Neo4j's Graph Movie Database via OpenAPI (Swagger)
+A containerized NodeJS sample implementation of Neo4j's Graph Movie Database via OpenAPI (Swagger)
 
 ## Live Demo ##
 
 ### HTML Web App ###
 https://fliXnet.daten-und-bass.io
 
-### JSON API Documentation ###
+### Swagger Documentation ###
+https://fliXnet.daten-und-bass.io/docs
+
+### Raw Documentation ###
 https://fliXnet.daten-und-bass.io/api
+
+## OpenAPI Definition ##
+### OpenAPI/ Swagger YAML File ###
+https://github.com/daten-und-bass/fliXnet/blob/master/api/swagger/swagger.yaml
 
 ## Screen Shots ##
 
