@@ -1,18 +1,42 @@
+dist: trusty
+sudo: required
+
 language: node_js
 node_js:
   - "6"
+
+services:
+  - neo4j
+  - redis-server
+
 before_script:
   - npm install
   - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
+  - cp ./config/travis/data.tar ~
+  - sudo service neo4j stop
+  - sleep 20
+  - sudo rm /var/lib/neo4j/certificates/neo4j.key
+  - sudo rm /var/lib/neo4j/certificates/neo4j.cert
+  - sudo cp ./config/travis/app3_tst2_s2_db_key.pem /var/lib/neo4j/certificates/neo4j.key
+  - sudo cp ./config/travis/app3_tst2_s2_db_pub.pem /var/lib/neo4j/certificates/neo4j.cert
+  - sudo rm -rd /var/lib/neo4j/data/databases
+  - (cd /var/lib/neo4j/data && sudo tar xvf ~/data.tar --strip 1)
+  - sudo rm /var/lib/neo4j/data/databases/graph.db/store_lock
+  - sudo chown -R neo4j:neo4j /var/lib/neo4j/data
+  - sudo chown neo4j:adm /var/lib/neo4j/data/databases
+  - sudo chown neo4j:adm /var/lib/neo4j/data/dbms
+  - echo 'dbms.allow_format_migration=true' | sudo tee --append /etc/neo4j/neo4j.conf
+  - sudo sed -i 's|dbms.security.auth_enabled=false|dbms.security.auth_enabled=true|g' /etc/neo4j/neo4j.conf
+  - cat /etc/neo4j/neo4j.conf
+  - sudo service neo4j start
+  - sleep 30
+
 script:
+  - curl http://neo4j:travis@localhost:7474/db/data/labels
+  - cat /var/log/neo4j/neo4j.log 
   - swagger project start &
   - sleep 20
-  # - swagger project test
+  - swagger project test
 
-services:
-  - neo4j
-
-services:
-  - redis-server
