@@ -14,7 +14,8 @@ services:
   - redis-server
 
 before_script:
-  - npm install
+#  - npm install
+  - ls -al /etc/neo4j
   - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
   - cp ./config/travis/pki1_tst2_ca_pub.pem ~
@@ -33,6 +34,7 @@ before_script:
   - sudo chown -R neo4j:neo4j /var/lib/neo4j/data
   - sudo chown neo4j:adm /var/lib/neo4j/data/databases
   - sudo chown neo4j:adm /var/lib/neo4j/data/dbms
+# dbms.allow_format_migration=true
   - ls -al /var/lib/neo4j/data
   - ls -al /var/lib/neo4j/data/databases/graph.db
 #  - cat /var/lib/neo4j/data/dbms/auth
