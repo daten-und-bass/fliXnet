@@ -37,6 +37,7 @@ before_script:
 
 script:
   - curl http://neo4j:neo4j@localhost:7474/db/data/labels
+  - cat /var/log/neo4j/neo4j.log 
   - swagger project start &
   - sleep 20
   - swagger project test
