@@ -42,11 +42,6 @@ var requests = {
               var nodesDeleted = 0;
               var relationshipDeleted = 0;
 
-              console.log(dbConfig.headers); 
-              console.log(process.env.FLIXNET_DB_HTTPS_CA); 
-              console.log(err);
-              console.log(res.body);
-
               if(res.body.results[0] && res.body.results[0].stats && res.body.results[0].stats.nodes_deleted > 0 ) {
                 nodesDeleted = res.body.results[0].stats.nodes_deleted;  
               }
