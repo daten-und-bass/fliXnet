@@ -1,5 +1,6 @@
 
-### Branches: master [![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=master)](https://travis-ci.org/daten-und-bass/fliXnet) | development [![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=development)](https://travis-ci.org/daten-und-bass/fliXnet) ###
+   master    |  development
+[![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=master)](https://travis-ci.org/daten-und-bass/fliXnet) |  [![Build Status](https://travis-ci.org/daten-und-bass/fliXnet.svg?branch=development)](https://travis-ci.org/daten-und-bass/fliXnet)
 
 
 
