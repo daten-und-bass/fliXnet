@@ -4,6 +4,7 @@ sudo: required
 language: node_js
 node_js:
   - "6"
+
 #cache:
 #  directories:
 #    - node_modules
@@ -12,10 +13,9 @@ services:
   - neo4j
   - redis-server
 
-
 before_script:
   - ls -al /var/run/neo4j
-  - ls -al /var/run/neo4j/bin
+#  - ls -al /var/run/neo4j/bin
   - npm install
   - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
