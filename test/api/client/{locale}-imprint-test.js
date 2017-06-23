@@ -3,7 +3,7 @@ var chai = require('chai');
 var request = require('request');
 var expect = chai.expect;
 
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 var urlsToTest = ['/de/imprint', '/en/imprint', '/es/imprint', '/fr/imprint'];
 
@@ -15,8 +15,6 @@ describe('/{locale}/imprint', function() {
         request({
           timeout: 4000,
           url: 'https://localhost:10011' + currentValue,
-          ca: process.env.FLIXNET_DB_HTTPS_CA,
-          strictSSL: false,
           method: 'GET',
           headers: {
             'Content-Type': 'text/html'
@@ -36,8 +34,6 @@ describe('/{locale}/imprint', function() {
         request({
           timeout: 4000,
           url: 'https://localhost:10011' + currentValue + '/ee',
-          ca: process.env.FLIXNET_DB_HTTPS_CA,
-          strictSSL: false,
           method: 'GET',
           headers: {
             'Content-Type': 'text/html'
