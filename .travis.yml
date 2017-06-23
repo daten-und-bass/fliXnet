@@ -35,16 +35,18 @@ before_script:
   - sudo chown neo4j:adm /var/lib/neo4j/data/databases
   - sudo chown neo4j:adm /var/lib/neo4j/data/dbms
   - echo 'dbms.allow_format_migration=true' | sudo tee --append /etc/neo4j/neo4j.conf
+  - sudo sed -i 's|dbms.security.auth_enabled=false|dbms.security.auth_enabled=true' /etc/neo4j/neo4j.conf
   - ls -al /var/lib/neo4j/data
   - ls -al /var/lib/neo4j/data/databases/graph.db
-#  - cat /var/lib/neo4j/data/dbms/auth
+  - cat /var/lib/neo4j/data/dbms/auth
+  - cat /etc/neo4j/neo4j.conf
   - sudo service neo4j start
   - sleep 30
 #  - curl -vX POST http://neo4j:travis@localhost:7474/user/neo4j/password -d 'password=travis'
 #  - curl -vH "Content-Type:application/json" -X POST -d '{"password":"travis"}' -u neo4j:neo4j http://0.0.0.0:7474/user/neo4j/password
 
 script:
-  - curl http://localhost:7474/db/data/labels
+  - curl http://neo4j:travis@localhost:7474/db/data/labels
   - cat /var/log/neo4j/neo4j.log 
   - swagger project start &
   - sleep 20
