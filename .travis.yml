@@ -4,12 +4,18 @@ sudo: required
 language: node_js
 node_js:
   - "6"
+cache:
+  directories:
+    - node_modules
 
 services:
   - neo4j
   - redis-server
 
+
 before_script:
+  - ls -al /var/run/neo4j
+  - ls -al /var/run/neo4j/bin
   - npm install
   - cp ./config/travis/app3_tst2_s1_wb_key.pem ~
   - cp ./config/travis/app3_tst2_s1_wb_pub.pem ~
@@ -29,6 +35,7 @@ before_script:
   - sudo service neo4j start
   - sleep 30
 #  - curl -vX POST http://neo4j:travis@localhost:7474/user/neo4j/password -d 'password=travis'
+#  - curl -vH "Content-Type:application/json" -X POST -d '{"password":"travis"}' -u neo4j:neo4j http://0.0.0.0:7474/user/neo4j/password
 
 script:
   - curl http://neo4j:travis@localhost:7474/db/data/labels
