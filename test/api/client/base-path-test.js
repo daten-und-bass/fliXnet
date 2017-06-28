@@ -7,10 +7,13 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 describe('/', function() {
   describe('get', function() {
+
+    this.timeout(9999);
+    
     it('should respond with 302 Success', function(done) {
       request({
       	followRedirect: false,
-      	timeout: 4000,
+      	timeout: 9999,
         url: 'https://localhost:10011/',
         method: 'GET',
         headers: {
@@ -30,7 +33,7 @@ describe('/', function() {
     it('should respond with 200 Success after redirect', function(done) {
       request({
       	followRedirect: true,
-      	timeout: 4000,
+      	timeout: 9999,
         url: 'https://localhost:10011/',
         method: 'GET',
         headers: {
@@ -49,7 +52,7 @@ describe('/', function() {
 
     it('should respond with default Error', function(done) {
       request({
-      	timeout: 4000,
+      	timeout: 9999,
         url: 'https://localhost:10011/ee',
         method: 'GET',
         headers: {

@@ -11,9 +11,12 @@ var urlsToTest = ['/de', '/en', '/es', '/fr'];
 describe('/{locale}/persons', function() {
   describe('get', function() {
 
+    this.timeout(6000);
+
     urlsToTest.forEach(function (currentValue) {
       it('should respond with 200 Success', function(done) {
         request({
+          timeout: 6000,
           url: 'https://localhost:10011' + currentValue + '/persons',
           method: 'GET',
           headers: {
@@ -32,6 +35,7 @@ describe('/{locale}/persons', function() {
 
       it('should respond with 200 Success for qs 1978', function(done) {
         request({
+          timeout: 6000,
           url: 'https://localhost:10011' + currentValue + '/persons',
           qs: {
             born: 1978
@@ -53,6 +57,7 @@ describe('/{locale}/persons', function() {
 
       it('should respond with default Error', function(done) {
         request({
+          timeout: 6000,
           url: 'https://localhost:10011' + currentValue + 'persons/ee',
           method: 'GET',
           headers: {

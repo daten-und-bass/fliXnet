@@ -10,10 +10,12 @@ var urlsToTest = ['/de/contact', '/en/contact', '/es/contact', '/fr/contact'];
 describe('/{locale}/contact', function() {
   describe('get', function() {
     
+    this.timeout(6000);
+
     urlsToTest.forEach(function (currentValue) {
       it('should respond with 200 Success', function(done) {
         request({
-          timeout: 4000,
+          timeout: 6000,
           url: 'https://localhost:10011' + currentValue,
           method: 'GET',
           headers: {
@@ -32,7 +34,7 @@ describe('/{locale}/contact', function() {
 
       it('should respond with default Error', function(done) {
         request({
-          timeout: 4000,
+          timeout: 6000,
           url: 'https://localhost:10011' + currentValue + '/ee',
           method: 'GET',
           headers: {
