@@ -29,15 +29,17 @@ before_script:
   #- sudo chown neo4j:adm /usr/local/neo4j-"${NEO4J_VERSION}"/data/databases
   #- sudo chown neo4j:adm /usr/local/neo4j-"${NEO4J_VERSION}"/data/dbms
   - sudo ls -al /usr/local/neo4j-"${NEO4J_VERSION}"/data
-  - echo 'dbms.allow_format_migration=true' | sudo tee --append /etc/neo4j/neo4j.conf
-  - sudo sed -i 's|dbms.security.auth_enabled=false|dbms.security.auth_enabled=true|g' /etc/neo4j/neo4j.conf
-  - cat /etc/neo4j/neo4j.conf
+  - sudo ls -al /etc
+  - sudo ls -al /var/log
+  - echo 'dbms.allow_format_migration=true' | sudo tee --append /etc/neo4j-"${NEO4J_VERSION}"/neo4j.conf
+  - sudo sed -i 's|dbms.security.auth_enabled=false|dbms.security.auth_enabled=true|g' /etc/neo4j-"${NEO4J_VERSION}"/neo4j.conf
+  - cat /etc/neo4j-"${NEO4J_VERSION}"/neo4j.conf
   - sudo service neo4j start
   - sleep 30
 
 script:
   - curl http://neo4j:"${DNB_APP_ENV_S2_DB_PASS}"@localhost:7474/db/data/labels
-  - cat /var/log/neo4j/neo4j.log 
+  - cat /var/log/neo4j-"${NEO4J_VERSION}"/neo4j.log 
   - swagger project start &
   - sleep 20
   - swagger project test
