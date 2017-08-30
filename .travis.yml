@@ -21,6 +21,7 @@ before_script:
   - sudo rm /usr/local/neo4j-"${NEO4J_VERSION}"/certificates/neo4j.cert
   - sudo cp ./config/travis/app3_tst2_s2_db_key.pem /usr/local/neo4j-"${NEO4J_VERSION}"/certificates/neo4j.key
   - sudo cp ./config/travis/app3_tst2_s2_db_pub.pem /usr/local/neo4j-"${NEO4J_VERSION}"/certificates/neo4j.cert
+  - sudo ls -al /usr/local/neo4j-"${NEO4J_VERSION}"/data
   - sudo rm -rd /usr/local/neo4j-"${NEO4J_VERSION}"/data/databases
   - (cd /usr/local/neo4j-"${NEO4J_VERSION}"/data && sudo tar xvf ~/data.tar --strip 1)
   - sudo rm /usr/local/neo4j-"${NEO4J_VERSION}"/data/databases/graph.db/store_lock
