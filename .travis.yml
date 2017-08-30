@@ -25,8 +25,6 @@ before_script:
   - (cd /usr/local/neo4j-"${NEO4J_VERSION}"/data && sudo tar xvf ~/data.tar --strip 1)
   - sudo rm /usr/local/neo4j-"${NEO4J_VERSION}"/data/databases/graph.db/store_lock
   - sudo chown -R travis:travis /usr/local/neo4j-"${NEO4J_VERSION}"/data
-  #- sudo chown neo4j:adm /usr/local/neo4j-"${NEO4J_VERSION}"/data/databases
-  #- sudo chown neo4j:adm /usr/local/neo4j-"${NEO4J_VERSION}"/data/dbms
   - sudo ls -al /usr/local/neo4j-"${NEO4J_VERSION}"/data
   - echo 'dbms.allow_format_migration=true' | sudo tee --append /usr/local/neo4j-"${NEO4J_VERSION}"/conf/neo4j.conf
   - sudo sed -i 's|dbms.security.auth_enabled=false|dbms.security.auth_enabled=true|g' /usr/local/neo4j-"${NEO4J_VERSION}"/conf/neo4j.conf
