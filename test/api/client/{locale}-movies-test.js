@@ -10,9 +10,12 @@ var urlsToTest = ['/de', '/en', '/es', '/fr'];
 describe('/{locale}/movies', function() {
   describe('get', function() {
 
+    this.timeout(6000);
+
     urlsToTest.forEach(function (currentValue) {
       it('should respond with 200 Success', function(done) {
         request({
+          timeout: 6000,
           url: 'https://localhost:10011' + currentValue + '/movies',
           method: 'GET',
           headers: {
@@ -31,6 +34,7 @@ describe('/{locale}/movies', function() {
 
       it('should respond with 200 Success for qs 2000', function(done) {
         request({
+          timeout: 6000,
           url: 'https://localhost:10011' + currentValue + '/movies',
           qs: {
             released: 2000
@@ -52,6 +56,7 @@ describe('/{locale}/movies', function() {
 
       it('should respond with default Error', function(done) {
         request({
+          timeout: 6000,
           url: 'https://localhost:10011' + currentValue + '/movies/ee',
           method: 'GET',
           headers: {
