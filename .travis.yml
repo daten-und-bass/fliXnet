@@ -41,4 +41,4 @@ script:
   - swagger project start &
   - sleep 20
   - swagger project test
-
+  - cat /usr/local/neo4j-"${NEO4J_VERSION}"/logs/neo4j.log
