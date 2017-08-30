@@ -34,7 +34,7 @@ before_script:
   - sleep 30
 
 script:
-  - curl http://neo4j:travis@localhost:7474/db/data/labels
+  - curl http://neo4j:"${DNB_APP_ENV_S2_DB_PASS}"@localhost:7474/db/data/labels
   - cat /var/log/neo4j/neo4j.log 
   - swagger project start &
   - sleep 20
