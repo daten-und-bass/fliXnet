@@ -17,8 +17,8 @@ before_script:
   - cp ./config/travis/data.tar ~
   - sudo service neo4j stop
   - sleep 20
-  - sudo rm /var/lib/neo4j/certificates/neo4j.key
-  - sudo rm /var/lib/neo4j/certificates/neo4j.cert
+  #- sudo rm /var/lib/neo4j/certificates/neo4j.key
+  #- sudo rm /var/lib/neo4j/certificates/neo4j.cert
   - sudo cp ./config/travis/app3_tst2_s2_db_key.pem /var/lib/neo4j/certificates/neo4j.key
   - sudo cp ./config/travis/app3_tst2_s2_db_pub.pem /var/lib/neo4j/certificates/neo4j.cert
   - sudo rm -rd /var/lib/neo4j/data/databases
