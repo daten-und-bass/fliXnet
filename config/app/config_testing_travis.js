@@ -8,6 +8,9 @@ var appConfig = {
   environment: function() {
     var environment = {
       name: process.env.NODE_ENV,
+      // git: {
+      //   commit: process.env.FLIXNET_WEB_REPO_HEAD,
+      // },
     };
 
     return environment;
@@ -15,16 +18,12 @@ var appConfig = {
 
   web: function() {
     var web = {
-      // ip: process.env.DNB_APP_ENV_S1_WB_FTED_IP1, // not used
-      // http: {
-      //   port: process.env.DNB_APP_ENV_S1_WB_FTED_HTTP_PORT, // not used
-      // },
       https: {
-        port: process.env.DNB_NODE_OAI_HTTPS_PORT,
-        crt: process.env.HOME + '/' + process.env.DNB_APP_ENV_S1_WB_FTED_HTTPS_CERT1,
-        key: process.env.HOME + '/' + process.env.DNB_APP_ENV_S1_WB_FTED_HTTPS_CERT1_KEY,
+        port: process.env.FLIXNET_WEB_HTTPS_PORT,
+        pub: process.env.HOME + '/' + process.env.FLIXNET_WEB_HTTPS_PUB_PATH,
+        key: process.env.HOME + '/' + process.env.FLIXNET_WEB_HTTPS_KEY_PATH,
       },
-      // proxies: [ process.env.DNB_INF1_ENV_S1_WF1_FTED_IP1, process.env.DNB_APP_ENV_S1_LB1_FTED_IP1 ],
+      proxies: isNaN(parseInt(process.env.FLIXNET_WEB_PROXIES)) ? false : parseInt(process.env.FLIXNET_WEB_PROXIES),
     };
 
     return web;
@@ -32,19 +31,18 @@ var appConfig = {
 
   db: function() {
     var db = {
-      // ip: process.env.DNB_APP_ENV_S2_DB_BKED_IP1,
-      ip: process.env.DNB_APP_ENV_S2_DB,
+      host: process.env.FLIXNET_DB1,
       headers: {
-        Authorization: process.env.DNB_APP_ENV_S2_DB_PASS,
+        Authorization: process.env.FLIXNET_DB1_PASS,
         'Content-Type': 'application/json',
         Accept: 'application/json; charset=UTF-8',
       },
       http: {
-        port: process.env.DNB_NEO_HTTP_PORT,
+        port: process.env.FLIXNET_DB1_HTTP_PORT,
       },
       https: {
-        port: process.env.DNB_NEO_HTTPS_PORT,
-        ca: process.env.HOME + '/' + process.env.DNB_INF_ENV_PKI1_CA_CERT,
+        port: process.env.FLIXNET_DB1_HTTPS_PORT,
+        ca: process.env.HOME + '/' + process.env.FLIXNET_WEB_CA_CERT_PUB_PATH,
       },
       request: {
         method: 'POST'  // not used
@@ -58,8 +56,8 @@ var appConfig = {
       },
     };
 
-    db.https.url = 'https://' + db.ip  + ':' + db.https.port + '/db/data/transaction/commit';
-    db.batch.url = 'https://' + db.ip  + ':' + db.https.port + '/db/data/batch';
+    db.https.url = 'https://' + db.host  + ':' + db.https.port + '/db/data/transaction/commit';
+    db.batch.url = 'https://' + db.host  + ':' + db.https.port + '/db/data/batch';
 
     return db;
   },
@@ -68,8 +66,8 @@ var appConfig = {
     var sessions = {
       session: {
         options:{
-          secret: process.env.DNB_APP_ENV_S1_WB_SESS_SEC,
-          name: process.env.DNB_APP_ENV_S1_WB_SESS_NAME,
+          secret: process.env.FLIXNET_WEB_SESS_SEC,
+          name: process.env.FLIXNET_WEB_SESS_NAME,
           resave: false,
           saveUninitialized: false, 
           cookie: { secure: true },
@@ -78,12 +76,10 @@ var appConfig = {
       },
       store: {
         options: {
-          // host: process.env.DNB_APP_ENV_S3_DB_BKED_IP1,
-          host: process.env.DNB_APP_ENV_S3_DB,
-          // port: process.env.DNB_APP_ENV_S3_DB_BKED_PORT,
-          port: process.env.DNB_REDIS_PORT,
-          db: parseInt(process.env.DNB_APP_ENV_S3_DB_INST1),
-          pass: process.env.DNB_APP_ENV_S3_DB_PASS,
+          host: process.env.FLIXNET_DB2,
+          port: process.env.FLIXNET_DB2_PORT,
+          db: parseInt(process.env.FLIXNET_DB2_INST1),
+          pass: process.env.FLIXNET_DB2_PASS,
           // prefix: 'fliXnet:sessions:',
         },
       },
@@ -94,15 +90,13 @@ var appConfig = {
 
   users: function() {
     var users = {
-      secret: Buffer.from(process.env.DNB_APP_ENV_S1_WB_USER_SEC),
+      secret: Buffer.from(process.env.FLIXNET_WEB_USER_SEC),
       store: {
-        // host: process.env.DNB_APP_ENV_S3_DB_BKED_IP1,
-        host: process.env.DNB_APP_ENV_S3_DB,
-        // port: process.env.DNB_APP_ENV_S3_DB_BKED_PORT,
-        port: process.env.DNB_REDIS_PORT,
+        host: process.env.FLIXNET_DB2,
+        port: process.env.FLIXNET_DB2_PORT,
         options: {
-          db: parseInt(process.env.DNB_APP_ENV_S3_DB_INST2),
-          auth_pass: process.env.DNB_APP_ENV_S3_DB_PASS, 
+          db: parseInt(process.env.FLIXNET_DB2_INST2),
+          auth_pass: process.env.FLIXNET_DB2_PASS, 
           return_buffers: true,
           // prefix: 'fliXnet:users:',
         },
@@ -122,14 +116,12 @@ var appConfig = {
           type: 'oAuth',
           volos: {
             options: {
-              encryptionKey: process.env.DNB_APP_ENV_S1_WB_OAUT_SEC,
-              // host: process.env.DNB_APP_ENV_S3_DB_BKED_IP1,
-              host: process.env.DNB_APP_ENV_S3_DB,
-              // port: process.env.DNB_APP_ENV_S3_DB_BKED_PORT,
-              port: process.env.DNB_REDIS_PORT,
-              db: parseInt(process.env.DNB_APP_ENV_S3_DB_INST3),
+              encryptionKey: process.env.FLIXNET_WEB_OAUT_SEC,
+              host: process.env.FLIXNET_DB2,
+              port: process.env.FLIXNET_DB2_PORT,
+              db: parseInt(process.env.FLIXNET_DB2_INST3),
               options:{
-                auth_pass: process.env.DNB_APP_ENV_S3_DB_PASS,
+                auth_pass: process.env.FLIXNET_DB2_PASS,
               },
             },
           },
@@ -142,11 +134,11 @@ var appConfig = {
 
   krypto: function() {
     var krypto = {
-      secret: Buffer.from(process.env.DNB_APP_ENV_S1_WB_KRYP_SEC),
+      secret: Buffer.from(process.env.FLIXNET_WEB_KRYP_SEC),
       options: {
-        hashBytes: parseInt(process.env.DNB_APP_ENV_S1_WB_KRYP_HBS),
-        saltBytes: parseInt(process.env.DNB_APP_ENV_S1_WB_KRYP_SBS),
-        iterations: parseInt(process.env.DNB_APP_ENV_S1_WB_KRYP_ITS),
+        hashBytes: parseInt(process.env.FLIXNET_WEB_KRYP_HBS),
+        saltBytes: parseInt(process.env.FLIXNET_WEB_KRYP_SBS),
+        iterations: parseInt(process.env.FLIXNET_WEB_KRYP_ITS),
       },
     };
 
@@ -156,7 +148,7 @@ var appConfig = {
 
 (function readPKIFiles() {
   process.env.FLIXNET_WEB_HTTPS_KEY = fs.readFileSync(appConfig.web().https.key, 'utf8');
-  process.env.FLIXNET_WEB_HTTPS_CRT = fs.readFileSync(appConfig.web().https.crt, 'utf8');
+  process.env.FLIXNET_WEB_HTTPS_PUB = fs.readFileSync(appConfig.web().https.pub, 'utf8');
   process.env.FLIXNET_DB_HTTPS_CA = fs.readFileSync(appConfig.db().https.ca, 'utf8');
 })();
 
