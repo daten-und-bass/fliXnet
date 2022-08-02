@@ -1948,8 +1948,8 @@ securityDefinitions:
     flow: application
     tokenUrl: https://localhost:10011/accesstoken
     scopes:
-      write:user: Write operations for user management
-      write:graph: Write operations for for graph relationships
+      # write:user: Write operations for user management
+      # write:graph: Write operations for for graph relationships
       write:movies: Write operations for nodes of the type 'movies'
       write:persons: Write operations for nodes of the type 'person'
 
