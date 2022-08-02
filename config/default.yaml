@@ -28,6 +28,9 @@ swagger:
     swagger_controllers:
       - onError: json_error_handler
       - cors
+      # Error: Cannot find module '/usr/src/fliXnet/api/fittings/swagger_router'
+      # https://github.com/swagger-api/swagger-node/issues/586#issuecomment-560078107
+      - swagger_params_parser
       - volos-swagger-oauth
       - swagger_security
       - _swagger_validate
