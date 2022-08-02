@@ -1869,8 +1869,8 @@ definitions:
         type: array
         items:
           type: object
-          required:
-            - row
+          # required:
+          #   - row
 
 ### Movies ###
   MoviesListBody:
