@@ -124,7 +124,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   app.use(SwaggerUi(swaggerExpress.runner.swagger));
 
-  app.use(swaggerExpress.runner.swaggerTools.swaggerSecurity(config.swaggerSecurityHandlers));
+  // app.use(swaggerExpress.runner.swaggerTools.swaggerSecurity(config.swaggerSecurityHandlers));
  
   swaggerExpress.register(app);
 
